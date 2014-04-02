@@ -117,21 +117,22 @@ public class Simple_RayTracer {
 		double lightCount = 0;
 		for (PointLight light : scene.getLights()) {
 			Ray shadowRay;
-			Vector3d lightPosition, lightDirection;
+			Vector3d lightDirection, objectNormal;
 			lit = false;
-			
-			/* create shadow ray */ 
-			lightPosition = new Vector3d(light.getPosition());
-			lightDirection = new Vector3d(light.getPosition());
 			
 			/* correct for floating point imprecision of object surface 
 			 * detail by moving origin of shadow ray
-			 * an epsilon factor closer to light */
-			Vector3d EPSILON = new Vector3d(lightDirection.x, lightDirection.y, lightDirection.z);
+			 * an epsilon factor in the direction of the object normal */
+			objectNormal = intersectedObject.getNormalAt(intersection.point);
+			objectNormal.negate();
+			Vector3d EPSILON = new Vector3d(objectNormal.x, objectNormal.y, objectNormal.z);
 			EPSILON.scale(FLOAT_CORRECTION);
 			intersection.point.add(EPSILON);
 			
+			lightDirection = new Vector3d(light.getPosition());
 			lightDirection.sub(intersection.point);
+			
+			/* create shadow ray */ 
 			shadowRay = new Ray(intersection.point, lightDirection);
 			
 			
