@@ -12,6 +12,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * A generic TextForm generator, used 
+ * 
+ * Modular GUI panel adapted from:
+ * http://www.java2s.com/Code/Java/Swing-JFC/Asimplelabelforfieldformpanel.htm
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+
+ */
 public class TextForm extends JPanel
 {
 
@@ -23,7 +31,7 @@ public class TextForm extends JPanel
 		super(new BorderLayout());
 		JPanel labelPanel = new JPanel(new GridLayout(labels.length, 1));
 		JPanel fieldPanel = new JPanel(new GridLayout(labels.length, 1));
-		JPanel imagePanel = new JPanel(new GridLayout(1,1));
+		JPanel imagePanel = new JPanel(new GridLayout(1, 1));
 		add(labelPanel, BorderLayout.WEST);
 		add(fieldPanel, BorderLayout.CENTER);
 		add(imagePanel, BorderLayout.EAST);
@@ -31,7 +39,7 @@ public class TextForm extends JPanel
 
 		for (int i = 0; i < labels.length; i += 1)
 		{
-			fields[i] = new JTextField(""+initials[i]);
+			fields[i] = new JTextField("" + initials[i]);
 			if (i < tips.length)
 				fields[i].setToolTipText(tips[i]);
 			if (i < widths.length)
@@ -59,8 +67,10 @@ public class TextForm extends JPanel
 		String[] labels = { "Width", "Height", "Antialiasing", "Shadows" };
 		char[] mnemonics = { 'W', 'H', 'A', 'S' };
 		int[] widths = { 4, 2, 4, 2 };
-		int[] initials = {400, 300, 20, 1};
-		String[] descs = { "Width of the rendered image, in pixels.", "Height of the rendered image, in pixels.", "Antialiasing sample count", "shadow sample count" };
+		int[] initials = { 400, 300, 20, 1 };
+		String[] descs = { "Width of the rendered image, in pixels.",
+				"Height of the rendered image, in pixels.", "Antialiasing sample count",
+				"shadow sample count" };
 
 		final TextForm form = new TextForm(labels, initials, mnemonics, widths, descs);
 

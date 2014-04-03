@@ -1,13 +1,15 @@
-/**
- *
- */
+
 
 package demo;
 
 import GUI.BasicGUI;
 
 /**
- * @author BU CS673 - Clone Productions
+ * 
+ * 
+ *Demo of a simple raytracer implementation, for EC504 Midterm Status Report.
+ *
+@author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
 public class MidtermStatusReportDemo
 {

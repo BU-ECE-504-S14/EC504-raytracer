@@ -4,6 +4,7 @@ import javax.vecmath.Vector3d;
 
 /**
  * Ray class.  Contains the origin position of the ray and its direction (a standard vector)
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
 public class Ray {
 
