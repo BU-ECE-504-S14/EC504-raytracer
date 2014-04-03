@@ -22,10 +22,8 @@ import scene.Scene;
  * Example class for wrapping the basic_renderer demo with a GUI interface. Currently just
  * has a button that renders a basic example scene.
  * 
- * Modular GUI panel adapted from:
- * http://www.java2s.com/Code/Java/Swing-JFC/Asimplelabelforfieldformpanel.htm
  * 
- * @author BU CS673 - Clone Productions
+@author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
 public class BasicGUI extends JFrame
 {

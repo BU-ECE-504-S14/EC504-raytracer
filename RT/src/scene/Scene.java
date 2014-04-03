@@ -12,8 +12,10 @@ import raytracer.Camera;
 import raytracer.Ray;
 import raytracer.Util;
 
-
-
+/**
+ * A representation of a scene, which contains various objects which can be intersected and illuminated by rays.
+  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
 public class Scene {
 
 	private Collection<SceneObject> objects;

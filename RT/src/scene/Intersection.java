@@ -2,6 +2,11 @@ package scene;
 
 import javax.vecmath.Vector3d;
 
+
+/**
+ * Representation of the intersection points of rays with SceneObjects.
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
 public class Intersection {
 
 	/* point of intersection from the point of view of the scene (ie not camera or object)*/
