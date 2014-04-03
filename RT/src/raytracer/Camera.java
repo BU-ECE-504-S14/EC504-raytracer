@@ -93,7 +93,7 @@ public class Camera {
 		this.rotationMatrix.set(orientation);
 		//this.rotationMatrix = rotation;
 		
-		System.out.println(this.rotationMatrix.toString());
+		//System.out.println(this.rotationMatrix.toString());
 		t.translation = position;
 		this.transformationMatrix = t.getTransformationMatrix();
 		this.transformationMatrix.mul(this.rotationMatrix);		
