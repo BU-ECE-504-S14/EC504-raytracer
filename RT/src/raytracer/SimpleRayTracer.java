@@ -57,8 +57,7 @@ public class SimpleRayTracer
 	 * @param outputImage
 	 *            TODO
 	 */
-	public SimpleRayTracer(Scene scene, Dimension imageSize, int antialiasing, int shadow,
-			BufferedImage outputImage)
+	public SimpleRayTracer(Scene scene, Dimension imageSize, int antialiasing, int shadow)
 	{
 		super();
 		this.scene = scene;
@@ -128,45 +127,43 @@ public class SimpleRayTracer
 	 * @return The first intersected object (may be null)
 	 */
 	private SceneObject getColor(Ray ray, int currentLevel, Vector3d viewerPosition,
-			Vector3d color, double currentRefraction)
-	{
-
+			Vector3d color, double currentRefraction) {
+		
 		Intersection intersection = new Intersection();
 		SceneObject intersectedObject = scene.getFirstIntersectedObject(ray, intersection);
-		if (intersectedObject == null)
-		{
+		if (intersectedObject == null) {
 			color.set(new double[] { 0, 0, 0 });
 			return null;
 		}
-
+		
 		Material material = intersectedObject.getMaterial();
 		Vector3d ptColor = new Vector3d(1, 1, 1);
-		Vector3d lightColor = new Vector3d(0, 0, 0);
+		Vector3d lightColor = new Vector3d(0, 0, 0);;
 		Vector3d totalLightColor = new Vector3d(0, 0, 0);
 		boolean lit;
-
+		
 		double lightCount = 0;
-		for (PointLight light : scene.getLights())
-		{
+		for (PointLight light : scene.getLights()) {
 			Ray shadowRay;
-			Vector3d lightPosition, lightDirection;
+			Vector3d lightDirection, objectNormal;
 			lit = false;
-
-			/* create shadow ray */
-			lightPosition = new Vector3d(light.getPosition());
-			lightDirection = new Vector3d(light.getPosition());
-
-			/*
-			 * correct for floating point imprecision of object surface detail by moving
-			 * origin of shadow ray an epsilon factor closer to light
-			 */
-			Vector3d EPSILON = new Vector3d(lightDirection.x, lightDirection.y, lightDirection.z);
+			
+			/* correct for floating point imprecision of object surface 
+			 * detail by moving origin of shadow ray
+			 * an epsilon factor in the direction of the object normal */
+			objectNormal = intersectedObject.getNormalAt(intersection.point);
+			objectNormal.negate();
+			Vector3d EPSILON = new Vector3d(objectNormal.x, objectNormal.y, objectNormal.z);
 			EPSILON.scale(FLOAT_CORRECTION);
 			intersection.point.add(EPSILON);
-
+			
+			lightDirection = new Vector3d(light.getPosition());
 			lightDirection.sub(intersection.point);
+			
+			/* create shadow ray */ 
 			shadowRay = new Ray(intersection.point, lightDirection);
-
+			
+			
 			/* check to see if shadow ray intersects object (ie the point is in shadow) */
 			Intersection lightIntersection = new Intersection();
 			SceneObject shadowIntersectedObject = scene.getFirstIntersectedObject(shadowRay,
