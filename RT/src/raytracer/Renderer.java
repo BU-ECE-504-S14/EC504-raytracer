@@ -23,6 +23,13 @@ import scene.PointLight;
 import scene.Scene;
 import scene.Transformation;
 
+/**
+ * Ray tracing renderer, for EC504 at Boston University
+ * based on the work of Rafael Martin Bigio <rbigio@itba.edu.ar.
+ * 
+ * 
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
 public class Renderer
 {
 
@@ -228,7 +235,7 @@ public class Renderer
 
 		/* Ultra simple raytracer */
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
-				optionShadow, null);
+				optionShadow);
 
 
 		BufferedImage result = rayTracer.render(optionProgress);

@@ -14,6 +14,14 @@ import scene.Intersection;
 import scene.PointLight;
 import scene.Scene;
 
+
+/**
+ * Simple ray tracer, for EC504 at Boston University
+ * based on the work of Rafael Martin Bigio <rbigio@itba.edu.ar.
+ * 
+ * 
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
 public class SimpleRayTracer
 {
 
