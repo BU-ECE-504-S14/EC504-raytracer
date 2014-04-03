@@ -9,11 +9,12 @@ import javax.vecmath.Vector4d;
 
 import objects.Material;
 import objects.SceneObject;
+import objects.Sphere;
 import scene.Intersection;
 import scene.PointLight;
 import scene.Scene;
 
-public class Simple_RayTracer
+public class SimpleRayTracer
 {
 
 	/** Maximum number of levels in the recursion of getColor */
@@ -53,9 +54,11 @@ public class Simple_RayTracer
 	 *            Antialiasing parameters (may be null)
 	 * @param shadow
 	 *            Shadow parameters (may be null)
-	 * @param outputImage TODO
+	 * @param outputImage
+	 *            TODO
 	 */
-	public Simple_RayTracer(Scene scene, Dimension imageSize, int antialiasing, int shadow, BufferedImage outputImage)
+	public SimpleRayTracer(Scene scene, Dimension imageSize, int antialiasing, int shadow,
+			BufferedImage outputImage)
 	{
 		super();
 		this.scene = scene;
@@ -139,7 +142,6 @@ public class Simple_RayTracer
 		Material material = intersectedObject.getMaterial();
 		Vector3d ptColor = new Vector3d(1, 1, 1);
 		Vector3d lightColor = new Vector3d(0, 0, 0);
-		;
 		Vector3d totalLightColor = new Vector3d(0, 0, 0);
 		boolean lit;
 
@@ -173,8 +175,12 @@ public class Simple_RayTracer
 			/* if shadow ray does not intersect another object make color appear */
 			if (shadowIntersectedObject == null)
 			{
-				ptColor.set(material.diffuseColor);
+				// Setting the color to the material color directly causes the light color and intensity to be ignored.
+				// That seems.. wrong?
+				// ptColor.set(material.diffuseColor);
+				ptColor.set(calculateColor(intersectedObject, light));
 				color.set(ptColor);
+
 				return intersectedObject;
 			}
 
@@ -182,6 +188,26 @@ public class Simple_RayTracer
 
 		color.set(new double[] { 0, 0, 0 });
 		return intersectedObject;
+
+	}
+
+	/**
+	 * This is wrong! Does not support multiple lights correctly, but it at least
+	 * preserves light intensity for one light.
+	 * 
+	 * @param o
+	 * @param l
+	 * @return
+	 */
+	public Vector3d calculateColor(SceneObject o, PointLight l)
+	{
+		Sphere targetSphere = (Sphere) o;
+		Vector3d lightColor = l.getColor(targetSphere.position);
+		double newRColor = o.getMaterial().diffuseColor.getX() * lightColor.getX();
+		double newGColor = o.getMaterial().diffuseColor.getY() * lightColor.getY();
+		double newBColor = o.getMaterial().diffuseColor.getZ() * lightColor.getZ();
+
+		return new Vector3d(newRColor, newGColor, newBColor);
 
 	}
 

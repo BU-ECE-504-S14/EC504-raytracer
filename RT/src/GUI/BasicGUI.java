@@ -13,8 +13,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
-import raytracer.basic_renderer;
+import raytracer.Renderer;
+import scene.Scene;
 
 /**
  * Example class for wrapping the basic_renderer demo with a GUI interface. Currently just
@@ -33,7 +35,7 @@ public class BasicGUI extends JFrame
 	String[] descriptions = new String[] { "Width of the rendered image, in pixels.",
 			"Height of the rendred image, in pixels.",
 			"Antialiasing quality, in number of samples.", "Shadow quality, in number of samples." };
-	String[] initials = new String[] { "400", "300", "20", "1" };
+	String[] initials = new String[] { "400", "300", "1", "1" };
 	int[] widths = new int[] { 4, 4, 2, 2 };
 
 	// The panel where the labels will be written
@@ -52,7 +54,8 @@ public class BasicGUI extends JFrame
 
 	ImageIcon renderIcon = null;
 	BufferedImage renderOutput = null;
-	basic_renderer render = new basic_renderer();
+	Renderer render = new Renderer();
+	Scene targetScene = render.constructSampleScene();
 	JPanel p = new JPanel();
 	JButton go = new JButton("Make it go!");
 	JLabel renderHolder = new JLabel();
@@ -90,6 +93,9 @@ public class BasicGUI extends JFrame
 			p.add(paramFields[ii]);
 			fieldPanel.add(p);
 		}
+		paramFields[2].setEnabled(false);
+		paramFields[3].setEnabled(false);
+		
 
 		JButton renderButton = new JButton("Render!");
 		renderButton.addActionListener(act);
@@ -101,7 +107,7 @@ public class BasicGUI extends JFrame
 		getContentPane().add(parameterPanel, BorderLayout.WEST);
 		getContentPane().add(imagePanel, BorderLayout.EAST);
 
-		pack();
+		setSize(400, 200);
 		setVisible(true);
 	}
 
@@ -115,7 +121,14 @@ public class BasicGUI extends JFrame
 
 	public void renderScene()
 	{
-		renderOutput = render.renderSampleScene();
+		try
+		{
+			renderOutput = render.renderScene(targetScene);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		renderIcon = new ImageIcon(renderOutput);
 		if (renderHolder.getIcon() == null)
 		{
