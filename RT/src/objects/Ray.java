@@ -1,6 +1,4 @@
-package raytracer;
-
-import javax.vecmath.Vector3d;
+package objects;
 
 /**
  * Ray class.  Contains the origin position of the ray and its direction (a standard vector)
@@ -9,16 +7,16 @@ import javax.vecmath.Vector3d;
 public class Ray {
 
 	/** The origin point of the ray */
-	public Vector3d position;
+	public Pt position;
 
 	/** Direction of the ray (vector is normalized) */
-	public Vector3d direction;
+	public Vec direction;
 
-	public Ray(Vector3d origin, Vector3d direction) {
+	public Ray(Pt origin, Vec direction) {
 		super();
 		direction.normalize();
-		this.position = origin;
-		this.direction = direction;
+		this.position = new Pt(origin);
+		this.direction = new Vec(direction);
 	}
 
 	@Override

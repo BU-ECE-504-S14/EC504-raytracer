@@ -7,9 +7,9 @@ import java.util.Set;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
+import objects.Ray;
 import objects.SceneObject;
 import raytracer.Camera;
-import raytracer.Ray;
 import raytracer.Util;
 
 /**

@@ -8,6 +8,7 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
 import objects.Material;
+import objects.Ray;
 import objects.SceneObject;
 import objects.Sphere;
 import scene.Intersection;

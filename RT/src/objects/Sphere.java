@@ -2,15 +2,26 @@ package objects;
 
 import javax.vecmath.Vector3d;
 
-import raytracer.Ray;
 import raytracer.Util;
 import scene.Intersection;
 import scene.Transformation;
 
 public class Sphere extends AbstractSceneObject {
 
-	public double radius = 1;
-	public Vector3d position = new Vector3d(0, 0, 0);
+	private float radius = 1;
+	private Vector3d position = new Vector3d(0, 0, 0);
+	private float zmin,zmax;
+	private float thetaMin,thetaMax,phiMax;
+	public Transformation t;
+	
+	public Sphere(float radius, float z0, float z1, float pm, ){
+		this.radius = radius;
+		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
+		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
+		thetaMin = (float) Math.acos(Util.clamp(zmin/radius, -1f, 1f));
+		thetaMax = (float) Math.acos(Util.clamp(zmax/radius, -1f, 1f));
+		phiMax = (float) Math.toRadians(Util.clamp(pm, 0.0f, 360.0f));
+	}
 
 	public Vector3d getNormalAt(Vector3d pointOfIntersection) {
 		Vector3d ret = new Vector3d(pointOfIntersection);
@@ -27,7 +38,7 @@ public class Sphere extends AbstractSceneObject {
 	}
 
 	@Override
-	public Intersection intersectsRay(Ray ray) {
+	public DifferentialGeometry intersectsRay(Ray ray) {
 		Vector3d aux = new Vector3d(ray.position);
 		aux.sub(position);
 		double a = 1.0; // == ray.direction.dot(ray.direction);

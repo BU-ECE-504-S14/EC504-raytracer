@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector3d;
 
-import raytracer.Ray;
+import scene.DifferentialGeometry;
 import scene.Intersection;
 import scene.Transformation;
 
@@ -21,7 +21,7 @@ public abstract class AbstractSceneObject implements SceneObject {
 
 	public abstract void transform(Transformation t);
 
-	public abstract Intersection intersectsRay(Ray ray);
+	public abstract DifferentialGeometry intersectsRay(Ray ray);
 
 	public Collection<? extends SceneObject> getChildren() {
 		return null;

@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector3d;
 
-import raytracer.Ray;
+import scene.DifferentialGeometry;
 import scene.Intersection;
 import scene.Transformation;
 
@@ -25,7 +25,7 @@ public interface SceneObject {
 	 * @param ray Ray that is shooting.
 	 * @return point of intersection or null
 	 */
-	public Intersection intersectsRay(Ray ray);
+	public DifferentialGeometry intersectsRay(Ray ray);
 
 	/**
 	 * Return the normal at a point on the object's surface.   It is the responsibility of the
