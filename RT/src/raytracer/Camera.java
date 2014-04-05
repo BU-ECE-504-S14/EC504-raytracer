@@ -11,6 +11,7 @@ import scene.Transformation;
  * (using a 4d vector: the first three components create the orientation axis and the fourth component is the angle that rotates around the axis),
  * and a field of view. Additionally, the construction of a camera calculates the rotation matrix 
  * (to apply to rays that are created) and a transformation matrix (combined translation and rotation)
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
 public class Camera {
 
@@ -93,7 +94,7 @@ public class Camera {
 		this.rotationMatrix.set(orientation);
 		//this.rotationMatrix = rotation;
 		
-		System.out.println(this.rotationMatrix.toString());
+		//System.out.println(this.rotationMatrix.toString());
 		t.translation = position;
 		this.transformationMatrix = t.getTransformationMatrix();
 		this.transformationMatrix.mul(this.rotationMatrix);		

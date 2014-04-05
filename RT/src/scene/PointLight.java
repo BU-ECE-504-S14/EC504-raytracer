@@ -6,6 +6,10 @@ import javax.vecmath.Vector4d;
 
 import raytracer.Util;
 
+/**
+ * A simple point light, which casts light rays in all directions.
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
 public class PointLight {
 
 	private Vector3d position = new Vector3d(0, 10, 0);
