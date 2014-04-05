@@ -4,6 +4,10 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 
+/**
+ * Utility class used for Matrix conversions.
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
 public class Transformation {
 
 	public Vector3d translation = new Vector3d(0, 0, 0);

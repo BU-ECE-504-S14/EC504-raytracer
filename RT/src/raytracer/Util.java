@@ -4,6 +4,10 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
+/**
+ * Utility class, contains various methods for working with vectors.
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
 public class Util {
 	public static Vector4d MultiplyMatrixAndVector(Matrix4d matrix, Vector4d vector) {
 		Vector4d result = new Vector4d();

@@ -7,6 +7,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+/**
+ * A simple frame renderer for BufferedImages as output from the raytracer.
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+
+ */
 public class RenderViewer extends JFrame {
 
 	private static final long serialVersionUID = 1L;
