@@ -177,20 +177,21 @@ public class Renderer
 
 		/* set lights */
 		PointLight l1 = new PointLight();
-		l1.setColor(new Vector3d(.2, 1, .2));
+		l1.setColor(new Vector3d(1, 1, 1));
 		l1.setPosition(new Vector3d(14, -2, 5));
 		PointLight l2 = new PointLight();
-		l2.setColor(new Vector3d(.2, 1, .2));
+		l2.setColor(new Vector3d(1, 1, 1));
 		l2.setPosition(new Vector3d(14, 2, 5));
 		PointLight l3 = new PointLight();
 		l3.setPosition(new Vector3d(1000, 0, 0));
-		l3.setColor(new Vector3d(.65, .65, .65));
-		
+		l3.setColor(new Vector3d(1, 1, 1));
+		l3.setRadio(1);
 		PointLight l4 = new PointLight();
-		l4.setColor(new Vector3d(.9, .9, .9));
+		l4.setColor(new Vector3d(1, 1, 1));
 		//l4.setPosition(new Vector3d(5, 5, -5));
 		l4.setPosition(new Vector3d(50, -20, -5));
-		
+		//l4.setRadio(4);
+
 		/*
 		PointLight l5 = new PointLight();
 		l5.setColor(new Vector3d(0, .5, 0));
@@ -206,11 +207,10 @@ public class Renderer
 		scene.addSceneObject(shape1);
 		scene.addSceneObject(shape2);
 		scene.addSceneObject(shape3);
-	//scene.addLight(l1);
-		//scene.addLight(l2);
-		
+	    scene.addLight(l1);
+		scene.addLight(l2);
+		scene.addLight(l3);
 		scene.addLight(l4);
-		//scene.addLight(l3);
 		//scene.addLight(l5);
 		//scene.addLight(l6);
 		scene.setCamera(cam);

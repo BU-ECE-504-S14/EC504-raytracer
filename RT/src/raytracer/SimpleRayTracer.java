@@ -137,73 +137,201 @@ public class SimpleRayTracer
 	private SceneObject getColor(Ray ray, int currentLevel, Vector3d viewerPosition,
 			Vector3d color, double currentRefraction) {
 		
+		//Find the first intersected object and its material properties
 		Intersection intersection = new Intersection();
 		SceneObject intersectedObject = scene.getFirstIntersectedObject(ray, intersection);
+		
+		//Set the color to black and return null if no object is intersected
 		if (intersectedObject == null) {
 			color.set(new double[] { 0, 0, 0 });
 			return null;
 		}
 		
 		Material material = intersectedObject.getMaterial();
-		Vector3d ptColor = new Vector3d(1, 1, 1);
-		Vector3d lightColor = new Vector3d(0, 0, 0);;
-		Vector3d totalLightColor = new Vector3d(0, 0, 0);
-		boolean lit;
+			
+		//Running sum of ambient, diffuse, and specular lights
+		Vector3d illumination = new Vector3d(0,0,0);  
 		
-		double lightCount = 0;
+		//Cycle through all of the lights
 		for (PointLight light : scene.getLights()) {
-			Ray shadowRay;
-			Vector3d lightDirection, objectNormal;
-			lit = false;
 			
-			/* correct for floating point imprecision of object surface 
-			 * detail by moving origin of shadow ray
-			 * an epsilon factor in the direction of the object normal */
-			objectNormal = intersectedObject.getNormalAt(intersection.point);
-			objectNormal.negate();
-			Vector3d EPSILON = new Vector3d(objectNormal.x, objectNormal.y, objectNormal.z);
-			EPSILON.scale(FLOAT_CORRECTION);
-			intersection.point.add(EPSILON);
+			//Lighting variables for each light
+			Vector3d ambient = new Vector3d(0,0,0);
+			Vector3d diffuse = new Vector3d(0,0,0);
+			Vector3d specular = new Vector3d(0,0,0);
 			
-			lightDirection = new Vector3d(light.getPosition());
-			lightDirection.sub(intersection.point);
-			
-			/* create shadow ray */ 
-			shadowRay = new Ray(intersection.point, lightDirection);
-			
-			
-			/* check to see if shadow ray intersects object (ie the point is in shadow) */
-			Intersection lightIntersection = new Intersection();
-			SceneObject shadowIntersectedObject = scene.getFirstIntersectedObject(shadowRay,
-					lightIntersection);
+			//Calculate ambient lighting
+			diffuse = calculateColor(intersectedObject, light);
+			ambient = diffuse;
+			ambient.scale(material.ambientIntensity);
 
-			/* if shadow ray does not intersect another object make color appear */
-			if (shadowIntersectedObject == null)
+			//Find the shadow ray
+			Ray shadowRay = findShadowRay(intersectedObject, intersection, light);
+			
+			//Calculate the distance between the light and the intersection point
+			Vector3d lightVect = new Vector3d(light.getPosition());
+			
+			lightVect.sub(intersection.point);
+			double lightDist = lightVect.length();
+			lightVect.normalize();
+			lightVect.negate();
+
+			//Check if the intersection point is in shadow
+			if(inShadow(shadowRay, lightDist))
 			{
-				// Setting the color to the material color directly causes the light color and intensity to be ignored.
-				// That seems.. wrong?
-				// ptColor.set(material.diffuseColor);
-				ptColor.set(calculateColor(intersectedObject, light));
-				color.set(ptColor);
-
-				return intersectedObject;
+				//Light contribution comes solely from ambient lighting
+				//Update illumination and continue with the next light
+				illumination.add(ambient);
+				continue;
 			}
+			
+			//If not in shadow, calculate diffuse and specular lighting
+			
+			//Calculate diffuse light
+			double dotProd = intersection.normal.dot(lightVect);
+			
+			if(dotProd>=0)
+			{
+				diffuse.scale(dotProd);
+				diffuse.scale(light.getRadio());	
+				illumination.add(diffuse);				
+			}
+			
+			//Calculate specular light
+//			double shininess = material.shininess;
+//			Vector3d eyeDirection = new Vector3d(ray.position);
+//			Vector3d reflection = new Vector3d();
+//
+//			eyeDirection.sub(intersection.point);
+//			eyeDirection.normalize();
+//			reflection = reflect(lightVect, intersection.normal);
+//			
+//			dotProd = eyeDirection.dot(reflection);
+//			if(dotProd>0)
+//			{
+//				double specAmt = Math.pow(dotProd,shininess)*light.getRadio();
+//				specular.setX(specAmt);
+//				specular.setY(specAmt);
+//				specular.setZ(specAmt);
+//				illumination.add(specular);
+//			}
+			
+			//Update illumination
+			illumination.add(ambient);
 
-		}
-
-		color.set(new double[] { 0, 0, 0 });
+		}			
+			
+		//Maximum illumination is 1 for any given R,G,B value
+		if(illumination.getX()>1)
+			illumination.setX(1);
+		if(illumination.getY()>1)
+			illumination.setY(1);
+		if(illumination.getZ()>1)
+			illumination.setZ(1);
+		
+		color.set(illumination);
+	
 		return intersectedObject;
 
 	}
 
+	
 	/**
-	 * This is wrong! Does not support multiple lights correctly, but it at least
-	 * preserves light intensity for one light.
+	 * Find reflected ray
 	 * 
-	 * @param o
-	 * @param l
-	 * @return
+	 * @param vector to be reflected
+	 * @param normal to the eye
+	 * @return reflected vector
+	 */	
+	public Vector3d reflect(Vector3d v1, Vector3d normal)
+	{
+		Vector3d reflected = new Vector3d(v1);
+		Vector3d adjVect = new Vector3d(normal);
+		
+		double adj = v1.dot(normal)*2;
+		adjVect.scale(adj);
+		reflected.sub(adjVect);
+		reflected.normalize();
+		
+		return reflected;
+	}
+
+	
+	/**
+	 * Find shadow ray and correct for floating point imprecision
+	 * 
+	 * @param shadowRay
+	 * @param distance
+	 * @return ray
 	 */
+	public Ray findShadowRay(SceneObject intersectedObject, Intersection intersection, PointLight light)
+	{
+		Ray shadowRay;
+		Vector3d lightDirection, objectNormal;
+		
+		/* correct for floating point imprecision of object surface 
+		 * detail by moving origin of shadow ray
+		 * an epsilon factor in the direction of the object normal */
+		objectNormal = intersectedObject.getNormalAt(intersection.point);
+		objectNormal.negate();
+		Vector3d EPSILON = new Vector3d(objectNormal.x, objectNormal.y, objectNormal.z);
+		EPSILON.scale(FLOAT_CORRECTION);
+		intersection.point.add(EPSILON);
+		
+		lightDirection = new Vector3d(light.getPosition());
+		lightDirection.sub(intersection.point);
+		
+		/* create shadow ray */ 
+		shadowRay = new Ray(intersection.point, lightDirection);
+		
+		return shadowRay;
+	}
+	
+	
+	/**
+	 * Check if an intersection point is in shadow relative to a specific light.  The
+	 * ray is shot from the object, ObjBeg, in the direction of the light.  If an object is hit (ObjHit)
+	 * and the distance between ObjBeg and ObjHit is less than the distance between the light and ObjBeg 
+	 * (parameter lightDist), then the object is in shadow relative to that light.  Otherwise, the object
+	 * is not in shadow.
+	 * 
+	 * @param shadowRay
+	 * @param lightDist
+	 * @return true if in shadow, false otherwise
+	 */
+	public boolean inShadow(Ray shadowRay, double lightDist)
+	{
+		Intersection intersection = new Intersection();
+		SceneObject shadowIntersectedObject = scene.getFirstIntersectedObject(shadowRay,
+				intersection);
+		
+		if(shadowIntersectedObject == null)
+		{
+			return false;
+		}
+		else{
+			Vector3d shadowVec = new Vector3d(intersection.point);
+			shadowVec.sub(shadowRay.position);
+			double shadowDist = shadowVec.length();	
+			
+			if(shadowDist>=lightDist)
+			{
+				return false;
+			}
+			
+			return true;
+		}
+	}
+	
+	
+	/**
+	 * Calculates the color based on one light. NEED TO ADJUST FOR OTHER SCENE OBJECTS.
+	 * 
+	 * @param SceneObject o
+	 * @param PointLight l
+	 * @return RGB vector
+	 */
+	
 	public Vector3d calculateColor(SceneObject o, PointLight l)
 	{
 		Sphere targetSphere = (Sphere) o;
@@ -213,7 +341,6 @@ public class SimpleRayTracer
 		double newBColor = o.getMaterial().diffuseColor.getZ() * lightColor.getZ();
 
 		return new Vector3d(newRColor, newGColor, newBColor);
-
 	}
 
 	/**
