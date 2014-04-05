@@ -1,5 +1,0 @@
-This folder contains settings for the code conventions, compiler warnings and FindBugs. Please see the Software Quality Assurance Plan for information about these standards.
-
-To import the preferences file:
-1. In Eclipse, select File >> Import >> General >> Preferences
-2. Select the bubolo.preferences.epf file
