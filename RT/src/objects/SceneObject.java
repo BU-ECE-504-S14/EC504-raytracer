@@ -25,7 +25,7 @@ public interface SceneObject {
 	 * @param ray Ray that is shooting.
 	 * @return point of intersection or null
 	 */
-	public DifferentialGeometry intersectsRay(Ray ray);
+	public boolean Intersect(Ray ray, DifferentialGeometry dg);
 
 	/**
 	 * Return the normal at a point on the object's surface.   It is the responsibility of the

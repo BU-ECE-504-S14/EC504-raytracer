@@ -3,6 +3,7 @@ package objects;
 import javax.vecmath.Vector3d;
 
 import raytracer.Util;
+import scene.DifferentialGeometry;
 import scene.Intersection;
 import scene.Transformation;
 
@@ -33,8 +34,50 @@ public class Sphere extends AbstractSceneObject {
 	}
 
 	@Override
-	public boolean Intersect(){
+	public boolean Intersect(Ray ray, DifferentialGeometry dg){
+		float phi;
+		Pt pHit;
 		
+		//transform ray to obj space
+		Ray o_ray = t.world2Object(ray);
+		
+		//calculate quadratic sphere coeffs
+		
+		float A = (float) o_ray.direction.dot(o_ray.direction); //dx^2 + dy^2 + dz^2
+		float B = (float) (2f*o_ray.direction.dot(position));
+		float C = (float) (o_ray.position.dot(o_ray.position))-radius*radius;
+		
+		float[] t = {0,0};
+		if(!Quadratic(A,B,C,t)) return false;
+		
+		//compute intersection distance along ray
+		if(t[0] > o_ray.maxt || t[1] < o_ray.mint) return false;
+		
+		
+		return true;
+	}
+	
+	private boolean Quadratic(float A, float B, float C, float[] t){
+		
+		//find quadratic discriminant
+		float discrim = B*B - 4f*A*C;
+		if(discrim <= 0) return false;
+		float rootdiscrim = (float) Math.sqrt(discrim);
+		
+		//compute t0,t1 i.e. the roots page no 119
+		float q;
+		if (B < 0) q = -0.5f * (B-rootdiscrim);
+		else	   q = -0.5f * (B+rootdiscrim);
+		t[0] = new Float(q / A);
+		t[1] = new Float(C / q);
+		
+		//swap if t1<t0
+		if (t[0] >= t[1]){
+			float tmp = t[0];
+			t[0] = t[1];
+			t[1] = tmp;
+		}
+		return true;
 	}
 	/*@Override
 	public DifferentialGeometry intersectsRay(Ray ray) {
@@ -74,7 +117,7 @@ public class Sphere extends AbstractSceneObject {
 		x.distance = t;
 		return x;
 	}*/
-
+	
 	@Override
 	public String toString() {
 		return "Sphere(radius=" + radius + ", position=" + position + ")" +
