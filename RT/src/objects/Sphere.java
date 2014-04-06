@@ -4,7 +4,6 @@ import javax.vecmath.Vector3d;
 
 import raytracer.Util;
 import scene.DifferentialGeometry;
-import scene.Intersection;
 import scene.Transformation;
 
 public class Sphere extends AbstractSceneObject {
@@ -36,13 +35,12 @@ public class Sphere extends AbstractSceneObject {
 	@Override
 	public boolean Intersect(Ray ray, DifferentialGeometry dg){
 		float phi;
-		Pt pHit;
+		Pt phit;
 		
 		//transform ray to obj space
-		Ray o_ray = t.world2Object(ray);
+		Ray o_ray = this.t.world2Object(ray);
 		
 		//calculate quadratic sphere coeffs
-		
 		float A = (float) o_ray.direction.dot(o_ray.direction); //dx^2 + dy^2 + dz^2
 		float B = (float) (2f*o_ray.direction.dot(position));
 		float C = (float) (o_ray.position.dot(o_ray.position))-radius*radius;
@@ -52,9 +50,95 @@ public class Sphere extends AbstractSceneObject {
 		
 		//compute intersection distance along ray
 		if(t[0] > o_ray.maxt || t[1] < o_ray.mint) return false;
+		float thit = t[0];
+		if(t[0] < o_ray.mint){
+			thit = t[1];
+			if(thit > o_ray.maxt) return false;
+		}
 		
+		//compute sphere hit position and phi
+		phit = o_ray.getPointAt(thit);
+		phi = computePhi(phit);
+		
+		//test sphere intersection against clipping parameters
+		if((zmin > -radius && phit.z < zmin) || (zmax < radius && phit.z > zmax) || (phi > phiMax) ) {
+			
+			if(thit == t[1]) return false;
+			if(t[1] > o_ray.maxt) return false;
+			
+			thit = t[1];
+			phit = o_ray.getPointAt(thit);
+			phi = computePhi(phit);
+			if( (zmin > -radius && phit.z < zmin) || 
+			    (zmax < radius && phit.z > zmax) || (phi > phiMax) ) return false;
+		}
+		
+		//find parametric representation of sphere hit
+		float u = phi / phiMax;
+		float theta = (float) Math.acos(Util.clamp((float) (phit.z/radius), -1f, 1f));
+		float v = (theta - thetaMin) / (thetaMax - thetaMin);
+		
+		//compute dpdu dpdv
+		float zradius = (float) Math.sqrt(phit.x *phit.x + phit.y * phit.y);
+		float invzradius = 1f / zradius;
+		float cosphi = (float) (phit.x * invzradius);
+		float sinphi = (float) (phit.y * invzradius);
+		Vec dpdu = new Vec(-phiMax * phit.y, phiMax * phit.x, 0);
+		Vec dpdv = new Vec(phit.z * cosphi, phit.z * sinphi, -radius * Math.sin(theta));
+		dpdv.scale((thetaMax - thetaMin));
+		
+		//compute dndu dndv based on Weingarten equations
+		Vec d2Pduu = new Vec(phit.x, phit.y, 0f);
+		d2Pduu.scale(-phiMax * phiMax);
+		Vec d2Pduv = new Vec(-sinphi, cosphi,0f);
+		d2Pduv.scale((thetaMax - thetaMin) * phit.z * phiMax);
+		Vec d2Pdvv = new Vec(phit.x, phit.y, phit.z);
+		d2Pdvv.scale(-(thetaMax - thetaMin) * (thetaMax - thetaMin));
+	    
+		//compute coeffs for fundamental forms
+		float E = (float) dpdu.dot(dpdu);
+		float F = (float) dpdu.dot(dpdv);
+		float G = (float) dpdv.dot(dpdv);
+		Vec N = new Vec();
+		N.cross(dpdu, dpdv);
+		N.normalize();
+		float e = (float) N.dot(d2Pduu);
+		float f = (float) N.dot(d2Pduv);
+		float g = (float) N.dot(d2Pdvv);
+		
+		float invEGF2 = 1f / (E*G - F*F);
+		Vec sdpdu = new Vec(dpdu);
+		Vec sdpdv = new Vec(dpdv);
+		sdpdu.scale((f * F - e * G) * invEGF2);
+		sdpdv.scale((e * F - f * E) * invEGF2);
+		sdpdu.add(sdpdv);
+		Normal dndu = new Normal(sdpdu);
+		
+		sdpdu = new Vec(dpdu);
+		sdpdv = new Vec(dpdv);
+		sdpdu.scale((g * F - f * G) * invEGF2);
+		sdpdv.scale((f * F - g * E) * invEGF2);
+		sdpdu.add(sdpdv);
+		Normal dndv = new Normal(sdpdu);
+		
+		//Differential geometry initialization
+		dg.update(this.t.object2World(phit),
+				  this.t.object2World(dpdu), 
+				  this.t.object2World(dpdv), 
+				  this.t.object2World(dndu),
+				  this.t.object2World(dndv), u, v, this);
+		
+		//update hit parameter
+		ray.tHit = thit;
 		
 		return true;
+	}
+	
+	private float computePhi(Pt phit){
+		if(phit.x == 0 && phit.y ==0) phit.x = 1E-5f * radius; //make phit a small number to avoid 0/0 division
+		float phi = (float) Math.atan2(phit.y, phit.x);
+		if(phi < 0f) phi += 2f*Math.PI;
+		return phi;
 	}
 	
 	private boolean Quadratic(float A, float B, float C, float[] t){
@@ -79,44 +163,6 @@ public class Sphere extends AbstractSceneObject {
 		}
 		return true;
 	}
-	/*@Override
-	public DifferentialGeometry intersectsRay(Ray ray) {
-		Vector3d aux = new Vector3d(ray.position);
-		aux.sub(position);
-		double a = 1.0; // == ray.direction.dot(ray.direction);
-		double b = 2 * ray.direction.dot(aux); //parameterized ray line of distance center of sphere to beginning of ray
-		double c = Math.pow(Util.Norm(aux), 2) - Math.pow(radius, 2); //unit normal
-
-		double discriminant = Math.pow(b, 2) - 4 * a * c;
-		if (discriminant < 0) {
-			return null;
-		}
-
-		/* determine point of intersection 
-		double t1 = (-b + Math.sqrt(discriminant)) / (2 * a);
-		double t2 = (-b - Math.sqrt(discriminant)) / (2 * a);
-		double t;
-
-		if (t1 < 0 && t2 < 0) {
-			return null;
-		} else if (t1 < 0) {
-			t = t2;
-		} else if (t2 < 0) {
-			t = t1;
-		} else if (Math.abs(t1) < Math.abs(t2)) {
-			t = t1;
-		} else {
-			t = t2;
-		}
-
-		Intersection x = new Intersection();
-		x.point = new Vector3d(ray.direction);
-		x.point.scale(t);
-		x.point.add(ray.position);	
-		x.normal = getNormalAt(x.point);
-		x.distance = t;
-		return x;
-	}*/
 	
 	@Override
 	public String toString() {
