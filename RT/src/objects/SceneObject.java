@@ -37,14 +37,6 @@ public interface SceneObject {
 	public Vector3d getNormalAt(Vector3d point);
 
 	/**
-	 * Transform the object's vertices in accordance with the determined 
-	 * transformation matrix
-	 * 
-	 * @param transformationMatrix The matrix to be applied
-	 */
-	public void transform(Transformation t);
-
-	/**
 	 * @param bb BoundingBox to intersect
 	 * @return boolean Return true if the object intersects the box
 	 */

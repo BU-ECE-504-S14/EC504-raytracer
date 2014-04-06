@@ -22,7 +22,6 @@ public class Util {
 				newValues[i] += matrix.getElement(i, j) * oldValues[j];
 			}
 		}
-
 		result.setX(newValues[0]);
 		result.setY(newValues[1]);
 		result.setZ(newValues[2]);

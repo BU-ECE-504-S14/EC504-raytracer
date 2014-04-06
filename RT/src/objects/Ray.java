@@ -18,6 +18,12 @@ public class Ray {
 		this.position = new Pt(origin);
 		this.direction = new Vec(direction);
 	}
+	
+	public Ray(Ray r){
+		super();
+		this.position=r.position;
+		this.direction=r.direction;
+	}
 
 	@Override
 	public String toString() {

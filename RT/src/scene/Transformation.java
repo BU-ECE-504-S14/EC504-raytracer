@@ -5,7 +5,9 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
+import objects.Normal;
 import objects.Pt;
+import objects.Ray;
 import objects.Vec;
 import raytracer.Util;
 
@@ -91,5 +93,50 @@ public class Transformation {
 		Vec v_copy = new Vec(v4.x,v4.y,v4.z);
 		return v_copy;
 	} 
+	
+	public Ray world2Object(Ray r){
+		Ray r_copy = new Ray(r);
+		r_copy.direction = this.world2Object(r_copy.direction);
+		r_copy.position = this.world2Object(r_copy.position);
+		return r_copy;
+	} 
+	
+	public Ray object2World(Ray r){
+		Ray r_copy = new Ray(r);
+		r_copy.direction = this.object2World(r_copy.direction);
+		r_copy.position = this.object2World(r_copy.position);
+		return r_copy;
+		
+	} 
+	
+	/**
+	 * Implements object space to world space normal transformation based on page 88 Pharr book.
+	 * @param n normal vector to be transformed
+	 * @return normal vector in world space
+	 */
+	public Normal object2World(Normal n){
+		float x = (float) n.x;
+		float y = (float) n.y;
+		float z = (float) n.z;
+		return new Normal(w2o.m00*x+w2o.m10*y+w2o.m20*z,
+						  w2o.m01*x+w2o.m11*y+w2o.m21*z,
+						  w2o.m02*x+w2o.m12*y+w2o.m22*z);
+	}
+	
+	/**
+	 * Implements world space to object space normal transformation based on page 88 Pharr book.
+	 * @param n normal vector to be transformed
+	 * @return normal vector in world space
+	 */
+	public Normal world2Object(Normal n){
+		float x = (float) n.x;
+		float y = (float) n.y;
+		float z = (float) n.z;
+		return new Normal(o2w.m00*x+o2w.m10*y+o2w.m20*z,
+						  o2w.m01*x+o2w.m11*y+o2w.m21*z,
+						  o2w.m02*x+o2w.m12*y+o2w.m22*z);
+	}
+	
+	
 	
 }

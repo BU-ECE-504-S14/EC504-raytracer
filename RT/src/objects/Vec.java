@@ -2,12 +2,8 @@ package objects;
 
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Tuple3f;
-import javax.vecmath.Tuple4d;
-import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4d;
-import javax.vecmath.Vector4f;
 
 /*
  * simple wrapper for Vector3d class. Reduces potential for performing an incorrect tranformation.

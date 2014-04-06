@@ -19,8 +19,6 @@ public abstract class AbstractSceneObject implements SceneObject {
 
 	public abstract Vector3d getNormalAt(Vector3d point);
 
-	public abstract void transform(Transformation t);
-
 	public abstract DifferentialGeometry intersectsRay(Ray ray);
 
 	public Collection<? extends SceneObject> getChildren() {

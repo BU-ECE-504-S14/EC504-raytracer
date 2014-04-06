@@ -14,7 +14,7 @@ public class Sphere extends AbstractSceneObject {
 	private float thetaMin,thetaMax,phiMax;
 	public Transformation t;
 	
-	public Sphere(float radius, float z0, float z1, float pm, ){
+	public Sphere(float radius, float z0, float z1, float pm ){
 		this.radius = radius;
 		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
 		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
