@@ -34,6 +34,14 @@ public class Transformation {
 		o2w = getTransformationMatrix();
 		w2o = getInverseTransformationMatrix();
 	}
+	
+	public Transformation(Transformation t){
+		translation= new Vector3d(t.translation);
+		scale = new Vector3d(t.scale);
+		rotation = new AxisAngle4d(t.rotation);
+		o2w = new Matrix4d(t.o2w);
+		w2o = new Matrix4d(t.w2o);
+	}
 
 	/** Create the transformation pipeline*/
 	public Matrix4d getTransformationMatrix() {

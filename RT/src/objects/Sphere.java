@@ -14,13 +14,14 @@ public class Sphere extends AbstractSceneObject {
 	private float thetaMin,thetaMax,phiMax;
 	public Transformation t;
 	
-	public Sphere(float radius, float z0, float z1, float pm ){
+	public Sphere(float radius, float z0, float z1, float pm, Transformation t){
 		this.radius = radius;
 		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
 		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
 		thetaMin = (float) Math.acos(Util.clamp(zmin/radius, -1f, 1f));
 		thetaMax = (float) Math.acos(Util.clamp(zmax/radius, -1f, 1f));
 		phiMax = (float) Math.toRadians(Util.clamp(pm, 0.0f, 360.0f));
+		this.t = new Transformation(t);
 	}
 
 	public Vector3d getNormalAt(Vector3d pointOfIntersection) {
@@ -32,12 +33,10 @@ public class Sphere extends AbstractSceneObject {
 	}
 
 	@Override
-	public void transform(Transformation t) {
-		position.add(t.translation);
-		radius *= Math.min(Math.min(t.scale.x, t.scale.y), t.scale.z);
+	public boolean Intersect(){
+		
 	}
-
-	@Override
+	/*@Override
 	public DifferentialGeometry intersectsRay(Ray ray) {
 		Vector3d aux = new Vector3d(ray.position);
 		aux.sub(position);
@@ -50,7 +49,7 @@ public class Sphere extends AbstractSceneObject {
 			return null;
 		}
 
-		/* determine point of intersection */
+		/* determine point of intersection 
 		double t1 = (-b + Math.sqrt(discriminant)) / (2 * a);
 		double t2 = (-b - Math.sqrt(discriminant)) / (2 * a);
 		double t;
@@ -74,7 +73,7 @@ public class Sphere extends AbstractSceneObject {
 		x.normal = getNormalAt(x.point);
 		x.distance = t;
 		return x;
-	}
+	}*/
 
 	@Override
 	public String toString() {
