@@ -8,10 +8,13 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
 import objects.Material;
+import objects.Normal;
+import objects.Pt;
 import objects.Ray;
 import objects.SceneObject;
 import objects.Sphere;
-import scene.Intersection;
+import objects.Vec;
+import scene.DifferentialGeometry;
 import scene.PointLight;
 import scene.Scene;
 
@@ -29,10 +32,7 @@ public class SimpleRayTracer
 	/** Maximum number of levels in the recursion of getColor */
 	private static final int MAX_LEVELS = 10;
 
-	/** Margin of error when comparing doubles */
-	private static final double EPSILON_EQUALS = 0.000000000001;
-
-	private static final double FLOAT_CORRECTION = 0.001;
+	private static final double FLOAT_CORRECTION = 0.01;
 
 	/** Desired scene to render */
 	private Scene scene;
@@ -129,72 +129,63 @@ public class SimpleRayTracer
 	 * @param viewerPosition
 	 *            Position of the observer. In the first invocation, it is the origin (not
 	 *            used yet)
-	 * @param color
-	 *            Output parameter with the color found in the pixel
-	 * @param currentRefraction
-	 *            Refractive index of the current environment (not used yet)
+	 * @param color Output parameter with the color found in the pixel
+	 * @param currentRefraction Refractive index of the current environment (not used yet)
 	 * @return The first intersected object (may be null)
 	 */
 	private SceneObject getColor(Ray ray, int currentLevel, Vector3d viewerPosition,
 			Vector3d color, double currentRefraction) {
 		
-		Intersection intersection = new Intersection();
-		SceneObject intersectedObject = scene.getFirstIntersectedObject(ray, intersection);
-		if (intersectedObject == null) {
+		DifferentialGeometry dg = new DifferentialGeometry();
+
+		if (!scene.getFirstIntersectedObject(ray, dg)) {
 			color.set(new double[] { 0, 0, 0 });
 			return null;
 		}
 		
-		Material material = intersectedObject.getMaterial();
+		Material material = dg.shape.getMaterial();
 		Vector3d ptColor = new Vector3d(1, 1, 1);
 		Vector3d lightColor = new Vector3d(0, 0, 0);;
 		Vector3d totalLightColor = new Vector3d(0, 0, 0);
-		boolean lit;
 		
 		double lightCount = 0;
 		for (PointLight light : scene.getLights()) {
 			Ray shadowRay;
-			Vector3d lightDirection, objectNormal;
-			lit = false;
+			Pt interP = new Pt(dg.p);
+
 			
 			/* correct for floating point imprecision of object surface 
 			 * detail by moving origin of shadow ray
-			 * an epsilon factor in the direction of the object normal */
-			objectNormal = intersectedObject.getNormalAt(intersection.point);
-			objectNormal.negate();
-			Vector3d EPSILON = new Vector3d(objectNormal.x, objectNormal.y, objectNormal.z);
+			 * an epsilon factor in the inverse direction of the ray */
+			Vec EPSILON = new Vec(ray.direction);
+			EPSILON.negate();
 			EPSILON.scale(FLOAT_CORRECTION);
-			intersection.point.add(EPSILON);
+			interP.add(EPSILON);
+			Vec lightDir = new Vec(light.getPosition());
+			lightDir.sub(interP);
 			
-			lightDirection = new Vector3d(light.getPosition());
-			lightDirection.sub(intersection.point);
 			
 			/* create shadow ray */ 
-			shadowRay = new Ray(intersection.point, lightDirection);
+			shadowRay = new Ray(interP, lightDir, 0);
 			
 			
 			/* check to see if shadow ray intersects object (ie the point is in shadow) */
-			Intersection lightIntersection = new Intersection();
-			SceneObject shadowIntersectedObject = scene.getFirstIntersectedObject(shadowRay,
-					lightIntersection);
+			DifferentialGeometry lightdg = new DifferentialGeometry();
 
 			/* if shadow ray does not intersect another object make color appear */
-			if (shadowIntersectedObject == null)
+			if (!scene.getFirstIntersectedObject(shadowRay, lightdg))
 			{
-				// Setting the color to the material color directly causes the light color and intensity to be ignored.
-				// That seems.. wrong?
-				// ptColor.set(material.diffuseColor);
-				ptColor.set(calculateColor(intersectedObject, light));
-				color.set(ptColor);
+				//ptColor.set(calculateColor(dg.shape, light, dg.p));
+				color.set(dg.shape.getMaterial().diffuseColor);
+				//color.set(ptColor);
 
-				return intersectedObject;
+				return dg.shape;
 			}
 
 		}
 
 		color.set(new double[] { 0, 0, 0 });
-		return intersectedObject;
-
+		return dg.shape;
 	}
 
 	/**
@@ -205,10 +196,10 @@ public class SimpleRayTracer
 	 * @param l
 	 * @return
 	 */
-	public Vector3d calculateColor(SceneObject o, PointLight l)
+	public Vector3d calculateColor(SceneObject o, PointLight l, Vector3d p)
 	{
-		Sphere targetSphere = (Sphere) o;
-		Vector3d lightColor = l.getColor(targetSphere.position);
+		SceneObject targetObject = o;
+		Vector3d lightColor = l.getColor(p);
 		double newRColor = o.getMaterial().diffuseColor.getX() * lightColor.getX();
 		double newGColor = o.getMaterial().diffuseColor.getY() * lightColor.getY();
 		double newBColor = o.getMaterial().diffuseColor.getZ() * lightColor.getZ();
@@ -238,7 +229,7 @@ public class SimpleRayTracer
 		Vector4d result = Util.MultiplyMatrixAndVector(scene.getCamera().rotationMatrix, dir);
 		Vector3d direction = new Vector3d(result.x, result.y, result.z);
 		direction.normalize();
-		return new Ray(scene.getCamera().position, direction);
+		return new Ray( scene.getCamera().position ,new Vec(direction), 0f);
 	}
 
 }

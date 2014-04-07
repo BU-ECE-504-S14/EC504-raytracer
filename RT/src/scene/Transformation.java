@@ -27,6 +27,12 @@ public class Transformation {
 	
 	public Matrix4d w2o;
 	
+	/**
+	 * 
+	 * @param scale (1,1,1) for no scale
+	 * @param translation (0,0,0) for no translation
+	 * @param rotation (0,0,1,0) for no rotation
+	 */
 	public Transformation(Vector3d scale, Vector3d translation,AxisAngle4d rotation){
 		this.translation.set(translation);
 		this.scale.set(scale);
@@ -46,16 +52,22 @@ public class Transformation {
 	/** Create the transformation pipeline*/
 	public Matrix4d getTransformationMatrix() {
 		Matrix4d rotationMatrix = getRotationMatrix();
-		Matrix4d translationMatrix = new Matrix4d(1, 0, 0, -translation.x, 0, 1, 0, -translation.y,
-				0, 0, 1, -translation.z, 0, 0, 0, 1);
+		Matrix4d translationMatrix = new Matrix4d(1, 0, 0, -translation.x , 0, 1, 0, -translation.y,
+				0, 0, 1, -translation.z, 0 , 0, 0, 1);
+		Matrix4d scaleMatrix = new Matrix4d(scale.x, 0, 0, 0, 0, scale.y, 0, 0, 0, 0, scale.z, 0,
+				0, 0, 0, 1);
+		rotationMatrix.mul(scaleMatrix);
 		translationMatrix.mul(rotationMatrix);
 		return translationMatrix;
 	}
 
 	public Matrix4d getInverseTransformationMatrix() {
 		Matrix4d rotationMatrix = getRotationMatrix();
-		Matrix4d translationMatrix = new Matrix4d(1, 0, 0, -translation.x, 0, 1, 0, -translation.y,
-				0, 0, 1, -translation.z, 0, 0, 0, 1);
+		Matrix4d translationMatrix = new Matrix4d(1, 0, 0, -translation.x , 0, 1, 0, -translation.y,
+				0, 0, 1, -translation.z, 0 , 0, 0, 1);
+		Matrix4d scaleMatrix = new Matrix4d(scale.x, 0, 0, 0, 0, scale.y, 0, 0, 0, 0, scale.z, 0,
+				0, 0, 0, 1);
+		rotationMatrix.mul(scaleMatrix);
 		translationMatrix.mul(rotationMatrix);
 		translationMatrix.invert();
 		return translationMatrix;
@@ -68,36 +80,30 @@ public class Transformation {
 		return ret;
 	}
 	
-	/*public void scaleObject(){
-		Matrix4d scaleMatrix = new Matrix4d(scale.x, 0, 0, 0, 0, scale.y, 0, 0, 0, 0, scale.z, 0,
-				0, 0, 0, 1);
-		rotationMatrix.mul(scaleMatrix);
-	}*/
-	
 	public Pt world2Object(Pt p){
 		Vector4d v4 = new Vector4d(p.x,p.y,p.z,p.w);
-		Util.MultiplyMatrixAndVector(w2o, v4);
+		v4 = Util.MultiplyMatrixAndVector(w2o, v4);
 		Pt p_copy = new Pt(v4.x,v4.y,v4.z);
 		return p_copy;
 	}
 	
 	public Pt object2World(Pt p){
 		Vector4d v4 = new Vector4d(p.x,p.y,p.z,p.w);
-		Util.MultiplyMatrixAndVector(o2w, v4);
+		v4 = Util.MultiplyMatrixAndVector(o2w, v4);
 		Pt p_copy = new Pt(v4.x,v4.y,v4.z);
 		return p_copy;
 	} 
 	
 	public Vec object2World(Vec v){
 		Vector4d v4 = new Vector4d(v.x,v.y,v.z,v.w);
-		Util.MultiplyMatrixAndVector(o2w, v4);
+		v4 = Util.MultiplyMatrixAndVector(o2w, v4);
 		Vec v_copy = new Vec(v4.x,v4.y,v4.z);
 		return v_copy;
 	} 
 	
 	public Vec world2Object(Vec v){
 		Vector4d v4 = new Vector4d(v.x,v.y,v.z,v.w);
-		Util.MultiplyMatrixAndVector(w2o, v4);
+		v4 = Util.MultiplyMatrixAndVector(w2o, v4);
 		Vec v_copy = new Vec(v4.x,v4.y,v4.z);
 		return v_copy;
 	} 

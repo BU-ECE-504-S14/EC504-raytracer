@@ -14,12 +14,20 @@ public class Sphere extends AbstractSceneObject {
 	private float thetaMin,thetaMax,phiMax;
 	public Transformation t;
 	
+	/**
+	 * 
+	 * @param radius
+	 * @param z0
+	 * @param z1
+	 * @param pm
+	 * @param t
+	 */
 	public Sphere(float radius, float z0, float z1, float pm, Transformation t){
 		this.radius = radius;
 		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
 		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
-		thetaMin = (float) Math.acos(Util.clamp(zmin/radius, -1f, 1f));
-		thetaMax = (float) Math.acos(Util.clamp(zmax/radius, -1f, 1f));
+		thetaMin = (float) Math.acos(Util.clamp(zmin/-radius, -1f, 1f));
+		thetaMax = (float) Math.acos(Util.clamp(zmax/-radius, -1f, 1f));
 		phiMax = (float) Math.toRadians(Util.clamp(pm, 0.0f, 360.0f));
 		this.t = new Transformation(t);
 	}
@@ -31,18 +39,19 @@ public class Sphere extends AbstractSceneObject {
 		ret.normalize();	//make into unit normal vector
 		return ret;
 	}
-
+	
 	@Override
-	public boolean Intersect(Ray ray, DifferentialGeometry dg){
+	public boolean IntersectP(Ray ray) {
+		
 		float phi;
-		Pt phit;
+		Pt pHit;
 		
 		//transform ray to obj space
 		Ray o_ray = this.t.world2Object(ray);
 		
 		//calculate quadratic sphere coeffs
 		float A = (float) o_ray.direction.dot(o_ray.direction); //dx^2 + dy^2 + dz^2
-		float B = (float) (2f*o_ray.direction.dot(position));
+		float B = (float) (2f*o_ray.direction.dot(o_ray.position));
 		float C = (float) (o_ray.position.dot(o_ray.position))-radius*radius;
 		
 		float[] t = {0,0};
@@ -57,42 +66,87 @@ public class Sphere extends AbstractSceneObject {
 		}
 		
 		//compute sphere hit position and phi
-		phit = o_ray.getPointAt(thit);
-		phi = computePhi(phit);
+		pHit = o_ray.getPointAt(thit);
+		phi = computePhi(pHit);
 		
 		//test sphere intersection against clipping parameters
-		if((zmin > -radius && phit.z < zmin) || (zmax < radius && phit.z > zmax) || (phi > phiMax) ) {
+		if((zmin > -radius && pHit.z < zmin) || (zmax < radius && pHit.z > zmax) || (phi > phiMax) ) {
 			
 			if(thit == t[1]) return false;
 			if(t[1] > o_ray.maxt) return false;
 			
 			thit = t[1];
-			phit = o_ray.getPointAt(thit);
-			phi = computePhi(phit);
-			if( (zmin > -radius && phit.z < zmin) || 
-			    (zmax < radius && phit.z > zmax) || (phi > phiMax) ) return false;
+			pHit = o_ray.getPointAt(thit);
+			phi = computePhi(pHit);
+			if( (zmin > -radius && pHit.z < zmin) || 
+			    (zmax < radius && pHit.z > zmax) || (phi > phiMax) ) return false;
+		}
+		
+		ray.maxt = thit;
+		return true;
+	}
+
+	@Override
+	public boolean Intersect(Ray ray, DifferentialGeometry dg){
+		float phi;
+		Pt pHit;
+		
+		//transform ray to obj space
+		Ray o_ray = this.t.world2Object(ray);
+		
+		//calculate quadratic sphere coeffs
+		float A = (float) o_ray.direction.dot(o_ray.direction); //dx^2 + dy^2 + dz^2
+		float B = (float) (2f*o_ray.direction.dot(o_ray.position));
+		float C = (float) (o_ray.position.dot(o_ray.position))-radius*radius;
+		
+		float[] t = {0,0};
+		if(!Quadratic(A,B,C,t)) return false;
+		
+		//compute intersection distance along ray
+		if(t[0] > o_ray.maxt || t[1] < o_ray.mint) return false;
+		float thit = t[0];
+		if(t[0] < o_ray.mint){
+			thit = t[1];
+			if(thit > o_ray.maxt) return false;
+		}
+		
+		//compute sphere hit position and phi
+		pHit = o_ray.getPointAt(thit);
+		phi = computePhi(pHit);
+		
+		//test sphere intersection against clipping parameters
+		if((zmin > -radius && pHit.z < zmin) || (zmax < radius && pHit.z > zmax) || (phi > phiMax) ) {
+			
+			if(thit == t[1]) return false;
+			if(t[1] > o_ray.maxt) return false;
+			
+			thit = t[1];
+			pHit = o_ray.getPointAt(thit);
+			phi = computePhi(pHit);
+			if( (zmin > -radius && pHit.z < zmin) || 
+			    (zmax < radius && pHit.z > zmax) || (phi > phiMax) ) return false;
 		}
 		
 		//find parametric representation of sphere hit
 		float u = phi / phiMax;
-		float theta = (float) Math.acos(Util.clamp((float) (phit.z/radius), -1f, 1f));
+		float theta = (float) Math.acos(Util.clamp((float) (pHit.z/radius), -1f, 1f));
 		float v = (theta - thetaMin) / (thetaMax - thetaMin);
 		
 		//compute dpdu dpdv
-		float zradius = (float) Math.sqrt(phit.x *phit.x + phit.y * phit.y);
+		float zradius = (float) Math.sqrt(pHit.x *pHit.x + pHit.y * pHit.y);
 		float invzradius = 1f / zradius;
-		float cosphi = (float) (phit.x * invzradius);
-		float sinphi = (float) (phit.y * invzradius);
-		Vec dpdu = new Vec(-phiMax * phit.y, phiMax * phit.x, 0);
-		Vec dpdv = new Vec(phit.z * cosphi, phit.z * sinphi, -radius * Math.sin(theta));
+		float cosphi = (float) (pHit.x * invzradius);
+		float sinphi = (float) (pHit.y * invzradius);
+		Vec dpdu = new Vec(-phiMax * pHit.y, phiMax * pHit.x, 0);
+		Vec dpdv = new Vec(pHit.z * cosphi, pHit.z * sinphi, -radius * Math.sin(theta));
 		dpdv.scale((thetaMax - thetaMin));
 		
 		//compute dndu dndv based on Weingarten equations
-		Vec d2Pduu = new Vec(phit.x, phit.y, 0f);
+		Vec d2Pduu = new Vec(pHit.x, pHit.y, 0f);
 		d2Pduu.scale(-phiMax * phiMax);
 		Vec d2Pduv = new Vec(-sinphi, cosphi,0f);
-		d2Pduv.scale((thetaMax - thetaMin) * phit.z * phiMax);
-		Vec d2Pdvv = new Vec(phit.x, phit.y, phit.z);
+		d2Pduv.scale((thetaMax - thetaMin) * pHit.z * phiMax);
+		Vec d2Pdvv = new Vec(pHit.x, pHit.y, pHit.z);
 		d2Pdvv.scale(-(thetaMax - thetaMin) * (thetaMax - thetaMin));
 	    
 		//compute coeffs for fundamental forms
@@ -122,21 +176,21 @@ public class Sphere extends AbstractSceneObject {
 		Normal dndv = new Normal(sdpdu);
 		
 		//Differential geometry initialization
-		dg.update(this.t.object2World(phit),
+		dg.update(this.t.object2World(pHit),
 				  this.t.object2World(dpdu), 
 				  this.t.object2World(dpdv), 
 				  this.t.object2World(dndu),
 				  this.t.object2World(dndv), u, v, this);
 		
 		//update hit parameter
-		ray.tHit = thit;
+		ray.maxt = thit;
 		
 		return true;
 	}
 	
-	private float computePhi(Pt phit){
-		if(phit.x == 0 && phit.y ==0) phit.x = 1E-5f * radius; //make phit a small number to avoid 0/0 division
-		float phi = (float) Math.atan2(phit.y, phit.x);
+	private float computePhi(Pt pHit){
+		if(pHit.x == 0 && pHit.y ==0) pHit.x = 1E-5f * radius; //make pHit a small number to avoid 0/0 division
+		float phi = (float) Math.atan2(pHit.y, pHit.x);
 		if(phi < 0f) phi += 2f*Math.PI;
 		return phi;
 	}

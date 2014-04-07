@@ -105,51 +105,52 @@ public class Renderer
 
 	public static Scene constructSampleScene()
 	{
-		Transformation t = new Transformation();
-		Transformation t1 = new Transformation();
-		Transformation t2 = new Transformation();
-		Transformation t3 = new Transformation();
+		
 
-		SceneObject shape = new Sphere();
-		SceneObject shape1 = new Sphere();
-		SceneObject shape2 = new Sphere();
-		SceneObject shape3 = new Sphere();
+		SceneObject shape0,shape1,shape2,shape3;
 
-		Material m = new Material();
+		Material m0 = new Material();
 		Material m1 = new Material();
 		Material m2 = new Material();
 		Material m3 = new Material();
 
 		/* set poisitions and material of sphere objects */
 		/* shape */
-		t.translation = new Vector3d(-1200, 500, 200);
-		t.scale = new Vector3d(500, 500, 500);
-		shape.transform(t);
-		m.diffuseColor = new Vector3d(.3, .3, .3);
-		m.reflectionIndex = 0.5;
-		m.diffuseIndex = 1;
-		shape.getMaterial().set(m);
+		Vector3d scale = new Vector3d(1,1,1);
+		Vector3d pos = new Vector3d(-6, 0, 0);
+		AxisAngle4d rot = new AxisAngle4d(0,0,1,0);
+		Transformation t0 = new Transformation(scale,pos,rot);
+		shape0 = new Sphere(10f, -10f, 10f, 360f,t0);
+		m0.diffuseColor = new Vector3d(0, 0, 0);
+		m0.reflectionIndex = 0.5;
+		shape0.getMaterial().set(m0);
 
 		/* shape1 */
-		t1.translation = new Vector3d(-6, 0, 0);
-		t1.scale = new Vector3d(3, 3, 3);
-		shape1.transform(t1);
+		scale = new Vector3d(1,1,1);
+		pos = new Vector3d(-200, 50, 0);
+		rot = new AxisAngle4d(0,0,1,0);
+		Transformation t1 = new Transformation(scale,pos,rot);
+		shape1 = new Sphere(100f, -100f, 100f, 360f,t1);
 		m1.diffuseColor = new Vector3d(.2, .8, .2);
 		m1.reflectionIndex = 0.5;
 		shape1.getMaterial().set(m1);
 
 		/* shape2 */
-		t2.translation = new Vector3d(0, 0, -10);
-		t2.scale = new Vector3d(3, 3, 3);
-		shape2.transform(t2);
+		scale = new Vector3d(1,1,1);
+		pos = new Vector3d(0, 0, -10);
+		rot = new AxisAngle4d(0,0,1,0);
+		Transformation t2 = new Transformation(scale,pos,rot);
+		shape2 = new Sphere(3f, -3f, 3f, 360f,t2);
 		m2.diffuseColor = new Vector3d(.2, .2, .8);
 		m2.reflectionIndex = 0.5;
 		shape2.getMaterial().set(m2);
 
 		/* shape3 */
-		t3.translation = new Vector3d(10, 10, -10);
-		t3.scale = new Vector3d(3, 3, 3);
-		shape3.transform(t3);
+		scale = new Vector3d(1,1,1);
+		pos = new Vector3d(10, 10, -10);
+		rot = new AxisAngle4d(0,0,1,0);
+		Transformation t3 = new Transformation(scale,pos,rot);
+		shape3 = new Sphere(3f, -3f, 3f, 360f,t3);
 		m3.diffuseColor = new Vector3d(.8, .2, .2);
 		m3.reflectionIndex = 0.5;
 		shape3.getMaterial().set(m3);
@@ -191,27 +192,26 @@ public class Renderer
 		//l4.setPosition(new Vector3d(5, 5, -5));
 		l4.setPosition(new Vector3d(50, -20, -5));
 		
-		/*
+
 		PointLight l5 = new PointLight();
 		l5.setColor(new Vector3d(0, .5, 0));
 		l5.setPosition(new Vector3d(14, 2, 5));
 		PointLight l6 = new PointLight();
 		l6.setPosition(new Vector3d(16, 0, 5));
 		l6.setColor(new Vector3d(0, 0, 1));
-		*/
+
 
 		/* add objects & lights & camera to scene */
 		Scene scene = new Scene();
-		scene.addSceneObject(shape);
+		//scene.addSceneObject(shape0);
 		scene.addSceneObject(shape1);
 		scene.addSceneObject(shape2);
-		scene.addSceneObject(shape3);
-	//scene.addLight(l1);
+		//scene.addSceneObject(shape3);
+		//scene.addLight(l1);
 		//scene.addLight(l2);
-		
-		scene.addLight(l4);
+		//scene.addLight(l4);
 		//scene.addLight(l3);
-		//scene.addLight(l5);
+		scene.addLight(l5);
 		//scene.addLight(l6);
 		scene.setCamera(cam);
 

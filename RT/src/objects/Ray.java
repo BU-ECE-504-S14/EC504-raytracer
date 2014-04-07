@@ -16,7 +16,6 @@ public class Ray {
 	/** parametric information for ray **/
 	public float maxt; //current farthest distance from origin (parametric)
 	public float mint; //base position on parametric line (any point less than rMin is behind ray)
-	public float tHit; //parametric distance from ray origin to nearest object intersection
 	public int depth;  //numbers of times ray has been reflected/refracted
 
 	public Ray(Pt origin, Vec direction, float mint) {
@@ -60,7 +59,6 @@ public class Ray {
 		this.direction= new Vec(r.direction);
 		maxt = r.maxt;
 		mint = r.mint;
-		tHit = r.tHit;
 		depth = r.depth;
 	}
 

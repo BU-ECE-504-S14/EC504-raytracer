@@ -60,12 +60,6 @@ public class Scene {
 		return camera;
 	}
 
-	public Intersection getFirstIntersectedObject(Ray ray) {
-		Intersection ret = new Intersection();
-		getFirstIntersectedObject(ray, ret, objects);
-		return ret;
-	}
-
 	/**
 	 * looks for the first object that a ray intersects, and the point at which the
 	 * ray intersects that object. If no intersection return null.
@@ -74,39 +68,22 @@ public class Scene {
 	 * @param intersection, output parameter.
 	 * @return intersected object.
 	 */
-	public SceneObject getFirstIntersectedObject(Ray ray,
-			Intersection intersection) {
-		return getFirstIntersectedObject(ray, intersection, objects);
+	public boolean getFirstIntersectedObject(Ray ray,
+			DifferentialGeometry dg) {
+		return getFirstIntersectedObject(ray, dg, objects);
 	}
 
 	/*ask aaron about this coding practice. Is this overloading.*/
-	public SceneObject getFirstIntersectedObject(Ray ray,
-			Intersection intersection, Collection<SceneObject> objs) {
+	public boolean getFirstIntersectedObject(Ray ray,
+			DifferentialGeometry dg, Collection<SceneObject> objs) {
 		SceneObject nearest = null;
-		Intersection currentIntersection, nearestIntersection = null;
-		double nearestDistance = Double.MAX_VALUE;
 
 		for (SceneObject o : objs) {
-			if ((currentIntersection = o.intersectsRay(ray)) == null)
-				continue;
-
-			Vector3d aux = new Vector3d(currentIntersection.point);
-			double currentDistance;
-			aux.sub(ray.position);
-			currentDistance = Util.Norm(aux);
-
-			if (nearestIntersection == null
-					|| currentDistance < nearestDistance) {
-				nearest = o;
-				nearestIntersection = currentIntersection;
-				nearestDistance = currentDistance;
-			}
+			if ( o.IntersectP(ray)) nearest = o;
 		}
-		if (nearestIntersection == null)
-			return null;
-		intersection.point = nearestIntersection.point;
-		intersection.normal = nearestIntersection.normal;
-		return nearest;
+		if (nearest == null)
+			return false;
+		return nearest.Intersect(ray, dg);
 	}
 
 	public void dumpScene() {
