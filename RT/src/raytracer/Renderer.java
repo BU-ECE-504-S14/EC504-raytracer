@@ -234,8 +234,7 @@ public class Renderer
 		Dimension imageSize = new Dimension(optionWidth, optionHeight);
 
 		/* Ultra simple raytracer */
-		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
-				optionShadow);
+		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing, optionShadow);
 
 
 		BufferedImage result = rayTracer.render(optionProgress);

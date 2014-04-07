@@ -2,6 +2,8 @@ package scene;
 
 import javax.vecmath.Vector3d;
 
+import raytracer.Ray;
+
 
 /**
  * Representation of the intersection points of rays with SceneObjects.
@@ -17,15 +19,19 @@ public class Intersection {
 	/**distance from rays origin to the point of intersection*/
 	public double distance;
 	
+	
+	public Ray ray;
+	
 	public Intersection() {
 		point = new Vector3d();
 		normal = new Vector3d();
 	}
 
-	public Intersection(Vector3d point, Vector3d normal, double distance) {
+	public Intersection(Vector3d point, Vector3d normal, double distance, Ray ray) {
 		this.point = new Vector3d(point);
 		this.normal = new Vector3d(normal);
 		this.distance = distance;
+		this.ray = ray;
 	}
 
 	@Override

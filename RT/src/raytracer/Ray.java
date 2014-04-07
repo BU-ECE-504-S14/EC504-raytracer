@@ -14,10 +14,12 @@ public class Ray {
 	/** Direction of the ray (vector is normalized) */
 	public Vector3d direction;
 
+	public Vector3d origin;
 	public Ray(Vector3d origin, Vector3d direction) {
 		super();
 		direction.normalize();
 		this.position = origin;
+		this.origin = origin;
 		this.direction = direction;
 	}
 
