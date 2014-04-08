@@ -32,7 +32,7 @@ public class SimpleRayTracer
 	/** Maximum number of levels in the recursion of getColor */
 	private static final int MAX_LEVELS = 10;
 
-	private static final double FLOAT_CORRECTION = 0.01;
+	private static final double FLOAT_CORRECTION = 0.001;
 
 	/** Desired scene to render */
 	private Scene scene;
@@ -163,7 +163,7 @@ public class SimpleRayTracer
 			interP.add(EPSILON);
 			Vec lightDir = new Vec(light.getPosition());
 			lightDir.sub(interP);
-			
+
 			
 			/* create shadow ray */ 
 			shadowRay = new Ray(interP, lightDir, 0);
@@ -175,9 +175,9 @@ public class SimpleRayTracer
 			/* if shadow ray does not intersect another object make color appear */
 			if (!scene.getFirstIntersectedObject(shadowRay, lightdg))
 			{
-				//ptColor.set(calculateColor(dg.shape, light, dg.p));
-				color.set(dg.shape.getMaterial().diffuseColor);
-				//color.set(ptColor);
+				ptColor.set(calculateColor(dg.shape, light, dg.p));
+				//color.set(dg.shape.getMaterial().diffuseColor);
+				color.set(ptColor);
 
 				return dg.shape;
 			}

@@ -107,63 +107,54 @@ public class Renderer
 	{
 		
 
-		SceneObject shape0,shape1,shape2,shape3;
+		SceneObject shape1,shape2,shape3;
 
-		Material m0 = new Material();
 		Material m1 = new Material();
 		Material m2 = new Material();
 		Material m3 = new Material();
 
 		/* set poisitions and material of sphere objects */
 		/* shape */
-		Vector3d scale = new Vector3d(1,1,1);
-		Vector3d pos = new Vector3d(-6, 0, 0);
-		AxisAngle4d rot = new AxisAngle4d(0,0,1,0);
-		Transformation t0 = new Transformation(scale,pos,rot);
-		shape0 = new Sphere(10f, -10f, 10f, 360f,t0);
-		m0.diffuseColor = new Vector3d(0, 0, 0);
-		m0.reflectionIndex = 0.5;
-		shape0.getMaterial().set(m0);
 
 		/* shape1 */
-		scale = new Vector3d(1,1,1);
-		pos = new Vector3d(-200, 50, 0);
-		rot = new AxisAngle4d(0,0,1,0);
+		Vector3d scale = new Vector3d(1,1,1);
+		Vector3d pos = new Vector3d(50, -25, 0);
+		AxisAngle4d rot = new AxisAngle4d(0,0,1,0);
 		Transformation t1 = new Transformation(scale,pos,rot);
-		shape1 = new Sphere(100f, -100f, 100f, 360f,t1);
+		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
 		m1.diffuseColor = new Vector3d(.2, .8, .2);
 		m1.reflectionIndex = 0.5;
 		shape1.getMaterial().set(m1);
 
 		/* shape2 */
 		scale = new Vector3d(1,1,1);
-		pos = new Vector3d(0, 0, -10);
+		pos = new Vector3d(50, 0, 0);
 		rot = new AxisAngle4d(0,0,1,0);
 		Transformation t2 = new Transformation(scale,pos,rot);
-		shape2 = new Sphere(3f, -3f, 3f, 360f,t2);
+		shape2 = new Sphere(25f, -50f, 50f, 360f,t2);
 		m2.diffuseColor = new Vector3d(.2, .2, .8);
 		m2.reflectionIndex = 0.5;
 		shape2.getMaterial().set(m2);
 
 		/* shape3 */
 		scale = new Vector3d(1,1,1);
-		pos = new Vector3d(10, 10, -10);
+		pos = new Vector3d(0, -30, -10);
 		rot = new AxisAngle4d(0,0,1,0);
 		Transformation t3 = new Transformation(scale,pos,rot);
-		shape3 = new Sphere(3f, -3f, 3f, 360f,t3);
+		shape3 = new Sphere(10f, -10f, 10f, 360f,t3);
 		m3.diffuseColor = new Vector3d(.8, .2, .2);
 		m3.reflectionIndex = 0.5;
 		shape3.getMaterial().set(m3);
 
 		/* set up camera */
-		double fieldofView = .5;
-		Point3d position = new Point3d(125, -75, -8);
-		Point3d sphereLocation = new Point3d(0, 0, -8);
+		double fieldofView = 1;
+		Point3d position = new Point3d(300, 100, 0);
+		Point3d sphereLocation = new Point3d(0, 0, 0);
 		Point3d takePos = new Point3d(position.x, position.y, position.z);
 		Point3d takeSL = new Point3d(sphereLocation.x, sphereLocation.y, sphereLocation.z);
 		takePos.sub(takeSL);
 
-		Vector3d up = new Vector3d(0, 0, 1);
+		Vector3d up = new Vector3d(0, 0, -1);
 
 		/*
 		 * uses axisangle to create camera (I hate axisangle) you will need to modify the
@@ -178,18 +169,17 @@ public class Renderer
 
 		/* set lights */
 		PointLight l1 = new PointLight();
-		l1.setColor(new Vector3d(.2, 1, .2));
-		l1.setPosition(new Vector3d(14, -2, 5));
+		l1.setColor(new Vector3d(0.5, 1, 1));
+		l1.setPosition(new Vector3d(100, 10, 0));
 		PointLight l2 = new PointLight();
 		l2.setColor(new Vector3d(.2, 1, .2));
-		l2.setPosition(new Vector3d(14, 2, 5));
+		l2.setPosition(new Vector3d(140, 200, 5));
 		PointLight l3 = new PointLight();
 		l3.setPosition(new Vector3d(1000, 0, 0));
 		l3.setColor(new Vector3d(.65, .65, .65));
-		
 		PointLight l4 = new PointLight();
 		l4.setColor(new Vector3d(.9, .9, .9));
-		//l4.setPosition(new Vector3d(5, 5, -5));
+		l4.setPosition(new Vector3d(50, 5, -5));
 		l4.setPosition(new Vector3d(50, -20, -5));
 		
 
@@ -206,12 +196,12 @@ public class Renderer
 		//scene.addSceneObject(shape0);
 		scene.addSceneObject(shape1);
 		scene.addSceneObject(shape2);
-		//scene.addSceneObject(shape3);
-		//scene.addLight(l1);
+		scene.addSceneObject(shape3);
+		scene.addLight(l1);
 		//scene.addLight(l2);
 		//scene.addLight(l4);
 		//scene.addLight(l3);
-		scene.addLight(l5);
+		//scene.addLight(l5);
 		//scene.addLight(l6);
 		scene.setCamera(cam);
 

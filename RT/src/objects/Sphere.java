@@ -26,8 +26,8 @@ public class Sphere extends AbstractSceneObject {
 		this.radius = radius;
 		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
 		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
-		thetaMin = (float) Math.acos(Util.clamp(zmin/-radius, -1f, 1f));
-		thetaMax = (float) Math.acos(Util.clamp(zmax/-radius, -1f, 1f));
+		thetaMin = (float) Math.acos(Util.clamp(zmin/radius, -1f, 1f));
+		thetaMax = (float) Math.acos(Util.clamp(zmax/radius, -1f, 1f));
 		phiMax = (float) Math.toRadians(Util.clamp(pm, 0.0f, 360.0f));
 		this.t = new Transformation(t);
 	}
