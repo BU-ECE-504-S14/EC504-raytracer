@@ -118,43 +118,43 @@ public class Renderer
 
 		/* shape1 */
 		Vector3d scale = new Vector3d(1,1,1);
-		Vector3d pos = new Vector3d(50, -25, 0);
+		Vector3d pos = new Vector3d(-50, -50, 0);
 		AxisAngle4d rot = new AxisAngle4d(0,0,1,0);
 		Transformation t1 = new Transformation(scale,pos,rot);
 		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
-		m1.diffuseColor = new Vector3d(.2, .8, .2);
+		m1.diffuseColor = new Vector3d(0, 1, 0);
 		m1.reflectionIndex = 0.5;
 		shape1.getMaterial().set(m1);
 
 		/* shape2 */
 		scale = new Vector3d(1,1,1);
-		pos = new Vector3d(50, 0, 0);
+		pos = new Vector3d(-50, 30, 0);
 		rot = new AxisAngle4d(0,0,1,0);
 		Transformation t2 = new Transformation(scale,pos,rot);
 		shape2 = new Sphere(25f, -50f, 50f, 360f,t2);
-		m2.diffuseColor = new Vector3d(.2, .2, .8);
+		m2.diffuseColor = new Vector3d(0, 0, 1);
 		m2.reflectionIndex = 0.5;
 		shape2.getMaterial().set(m2);
 
 		/* shape3 */
 		scale = new Vector3d(1,1,1);
-		pos = new Vector3d(0, -30, -10);
+		pos = new Vector3d(0, 30, -10);
 		rot = new AxisAngle4d(0,0,1,0);
 		Transformation t3 = new Transformation(scale,pos,rot);
 		shape3 = new Sphere(10f, -10f, 10f, 360f,t3);
-		m3.diffuseColor = new Vector3d(.8, .2, .2);
+		m3.diffuseColor = new Vector3d(1, 0, 0);
 		m3.reflectionIndex = 0.5;
 		shape3.getMaterial().set(m3);
 
 		/* set up camera */
 		double fieldofView = 1;
-		Point3d position = new Point3d(300, 100, 0);
+		Point3d position = new Point3d(200, 0, 0);
 		Point3d sphereLocation = new Point3d(0, 0, 0);
 		Point3d takePos = new Point3d(position.x, position.y, position.z);
 		Point3d takeSL = new Point3d(sphereLocation.x, sphereLocation.y, sphereLocation.z);
 		takePos.sub(takeSL);
 
-		Vector3d up = new Vector3d(0, 0, -1);
+		Vector3d up = new Vector3d(0, 0, 1);
 
 		/*
 		 * uses axisangle to create camera (I hate axisangle) you will need to modify the
@@ -170,7 +170,7 @@ public class Renderer
 		/* set lights */
 		PointLight l1 = new PointLight();
 		l1.setColor(new Vector3d(0.5, 1, 1));
-		l1.setPosition(new Vector3d(100, 10, 0));
+		l1.setPosition(new Vector3d(-100, 0, 0));
 		PointLight l2 = new PointLight();
 		l2.setColor(new Vector3d(.2, 1, .2));
 		l2.setPosition(new Vector3d(140, 200, 5));

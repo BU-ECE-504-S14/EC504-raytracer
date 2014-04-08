@@ -52,8 +52,8 @@ public class Transformation {
 	/** Create the transformation pipeline*/
 	public Matrix4d getTransformationMatrix() {
 		Matrix4d rotationMatrix = getRotationMatrix();
-		Matrix4d translationMatrix = new Matrix4d(1, 0, 0, -translation.x , 0, 1, 0, -translation.y,
-				0, 0, 1, -translation.z, 0 , 0, 0, 1);
+		Matrix4d translationMatrix = new Matrix4d(1, 0, 0, translation.x , 0, 1, 0, translation.y,
+				0, 0, 1, translation.z, 0 , 0, 0, 1);
 		Matrix4d scaleMatrix = new Matrix4d(scale.x, 0, 0, 0, 0, scale.y, 0, 0, 0, 0, scale.z, 0,
 				0, 0, 0, 1);
 		rotationMatrix.mul(scaleMatrix);
@@ -63,8 +63,8 @@ public class Transformation {
 
 	public Matrix4d getInverseTransformationMatrix() {
 		Matrix4d rotationMatrix = getRotationMatrix();
-		Matrix4d translationMatrix = new Matrix4d(1, 0, 0, -translation.x , 0, 1, 0, -translation.y,
-				0, 0, 1, -translation.z, 0 , 0, 0, 1);
+		Matrix4d translationMatrix = new Matrix4d(1, 0, 0, translation.x , 0, 1, 0, translation.y,
+				0, 0, 1, translation.z, 0 , 0, 0, 1);
 		Matrix4d scaleMatrix = new Matrix4d(scale.x, 0, 0, 0, 0, scale.y, 0, 0, 0, 0, scale.z, 0,
 				0, 0, 0, 1);
 		rotationMatrix.mul(scaleMatrix);
