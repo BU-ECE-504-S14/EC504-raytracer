@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector3d;
 
-import scene.DifferentialGeometry;
+import scene.Intersection;
 import scene.Transformation;
 
 
@@ -25,14 +25,14 @@ public interface SceneObject {
 	boolean IntersectP(Ray ray);
 
 	/**
-	 * Test if a ray intersects an object.  If an intersection occurs, update dg object.
+	 * Test if a ray intersects an object.  If an intersection occurs, update inter object.
 	 * with information about the intersection.
 	 * 
 	 * @param ray Ray that is shooting.
-	 * @param dg differential geometry to fill with intersection information
+	 * @param inter differential geometry to fill with intersection information
 	 * @return boolean as to whether or not object was intersected
 	 */
-	public boolean Intersect(Ray ray, DifferentialGeometry dg);
+	public boolean Intersect(Ray ray, Intersection inter);
 
 	/**
 	 * Return the normal at a point on the object's surface.   It is the responsibility of the

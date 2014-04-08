@@ -69,13 +69,13 @@ public class Scene {
 	 * @return intersected object.
 	 */
 	public boolean getFirstIntersectedObject(Ray ray,
-			DifferentialGeometry dg) {
-		return getFirstIntersectedObject(ray, dg, objects);
+			Intersection inter) {
+		return getFirstIntersectedObject(ray, inter, objects);
 	}
 
 	/*ask aaron about this coding practice. Is this overloading.*/
 	public boolean getFirstIntersectedObject(Ray ray,
-			DifferentialGeometry dg, Collection<SceneObject> objs) {
+			Intersection inter, Collection<SceneObject> objs) {
 		SceneObject nearest = null;
 
 		for (SceneObject o : objs) {
@@ -83,7 +83,7 @@ public class Scene {
 		}
 		if (nearest == null)
 			return false;
-		return nearest.Intersect(ray, dg);
+		return nearest.Intersect(ray, inter);
 	}
 
 	public void dumpScene() {

@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.vecmath.Vector3d;
 
-import scene.DifferentialGeometry;
+import scene.Intersection;
 import scene.Transformation;
 
 
@@ -20,7 +20,7 @@ public abstract class AbstractSceneObject implements SceneObject {
 	
 	public abstract boolean IntersectP(Ray ray);
 
-	public abstract boolean Intersect(Ray ray, DifferentialGeometry dg);
+	public abstract boolean Intersect(Ray ray, Intersection inter);
 
 	public Collection<? extends SceneObject> getChildren() {
 		return null;

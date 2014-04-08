@@ -11,7 +11,7 @@ import objects.SceneObject;
  * @author Tolga
  *
  */
-public class DifferentialGeometry {
+public class Intersection {
 	
 	public Vector3d p;
 	public Vector3d nn; //normalized normal
@@ -23,12 +23,12 @@ public class DifferentialGeometry {
 	/**
 	 * 
 	 */
-	public DifferentialGeometry(){
+	public Intersection(){
 		u=v=0;
 		shape = null;
 	}
 	
-	public DifferentialGeometry(Vector3d p, Vector3d dpdu, Vector3d dpdv,Vector3d dndu,Vector3d dndv,float u,float v,SceneObject shape) {
+	public Intersection(Vector3d p, Vector3d dpdu, Vector3d dpdv,Vector3d dndu,Vector3d dndv,float u,float v,SceneObject shape) {
 		this.p = new Vector3d(p);
 		this.dpdu = new Vector3d(dpdu);
 		this.dpdv = new Vector3d(dpdv);

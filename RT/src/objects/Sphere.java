@@ -3,7 +3,7 @@ package objects;
 import javax.vecmath.Vector3d;
 
 import raytracer.Util;
-import scene.DifferentialGeometry;
+import scene.Intersection;
 import scene.Transformation;
 
 public class Sphere extends AbstractSceneObject {
@@ -87,7 +87,7 @@ public class Sphere extends AbstractSceneObject {
 	}
 
 	@Override
-	public boolean Intersect(Ray ray, DifferentialGeometry dg){
+	public boolean Intersect(Ray ray, Intersection inter){
 		float phi;
 		Pt pHit;
 		
@@ -176,7 +176,7 @@ public class Sphere extends AbstractSceneObject {
 		Normal dndv = new Normal(sdpdu);
 		
 		//Differential geometry initialization
-		dg.update(this.t.object2World(pHit),
+		inter.update(this.t.object2World(pHit),
 				  this.t.object2World(dpdu), 
 				  this.t.object2World(dpdv), 
 				  this.t.object2World(dndu),
