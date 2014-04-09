@@ -1,8 +1,18 @@
 package objects;
 
+import java.io.Serializable;
+
 import javax.vecmath.Vector3d;
 
-public class Material {
+/**
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
+public class Material implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** Color that reflects when the object is hit by a ray */
 	public Vector3d diffuseColor = new Vector3d(0.8, 0.8, 0.8);

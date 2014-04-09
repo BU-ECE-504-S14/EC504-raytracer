@@ -25,7 +25,7 @@ import scene.Transformation;
 
 /**
  * Ray tracing renderer, for EC504 at Boston University
- * based on the work of Rafael Martin Bigio <rbigio@itba.edu.ar.
+ * based on the work of Rafael Martin Bigio <rbigio@itba.edu.ar>
  * 
  * 
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
