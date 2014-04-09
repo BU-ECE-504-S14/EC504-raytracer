@@ -1,5 +1,7 @@
 package raytracer;
 
+import java.io.Serializable;
+
 import javax.vecmath.*;
 import javax.media.j3d.Transform3D;
 
@@ -13,7 +15,12 @@ import scene.Transformation;
  * (to apply to rays that are created) and a transformation matrix (combined translation and rotation)
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
-public class Camera {
+public class Camera implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** Camera position */
 	public Vector3d position;

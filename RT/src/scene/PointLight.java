@@ -1,5 +1,7 @@
 package scene;
 
+import java.io.Serializable;
+
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
@@ -10,8 +12,12 @@ import raytracer.Util;
  * A simple point light, which casts light rays in all directions.
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
-public class PointLight {
+public class PointLight implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Vector3d position = new Vector3d(0, 10, 0);
 	private Vector3d color = new Vector3d(1, 1, 1);
 	// private double fallConstant = 0.05;

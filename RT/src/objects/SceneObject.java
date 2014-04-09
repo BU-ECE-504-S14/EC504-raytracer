@@ -13,6 +13,12 @@ import scene.Transformation;
  * Object interface for the scene
  */
 public interface SceneObject {
+	
+	/** Get the name of this SceneObject, if it has one. 
+	 * 
+	 * @return a String representing the name of this SceneObject.
+	 */
+	public String getName();
 
 	/** @return Material properties of the object */
 	public Material getMaterial();

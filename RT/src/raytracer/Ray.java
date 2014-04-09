@@ -7,6 +7,7 @@ import javax.vecmath.Vector3d;
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
 public class Ray {
+	
 
 	/** The origin point of the ray */
 	public Vector3d position;
