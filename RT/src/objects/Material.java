@@ -29,7 +29,7 @@ public class Material {
 	public double reflectionIndex = 0;
 
 	/** Object brightness */
-	public double shininess = 0.1;
+	public double shininess = 0.2;
 	
 	@Override
 	public String toString() {

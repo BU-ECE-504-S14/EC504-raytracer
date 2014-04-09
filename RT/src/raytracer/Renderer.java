@@ -134,7 +134,9 @@ public class Renderer
 		t1.translation = new Vector3d(-6, 0, 0);
 		t1.scale = new Vector3d(3, 3, 3);
 		shape1.transform(t1);
-		m1.diffuseColor = new Vector3d(.2, .8, .2);
+		m1.diffuseColor = new Vector3d(.25, .25, .25);
+		m1.specularColor = new Vector3d(.75, .2, .2);
+		m1.shininess = 1;
 		m1.reflectionIndex = 0.5;
 		shape1.getMaterial().set(m1);
 
@@ -190,7 +192,7 @@ public class Renderer
 		l4.setColor(new Vector3d(1, 1, 1));
 		//l4.setPosition(new Vector3d(5, 5, -5));
 		l4.setPosition(new Vector3d(50, -20, -5));
-		//l4.setRadio(4);
+		l4.setRadio(2);
 
 		/*
 		PointLight l5 = new PointLight();
@@ -207,9 +209,9 @@ public class Renderer
 		scene.addSceneObject(shape1);
 		scene.addSceneObject(shape2);
 		scene.addSceneObject(shape3);
-	    scene.addLight(l1);
-		scene.addLight(l2);
-		scene.addLight(l3);
+	    //scene.addLight(l1);
+		//scene.addLight(l2);
+		//scene.addLight(l3);
 		scene.addLight(l4);
 		//scene.addLight(l5);
 		//scene.addLight(l6);
