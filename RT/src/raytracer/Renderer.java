@@ -183,6 +183,7 @@ public class Renderer
 		l4.setPosition(new Vector3d(50, -20, -5));
 		
 
+
 		PointLight l5 = new PointLight();
 		l5.setColor(new Vector3d(0, .5, 0));
 		l5.setPosition(new Vector3d(14, 2, 5));
@@ -200,7 +201,9 @@ public class Renderer
 		scene.addLight(l1);
 		scene.addLight(l2);
 	    scene.addLight(l4);
+
 		//scene.addLight(l3);
+		scene.addLight(l4);
 		//scene.addLight(l5);
 		//scene.addLight(l6);
 		scene.setCamera(cam);
@@ -224,8 +227,7 @@ public class Renderer
 		Dimension imageSize = new Dimension(optionWidth, optionHeight);
 
 		/* Ultra simple raytracer */
-		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
-				optionShadow);
+		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing, optionShadow);
 
 
 		BufferedImage result = rayTracer.render(optionProgress);
