@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
 import objects.Material;
@@ -41,6 +42,10 @@ public class SphereInfoPanel extends JPanel
 	ParameterPanel thetaMaxPanel;
 	ParameterPanel phiMaxPanel;
 	PositionPanel posPanel;
+	PositionPanel transformScale;
+	PositionPanel transformPosition;
+	PositionPanel transformRotationAxis;
+	ParameterPanel transformRotationAngle;
 
 	public static void main(String[] args)
 	{
@@ -74,6 +79,10 @@ public class SphereInfoPanel extends JPanel
 		thetaMinPanel.addFieldListener(go);
 		thetaMaxPanel.addFieldListener(go);
 		phiMaxPanel.addFieldListener(go);
+		transformPosition.addFieldListeners(go);
+		transformRotationAxis.addFieldListeners(go);
+		transformRotationAngle.addFieldListener(go);
+		transformScale.addFieldListeners(go);
 	}
 
 	public void setupPanels()
@@ -90,9 +99,16 @@ public class SphereInfoPanel extends JPanel
 		zMaxPanel = new ParameterPanel("zMax: ", ""+mySphere.zmax, 5);
 		thetaMinPanel = new ParameterPanel("thetaMin: ", ""+mySphere.thetaMin, 5);
 		thetaMaxPanel = new ParameterPanel("thetaMax: ", ""+mySphere.thetaMax, 5);
-		phiMaxPanel = new ParameterPanel("phiMax: " , ""+mySphere.phiMax, 5);
+		phiMaxPanel = new ParameterPanel("phiMax: " , ""+Math.toDegrees(mySphere.phiMax), 5);
 		
+		transformPosition = new PositionPanel("Transform position: ", mySphere.trans.getTranslation());
 		
+		Vector3d transformationAxis = new Vector3d(mySphere.trans.getRotation().x, mySphere.trans.getRotation().y, mySphere.trans.getRotation().z);
+		Vector3d transformationScale = new Vector3d(mySphere.trans.getScale());
+		
+		transformScale = new PositionPanel("Transform scale: " , transformationScale);
+		transformRotationAxis = new PositionPanel("Transform rotation axis: ", transformationAxis);
+		transformRotationAngle = new ParameterPanel("Transform rotation angle: ", ""+Math.toDegrees(mySphere.trans.getRotation().angle), 5);
 
 		add(namePanel);
 		add(posPanel);
@@ -102,6 +118,10 @@ public class SphereInfoPanel extends JPanel
 		add(thetaMinPanel);
 		add(thetaMaxPanel);
 		add(phiMaxPanel);
+		add(transformPosition);
+		add(transformScale);
+		add(transformRotationAxis);
+		add(transformRotationAngle);
 	}
 
 
@@ -126,7 +146,11 @@ public class SphereInfoPanel extends JPanel
 			mySphere.zmax = Float.parseFloat(zMaxPanel.getValue());
 			mySphere.thetaMin = Float.parseFloat(thetaMinPanel.getValue());
 			mySphere.thetaMax = Float.parseFloat(thetaMaxPanel.getValue());
-			mySphere.phiMax = Float.parseFloat(phiMaxPanel.getValue());
+			mySphere.phiMax = (float)Math.toRadians(Float.parseFloat(phiMaxPanel.getValue()));
+			mySphere.trans.setRotation(new AxisAngle4d(transformRotationAxis.getPosition(), Math.toRadians(Double.parseDouble(transformRotationAngle.getValue()))));
+			mySphere.trans.setTranslation(transformPosition.getPosition());
+			mySphere.trans.setScale(transformScale.getPosition());
+			
 		}
 		catch (Exception e)
 		{

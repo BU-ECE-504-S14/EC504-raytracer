@@ -58,9 +58,10 @@ public class SpherePanel extends JPanel
 		Sphere demoSphere = new Sphere();
 		demoSphere.radius = .5f;
 		demoSphere.position = new Vector3d(0, 0, 2);
+		demoSphere.material.diffuseColor = new Vector3d(.8, .15, .15);
 		JFrame testFrame = new JFrame("Scene Object Information: Sphere");
-		testFrame.setMinimumSize(new Dimension(650, 510));
-		testFrame.setPreferredSize(new Dimension(650, 510));
+		testFrame.setMinimumSize(new Dimension(650, 600));
+		testFrame.setPreferredSize(new Dimension(650, 600));
 		testFrame.setResizable(true);
 		testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -137,7 +138,7 @@ public class SpherePanel extends JPanel
 		lowerLeftPanel = new JPanel();
 		lowerLeftPanel.setLayout(new BorderLayout());
 		lowerLeftPanel.add(previewPanel);
-		leftPanel.add(lowerLeftPanel);
+		rightPanel.add(lowerLeftPanel);
 
 		add(leftPanel);
 		add(rightPanel);

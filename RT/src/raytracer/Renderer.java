@@ -107,7 +107,7 @@ public class Renderer
 	{
 		
 
-		SceneObject shape1,shape2,shape3;
+		Sphere shape1,shape2,shape3;
 
 		Material m1 = new Material();
 		Material m2 = new Material();

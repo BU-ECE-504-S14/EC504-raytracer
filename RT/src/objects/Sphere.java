@@ -10,15 +10,15 @@ import scene.Transformation;
 public class Sphere extends AbstractSceneObject {
 	public float radius = 1;
 	public Vector3d position = new Vector3d(0, 0, 0);
-	public float zmin = -1;
+	public float zmin = 0;
 	public float zmax = 1;
 	public float thetaMin = 0;
 	public float thetaMax = (float) 360;
-	public float phiMax = (float) 360;
-	public Vector3d scale = new Vector3d(1,1,1);
+	public float phiMax = (float) Math.PI*2; // Why is this in Radians when everything else isn't?
+ 	public Vector3d scale = new Vector3d(1,1,1);
 	public Vector3d pos = new Vector3d(0,0,0);
 	public AxisAngle4d rot = new AxisAngle4d(0,0,0,0);
-	public Transformation t = new Transformation(scale, pos, rot);
+	public Transformation trans = new Transformation(scale, pos, rot);
 
 	public Sphere(){
 		super();
@@ -40,7 +40,7 @@ public class Sphere extends AbstractSceneObject {
 		thetaMin = (float) Math.acos(Util.clamp(zmin / radius, -1f, 1f));
 		thetaMax = (float) Math.acos(Util.clamp(zmax / radius, -1f, 1f));
 		phiMax = (float) Math.toRadians(Util.clamp(pm, 0.0f, 360.0f));
-		this.t = new Transformation(trans);
+		this.trans = new Transformation(trans);
 		
 		setName("New Sphere");
 
@@ -62,7 +62,7 @@ public class Sphere extends AbstractSceneObject {
 		Pt pHit;
 
 		// transform ray to obj space
-		Ray o_ray = this.t.world2Object(ray);
+		Ray o_ray = this.trans.world2Object(ray);
 
 		// calculate quadratic sphere coeffs
 		float A = (float) o_ray.direction.dot(o_ray.direction); // dx^2 + dy^2 +
@@ -116,7 +116,7 @@ public class Sphere extends AbstractSceneObject {
 		Pt pHit;
 
 		// transform ray to obj space
-		Ray o_ray = this.t.world2Object(ray);
+		Ray o_ray = this.trans.world2Object(ray);
 
 		// calculate quadratic sphere coeffs
 		float A = (float) o_ray.direction.dot(o_ray.direction); // dx^2 + dy^2 +
@@ -211,9 +211,9 @@ public class Sphere extends AbstractSceneObject {
 		Normal dndv = new Normal(sdpdu);
 
 		// Differential geometry initialization
-		inter.update(this.t.object2World(pHit), this.t.object2World(dpdu),
-				this.t.object2World(dpdv), this.t.object2World(dndu),
-				this.t.object2World(dndv), u, v, this);
+		inter.update(this.trans.object2World(pHit), this.trans.object2World(dpdu),
+				this.trans.object2World(dpdv), this.trans.object2World(dndu),
+				this.trans.object2World(dndv), u, v, this);
 
 		// update hit parameter
 		ray.maxt = thit;
@@ -260,6 +260,6 @@ public class Sphere extends AbstractSceneObject {
 	@Override
 	public String toString() {
 		return "Sphere name= " + name + ", radius=" + radius + ", position="
-				+ position + ")" + material.toString();
+				+ position + ")" + material.toString() + trans.toString();
 	}
 }
