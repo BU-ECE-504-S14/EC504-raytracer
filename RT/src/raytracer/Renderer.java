@@ -131,7 +131,7 @@ public class Renderer
 		pos = new Vector3d(-50, 30, 0);
 		rot = new AxisAngle4d(0,0,1,0);
 		Transformation t2 = new Transformation(scale,pos,rot);
-		shape2 = new Sphere(25f, -50f, 50f, 360f,t2);
+		shape2 = new Sphere(25f, -102f, 250f, 200f,t2);
 		m2.diffuseColor = new Vector3d(0, 0, 1);
 		m2.reflectionIndex = 0.5;
 		shape2.getMaterial().set(m2);
@@ -198,8 +198,8 @@ public class Renderer
 		scene.addSceneObject(shape2);
 		scene.addSceneObject(shape3);
 		scene.addLight(l1);
-		//scene.addLight(l2);
-		//scene.addLight(l4);
+		scene.addLight(l2);
+	    scene.addLight(l4);
 		//scene.addLight(l3);
 		//scene.addLight(l5);
 		//scene.addLight(l6);
