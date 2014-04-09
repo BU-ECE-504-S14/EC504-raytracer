@@ -18,6 +18,7 @@ public abstract class AbstractSceneObject implements SceneObject {
 
 	public abstract Vector3d getNormalAt(Vector3d point);
 	
+	
 	public abstract boolean IntersectP(Ray ray);
 
 	public abstract boolean Intersect(Ray ray, Intersection inter);
