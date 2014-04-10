@@ -62,6 +62,8 @@ public class Sphere extends AbstractSceneObject {
 		x.point.add(ray.position);	
 		x.normal = getNormalAt(x.point);
 		x.distance = t;
+		
+		x.ray = ray;
 		return x;
 	}
 

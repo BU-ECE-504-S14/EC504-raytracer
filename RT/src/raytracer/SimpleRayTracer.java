@@ -37,14 +37,9 @@ public class SimpleRayTracer{
 	public int currentRay;
 
 	/**
-<<<<<<< HEAD
-	 * Create the new ray tracer with the given parameters. The camera is set up to the
-	 * size of the image to generate so that we can construct the rays.
-=======
 	 * Create the new ray tracer with the given parameters. The camera is set up
 	 * to the size of the image to generate so that we can construct the rays.
 	 * 
->>>>>>> Bryant
 	 * @param scene
 	 *            Scene to render
 	 * @param imageSize
@@ -86,14 +81,14 @@ public class SimpleRayTracer{
 				currentRay++;
 				if (showProgress
 						&& (i * imageSize.width + j)
-								% (imageSize.width * imageSize.height / 80) == 0)
+						% (imageSize.width * imageSize.height / 80) == 0)
 					System.out.print('*');
 
 				Ray ray = constructRayThroughPixel(i, j);/* create this ray through pixel (i,j) */
 				color.set(0, 0, 0);
 
 				/* do ray trace */
-				getColor(ray, 0, scene.getCamera().position, color, 1);
+				getColor(ray, 0, scene.getCamera().position, color,1); 
 
 				/* set color into image at screen position (i,j) */
 				image.setRGB(j, i, new Color((float) color.x, (float) color.y,
@@ -116,8 +111,6 @@ public class SimpleRayTracer{
 	 *            origin (not used yet)
 	 * @param color
 	 *            Output parameter with the color found in the pixel
-	 * @param currentRefraction
-	 *            Refractive index of the current environment (not used yet)
 	 * @return The first intersected object (may be null)
 	 */
 
@@ -147,6 +140,7 @@ public class SimpleRayTracer{
 			Vector3d ambient = new Vector3d(0, 0, 0);
 			Vector3d diffuse = new Vector3d(0, 0, 0);
 			Vector3d specular = new Vector3d(0, 0, 0);
+			Vector3d ReflectRefract = new Vector3d(0,0,0);
 
 			// Calculate ambient lighting
 			diffuse = calculateDiffuseColor(intersectedObject.getMaterial(),
@@ -225,13 +219,15 @@ public class SimpleRayTracer{
 				specular = calculateSpecularColor(
 						intersectedObject.getMaterial(), light,
 						intersection.point);
-				
+
 				specular.scale(specAmt);
 				illumination.add(specular);
 			}
 
 			// Update illumination
 			illumination.add(ambient);
+			ReflectRefract = getReflectiveRefractiveLighting(ray, intersectedObject, intersection, ambient, currentLevel, currentRefraction);
+			illumination.add(ReflectRefract);
 		}
 
 		// Maximum illumination is 1 for any given R,G,B value
@@ -246,26 +242,7 @@ public class SimpleRayTracer{
 
 		return intersectedObject;
 	}
-	/**
-	 * Find reflected ray
-	 * 
-	 * @param vector
-	 *            to be reflected
-	 * @param normal
-	 *            to the eye
-	 * @return reflected vector
-	 */
-	public Vector3d reflect(Vector3d v1, Vector3d normal) {
-		Vector3d reflected = new Vector3d(v1);
-		Vector3d adjVect = new Vector3d(normal);
 
-		double adj = v1.dot(normal) * 2;
-		adjVect.scale(adj);
-		reflected.sub(adjVect);
-		reflected.normalize();
-
-		return reflected;
-	}
 
 	/**
 	 * Find shadow ray and correct for floating point imprecision
@@ -374,6 +351,93 @@ public class SimpleRayTracer{
 
 		return new Vector3d(newRColor, newGColor, newBColor);
 	}
+
+	Vector3d getReflectiveRefractiveLighting(Ray ray, SceneObject intersectedObject, Intersection intersection, Vector3d ambientIntensity, 
+			int currentLevel, double currentRefraction){
+		double reflectivity = intersectedObject.getMaterial().reflectionIndex;
+		double startRefractiveIndex = intersectedObject.getMaterial().refractionIndex;//intersection.startMaterial->getRefractiveIndex();
+		double endRefractiveIndex = intersectedObject.getMaterial().refractionIndex;
+		int reflectionsRemaining = intersection.ray.remainingReflections;
+		/**
+		 * Don't perform lighting if the object is not reflective or refractive or we have
+		 * hit our recursion limit.
+		 */
+		if (reflectivity == NOT_REFLECTIVE && endRefractiveIndex == NOT_REFRACTIVE || reflectionsRemaining <= 0) {
+			return new Vector3d(0,0,0);
+		}
+
+		// Default to exclusively reflective values.
+		double reflectivePercentage = reflectivity;
+		double refractivePercentage = 0;
+
+		// Refractive index overrides the reflective property.
+		if (endRefractiveIndex != NOT_REFRACTIVE) {
+			reflectivePercentage = getReflectance(intersection.normal, intersection.ray.direction, startRefractiveIndex, endRefractiveIndex);
+			refractivePercentage = 1 - reflectivePercentage;
+		}
+
+		// No ref{ra,le}ctive properties - bail early.
+		if (refractivePercentage <= 0 && reflectivePercentage <= 0) {
+			return new Vector3d(0,0,0);
+		}
+
+		Vector3d reflectiveColor = new Vector3d(0,0,0);
+		Vector3d refractiveColor = new Vector3d(0,0,0);
+
+		if (reflectivePercentage > 0) {
+			Vector3d reflected = reflect(intersection.ray.position, intersection.normal);
+			Ray reflectedRay = new Ray(intersection.point,intersection.ray.origin, reflected, reflectionsRemaining - 1);
+			reflectiveColor.x = (reflectiveColor.x* reflectivePercentage);
+			reflectiveColor.y = (reflectiveColor.y* reflectivePercentage);
+			reflectiveColor.z =  (reflectiveColor.z* reflectivePercentage);
+			if (getColor(reflectedRay, currentLevel + 1, reflectedRay.position, reflectiveColor,
+					currentRefraction) != null) {
+				Material material = intersectedObject.getMaterial();
+				Util.multiplyVectors(reflectiveColor, material.diffuseColor);
+				reflectiveColor.scale(material.reflectionIndex);
+				ambientIntensity.add(reflectiveColor);
+			}
+		}
+
+		if (refractivePercentage > 0) {
+			Vector3d refracted = refract(intersection.normal,intersection.ray.direction, startRefractiveIndex, endRefractiveIndex);
+			Ray refractedRay = new Ray(intersection.point,intersection.ray.origin, refracted, reflectionsRemaining - 1);//, 1, intersection.endMaterial);
+			//refractiveColor = castRay(refractedRay);// * refractivePercentage;
+			refractiveColor.x = (refractiveColor.x* refractivePercentage);
+			refractiveColor.y = (refractiveColor.y* refractivePercentage);
+			refractiveColor.z =  (refractiveColor.z* refractivePercentage);
+			if (refractedRay != null) {
+				// TODO
+				if (refractedRay.direction.dot(intersection.normal) > 0) {
+					currentRefraction = intersectedObject.getMaterial().refractionIndex;
+				} else {
+					currentRefraction = 1;
+				}
+				Vector3d refractedColor = new Vector3d();
+				SceneObject instersectedObject2 = getColor(refractedRay, currentLevel + 1,
+						refractedRay.position, refractedColor, currentRefraction);
+				if (instersectedObject2 != null) {
+
+					Vector3d pointOfIntersection = instersectedObject2.intersectsRay(refractedRay).point;
+					pointOfIntersection.sub(intersection.point);
+					double distancia = intersection.distance;
+
+					Material material = intersectedObject.getMaterial();
+					Vector3d absorbance = new Vector3d(material.diffuseColor);
+					absorbance.scale(-0.15 * distancia);
+					Vector3d transparency = new Vector3d(Math.exp(absorbance.x),
+							Math.exp(absorbance.y), Math.exp(absorbance.z));
+
+					Util.multiplyVectors(refractedColor, transparency);
+					refractedColor.scale(material.transparency);
+					ambientIntensity.add(refractedColor);
+				}
+			}
+
+		}
+		refractiveColor.add(reflectiveColor);
+		return refractiveColor;
+	}
 	/**
 
 	 * Construct a ray that exits that camera and passes through the pixel (i,j)
@@ -394,7 +458,7 @@ public class SimpleRayTracer{
 		double zDir = (double) (Math.min(imageSize.width, imageSize.height) / (2 * Math
 				.tan(scene.getCamera().fieldOfView / 2)));
 		Vector4d dir = new Vector4d(xDir, -yDir, -zDir, 1); // why is image
-															// inverted?
+		// inverted?
 
 		dir.normalize();
 		Vector4d result = Util.MultiplyMatrixAndVector(
@@ -403,82 +467,6 @@ public class SimpleRayTracer{
 		direction.normalize();
 		return new Ray(scene.getCamera().position, direction);
 	}
-	Color getReflectiveRefractiveLighting(Intersection intersection, SceneObject o) {
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\DOUBLE CHECK THESE
-		double reflectivity = o.getMaterial().reflectionIndex;//intersection.endMaterial->getReflectivity();
-		double startRefractiveIndex = o.getMaterial().refractionIndex;//intersection.startMaterial->getRefractiveIndex();
-		double endRefractiveIndex = o.getMaterial().refractionIndex;//intersection.endMaterial->getRefractiveIndex();
-		int reflectionsRemaining =0;//intersection.ray.reflectionsRemaining;
-
-		/**
-		 * Don't perform lighting if the object is not reflective or refractive or we have
-		 * hit our recursion limit.
-		 */
-		if (reflectivity == NOT_REFLECTIVE && endRefractiveIndex == NOT_REFRACTIVE || reflectionsRemaining <= 0) {
-			return null;
-		}
-
-		// Default to exclusively reflective values.
-		double reflectivePercentage = reflectivity;
-		double refractivePercentage = 0;
-
-		// Refractive index overrides the reflective property.
-		if (endRefractiveIndex != NOT_REFRACTIVE) {
-			reflectivePercentage = getReflectance(intersection.normal, intersection.ray.direction, startRefractiveIndex, endRefractiveIndex);
-
-			refractivePercentage = 1 - reflectivePercentage;
-		}
-
-		// No ref{ra,le}ctive properties - bail early.
-		if (refractivePercentage <= 0 && reflectivePercentage <= 0) {
-			return null;
-		}
-
-		Color reflectiveColor = new Color(0,0,0);
-		Color refractiveColor = new Color(0,0,0);
-
-		if (reflectivePercentage > 0) {
-			Vector3d reflected = reflectVector(intersection.ray.position, intersection.normal);
-			Ray reflectedRay = new Ray(intersection.point, reflected);//, reflectionsRemaining - 1, intersection.ray.material);
-			Color temp = new Color(0,0,0);
-			//temp = castRay(reflectedRay);
-			int red = (int) (temp.getRed()* reflectivePercentage);
-			int green = (int) (temp.getGreen()* reflectivePercentage);
-			int blue = (int) (temp.getBlue()* reflectivePercentage);
-			reflectiveColor = new Color(red,green,blue);
-
-		}
-
-		if (refractivePercentage > 0) {
-			Vector3d refracted = refractVector(intersection.normal,intersection.ray.direction, startRefractiveIndex, endRefractiveIndex);
-			Ray refractedRay = new Ray(intersection.point, refracted);//, 1, intersection.endMaterial);
-			//refractiveColor = castRay(refractedRay);// * refractivePercentage;
-		}
-
-		return new Color(reflectiveColor.getRed() + refractiveColor.getRed(),reflectiveColor.getGreen() +
-				refractiveColor.getGreen(), reflectiveColor.getBlue() + refractiveColor.getBlue());
-	}
-	/*
-	Color castRay(Ray ray) {
-		//raysCast++;
-		Intersection intersection = getClosestIntersection(ray);
-		if (intersection.didIntersect) {
-			return performLighting(intersection);
-		} else {
-			return null;
-		}
-	}
-
-Color RayTracer::performLighting(const Intersection& intersection) {
-   Color color = intersection.getColor();
-   Color ambientColor = getAmbientLighting(intersection, color);
-   Color diffuseAndSpecularColor = getDiffuseAndSpecularLighting(intersection, color);
-   Color reflectedColor = getReflectiveRefractiveLighting(intersection);
-
-   return ambientColor + diffuseAndSpecularColor + reflectedColor;
-}
-	 */
 	double getReflectance( Vector3d normal, Vector3d incident, double n1, double n2) {
 		double n = n1 / n2;
 		double cosI = -normal.dot(incident);
@@ -495,7 +483,7 @@ Color RayTracer::performLighting(const Intersection& intersection) {
 		return (r0rth * r0rth + rPar * rPar) / 2.0;
 	}
 
-	Vector3d refractVector( Vector3d normal, Vector3d incident, double n1, double n2) {
+	Vector3d refract( Vector3d normal, Vector3d incident, double n1, double n2) {
 		double n = n1 / n2;
 		double cosI = -normal.dot(incident);
 		double sinT2 = n * n * (1.0 - cosI * cosI);
@@ -516,13 +504,25 @@ Color RayTracer::performLighting(const Intersection& intersection) {
 		return incident;
 	}
 
-	Vector3d reflectVector(Vector3d vector, Vector3d normal) {
-		normal.x *=2 * vector.dot(normal);
-		normal.y *=2 * vector.dot(normal);
-		normal.z *=2 * vector.dot(normal);
-		normal.sub(vector);
-		return normal;// - vector;
-	}
+	/**
+	 * Find reflected ray
+	 * 
+	 * @param vector
+	 *            to be reflected
+	 * @param normal
+	 *            to the eye
+	 * @return reflected vector
+	 */
+	public Vector3d reflect(Vector3d v1, Vector3d normal) {
+		Vector3d reflected = new Vector3d(v1);
+		Vector3d adjVect = new Vector3d(normal);
 
+		double adj = v1.dot(normal) * 2;
+		adjVect.scale(adj);
+		reflected.sub(adjVect);
+		reflected.normalize();
+
+		return reflected;
+	}
 
 }

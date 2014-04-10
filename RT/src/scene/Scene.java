@@ -106,6 +106,7 @@ public class Scene {
 			return null;
 		intersection.point = nearestIntersection.point;
 		intersection.normal = nearestIntersection.normal;
+		intersection.ray = nearestIntersection.ray;
 		return nearest;
 	}
 

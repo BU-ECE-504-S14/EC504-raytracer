@@ -21,7 +21,7 @@ public class Intersection {
 	
 	
 	public Ray ray;
-	
+
 	public Intersection() {
 		point = new Vector3d();
 		normal = new Vector3d();
@@ -31,7 +31,7 @@ public class Intersection {
 		this.point = new Vector3d(point);
 		this.normal = new Vector3d(normal);
 		this.distance = distance;
-		this.ray = ray;
+		this.ray = new Ray(ray.position, ray.origin, ray.direction, ray.remainingReflections);
 	}
 
 	@Override
