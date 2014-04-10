@@ -13,7 +13,7 @@ public class TriangleMesh extends AbstractSceneObject{
 	public Transformation t;
 	
 	//Points are expected to be in object space
-	TriangleMesh(Transformation t, int nt, int nv, int[] vi, 
+	public TriangleMesh(Transformation t, int nt, int nv, int[] vi, 
 			Pt[] P, Normal[] N, Vec[] S, float[] uv){
 		this.t = new Transformation(t);
 		ntris = nt;
@@ -48,6 +48,7 @@ public class TriangleMesh extends AbstractSceneObject{
 	
 	@Override
 	public void refine(ArrayList<SceneObject> SOA){
+		SOA.ensureCapacity(ntris); // avoid vector doubling copy cost
 		for(int i = 0; i < ntris; i++) 
 			SOA.add(new Triangle(this,i));
 	}

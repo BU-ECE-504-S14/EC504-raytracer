@@ -18,6 +18,7 @@ public class Triangle extends AbstractSceneObject {
 		 v[0] = mesh.vertexIndex[3*n];
 		 v[1] = mesh.vertexIndex[3*n+1];
 		 v[2] = mesh.vertexIndex[3*n+2];
+		 this.material = m.material;
 	}
 	
 	@Override
@@ -56,7 +57,9 @@ public class Triangle extends AbstractSceneObject {
 		float t = (float) (Util.dotProduct(e2, s2) * invDivisor);
 		if(t < ray.mint || t > ray.maxt) return false; //there is some other object closer than this or mesh is behind the ray
 		
+		
 		//triangle has definitely been intersected
+		ray.maxt = t; //update nearest
 		return true;
 	}
 
@@ -135,7 +138,7 @@ public class Triangle extends AbstractSceneObject {
 		Pt phit = ray.getPointAt(t);
 		Inter.update(phit, dpdu, dpdv, new Normal(0,0,0), new Normal(0,0,0), tu, tv, this);
 		
-		ray.maxt = t;
+		ray.maxt = t; //update nearest
 		return true;
 	}
 	

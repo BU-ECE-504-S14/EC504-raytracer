@@ -83,7 +83,7 @@ public class SimpleRayTracer
 	 *            Flag indicating whether or not to show progress on the screen
 	 * @return The generated image
 	 */
-	public BufferedImage render(boolean showProgress)
+	public BufferedImage render(boolean showProgress) throws Exception
 	{
 		totalRays = imageSize.height * imageSize.width;
 		currentRay = 1;
@@ -134,10 +134,10 @@ public class SimpleRayTracer
 	 * @return The first intersected object (may be null)
 	 */
 	private SceneObject getColor(Ray ray, int currentLevel, Vector3d viewerPosition,
-			Vector3d color, double currentRefraction) {
+			Vector3d color, double currentRefraction) throws Exception{
 		
 		Intersection inter = new Intersection();
-
+		
 		if (!scene.getFirstIntersectedObject(ray, inter)) {
 			color.set(new double[] { 0, 0, 0 });
 			return null;
