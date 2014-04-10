@@ -1,5 +1,6 @@
 package objects;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.vecmath.Vector3d;
@@ -10,6 +11,10 @@ import scene.Transformation;
 
 public abstract class AbstractSceneObject implements SceneObject {
 
+	public class RefinementException extends Exception {
+		private static final long serialVersionUID = 1L;
+		
+	}
 	public Material material = new Material();
 	
 	public Material getMaterial() {
@@ -18,6 +23,13 @@ public abstract class AbstractSceneObject implements SceneObject {
 
 	public abstract Vector3d getNormalAt(Vector3d point);
 	
+	public boolean isIntersectable(){
+		return true;
+	}
+	
+	public void refine(ArrayList<SceneObject> SOA) throws RefinementException {
+		throw new RefinementException();
+	}
 	
 	public abstract boolean IntersectP(Ray ray);
 

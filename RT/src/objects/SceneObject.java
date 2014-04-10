@@ -1,9 +1,11 @@
 package objects;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.vecmath.Vector3d;
 
+import objects.AbstractSceneObject.RefinementException;
 import scene.Intersection;
 import scene.Transformation;
 
@@ -23,6 +25,21 @@ public interface SceneObject {
 	 * @return boolean as to whether or not object was intersected
 	 */
 	boolean IntersectP(Ray ray);
+	
+	/**
+	 * tests whether or not object is intersectable
+	 * 
+	 * @return true if object is intersectable
+	 */
+	public boolean isIntersectable();
+	
+	/**
+	 * Breaks unintersectable object into an ArrayList of smaller intersectable objects
+	 * 
+	 * @param SOA empty ArrayList to be filled with intersectable objects
+	 * @throws RefinementException
+	 */
+	public void refine(ArrayList<SceneObject> SOA) throws RefinementException;
 
 	/**
 	 * Test if a ray intersects an object.  If an intersection occurs, update inter object.

@@ -4,6 +4,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
+import objects.Normal;
 import objects.Vec;
 
 /**
@@ -80,18 +81,19 @@ public class Util {
 	
 	/**
 	 * Set up orthonormal arbitrary coordinate system based on v1
-	 * @param v1
+	 * 
+	 * @param n
 	 * @param v2
 	 * @param v3
 	 */
-	public void makeCoordinateSystem(Vec v1, Vec v2, Vec v3) {
-	       if (Math.abs(v1.x) > Math.abs(v1.y)) {
-	           float invLen = (float) (1.f / Math.sqrt(v1.x*v1.x + v1.z*v1.z));
-	           v2.set(-v1.z * invLen, 0.f, v1.x * invLen);
+	public static void makeCoordinateSystem(Normal n, Vec v2, Vec v3) {
+	       if (Math.abs(n.x) > Math.abs(n.y)) {
+	           float invLen = (float) (1.f / Math.sqrt(n.x*n.x + n.z*n.z));
+	           v2.set(-n.z * invLen, 0.f, n.x * invLen);
 	       } else {
-	           float invLen = (float) (1.f / Math.sqrt(v1.y*v1.y + v1.z*v1.z));
-	           v2.set(0.f, v1.z * invLen, -v1.y * invLen);
+	           float invLen = (float) (1.f / Math.sqrt(n.y*n.y + n.z*n.z));
+	           v2.set(0.f, n.z * invLen, -n.y * invLen);
 	       }
-	       v3.cross(v1, v2);
+	       v3.cross(n, v2);
 	}
 }
