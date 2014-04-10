@@ -23,9 +23,9 @@ public class Triangle extends AbstractSceneObject {
 	@Override
 	public boolean IntersectP(Ray ray) {
 		//get triangle positions
-		Pt p1 = new Pt(mesh.P[v[0]]);
-		Pt p2 = new Pt(mesh.P[v[1]]);
-		Pt p3 = new Pt(mesh.P[v[2]]);
+		Pt p1 = new Pt(mesh.Points[v[0]]);
+		Pt p2 = new Pt(mesh.Points[v[1]]);
+		Pt p3 = new Pt(mesh.Points[v[2]]);
 		
 		//compute s1
 		Vec e1 = new Vec(p2);
@@ -65,9 +65,9 @@ public class Triangle extends AbstractSceneObject {
 	public boolean Intersect(Ray ray, Intersection Inter) {
 		
 		//get triangle positions
-		Pt p1 = new Pt(mesh.P[v[0]]);
-		Pt p2 = new Pt(mesh.P[v[1]]);
-		Pt p3 = new Pt(mesh.P[v[2]]);
+		Pt p1 = new Pt(mesh.Points[v[0]]);
+		Pt p2 = new Pt(mesh.Points[v[1]]);
+		Pt p3 = new Pt(mesh.Points[v[2]]);
 		
 		//compute s1
 		Vec e1 = new Vec(p2);
@@ -153,12 +153,6 @@ public class Triangle extends AbstractSceneObject {
 			uvs[1][0] = 1f; uvs[1][1] = 0f;
 			uvs[2][0] = 1f; uvs[2][1] = 1f;
 		}
-	}
-
-	@Override
-	public Vector3d getNormalAt(Vector3d point) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

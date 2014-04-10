@@ -15,13 +15,18 @@ public abstract class AbstractSceneObject implements SceneObject {
 		private static final long serialVersionUID = 1L;
 		
 	}
+	
+	public class NotIntersectableException extends Exception {
+
+		private static final long serialVersionUID = 1L;
+		
+	}
+	
 	public Material material = new Material();
 	
 	public Material getMaterial() {
 		return material;
 	}
-
-	public abstract Vector3d getNormalAt(Vector3d point);
 	
 	public boolean isIntersectable(){
 		return true;
@@ -31,9 +36,13 @@ public abstract class AbstractSceneObject implements SceneObject {
 		throw new RefinementException();
 	}
 	
-	public abstract boolean IntersectP(Ray ray);
+	public boolean IntersectP(Ray ray) throws NotIntersectableException {
+		throw new NotIntersectableException();
+	}
 
-	public abstract boolean Intersect(Ray ray, Intersection inter);
+	public boolean Intersect(Ray ray, Intersection inter) throws NotIntersectableException {
+		throw new NotIntersectableException();
+	}
 
 	public Collection<? extends SceneObject> getChildren() {
 		return null;

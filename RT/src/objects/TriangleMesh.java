@@ -1,21 +1,18 @@
 package objects;
 
 import java.util.ArrayList;
-
-import javax.vecmath.Vector3d;
-
-import scene.Intersection;
 import scene.Transformation;
 
 public class TriangleMesh extends AbstractSceneObject{
-	public int ntris, nverts;
+	private int ntris, nverts;
 	public int[] vertexIndex;
-	public Pt[] P;
+	public Pt[] Points;
 	public Normal[] normals;
 	public Vec[] tangents;
 	public float uvs[];
 	public Transformation t;
 	
+	//Points are expected to be in object space
 	TriangleMesh(Transformation t, int nt, int nv, int[] vi, 
 			Pt[] P, Normal[] N, Vec[] S, float[] uv){
 		this.t = new Transformation(t);
@@ -38,6 +35,10 @@ public class TriangleMesh extends AbstractSceneObject{
 			tangents = new Vec[nverts];
 			System.arraycopy(S, 0, tangents, 0, S.length);
 		} else tangents = null;
+		
+		Points = new Pt[nverts];
+		for(int i = 0; i < nverts; i++) 
+			Points[i] = t.object2World(P[i]); //for triangle mesh object points are stored in world space
 	}
 	
 	@Override 
@@ -47,25 +48,8 @@ public class TriangleMesh extends AbstractSceneObject{
 	
 	@Override
 	public void refine(ArrayList<SceneObject> SOA){
-		
-	}
-
-	@Override
-	public Vector3d getNormalAt(Vector3d point) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean IntersectP(Ray ray) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean Intersect(Ray ray, Intersection inter) {
-		// TODO Auto-generated method stub
-		return false;
+		for(int i = 0; i < ntris; i++) 
+			SOA.add(new Triangle(this,i));
 	}
 
 }
