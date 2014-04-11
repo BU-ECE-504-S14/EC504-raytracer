@@ -6,6 +6,7 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -18,7 +19,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
@@ -33,6 +37,7 @@ import util.SceneObjectException;
 public class SphereInfoPanel extends JPanel
 {
 	Sphere mySphere;
+	public SpherePanel mySpherePanel;
 
 	ParameterPanel namePanel;
 	ParameterPanel radiusPanel;
@@ -46,6 +51,7 @@ public class SphereInfoPanel extends JPanel
 	PositionPanel transformPosition;
 	PositionPanel transformRotationAxis;
 	ParameterPanel transformRotationAngle;
+	JSlider rotationSlider; 
 
 	public static void main(String[] args)
 	{
@@ -122,8 +128,21 @@ public class SphereInfoPanel extends JPanel
 		add(transformScale);
 		add(transformRotationAxis);
 		add(transformRotationAngle);
+		
+		JSlider rotationSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
+		
+		ChangeListener c = new ChangeListener(){
+			public void stateChanged(ChangeEvent e){
+				JSlider source = (JSlider)e.getSource();
+				transformRotationAngle.paramField.setText(""+source.getValue());
+				mySpherePanel.updateSphere();
+			}
+		};
+		
+		rotationSlider.addChangeListener(c);
+		add(rotationSlider);
+		
 	}
-
 
 	public void updateSphereInfo()
 	{

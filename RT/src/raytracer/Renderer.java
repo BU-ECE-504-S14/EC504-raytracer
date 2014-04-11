@@ -123,7 +123,8 @@ public class Renderer
 		Transformation t1 = new Transformation(scale,pos,rot);
 		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
 		m1.diffuseColor = new Vector3d(0, 1, 0);
-		m1.reflectionIndex = 0.5;
+		m1.specularIndex = 0.5;
+		m1.ambientIntensity = .5;
 		shape1.getMaterial().set(m1);
 
 		/* shape2 */
@@ -133,7 +134,9 @@ public class Renderer
 		Transformation t2 = new Transformation(scale,pos,rot);
 		shape2 = new Sphere(25f, -102f, 250f, 200f,t2);
 		m2.diffuseColor = new Vector3d(0, 0, 1);
-		m2.reflectionIndex = 0.5;
+		m2.specularIndex = 0.5;
+		m2.ambientIntensity = .5;
+
 		shape2.getMaterial().set(m2);
 
 		/* shape3 */
@@ -143,7 +146,9 @@ public class Renderer
 		Transformation t3 = new Transformation(scale,pos,rot);
 		shape3 = new Sphere(10f, -10f, 10f, 360f,t3);
 		m3.diffuseColor = new Vector3d(1, 0, 0);
-		m3.reflectionIndex = 0.5;
+		m3.specularIndex = 0.5;
+		m3.ambientIntensity = .5;
+
 		shape3.getMaterial().set(m3);
 
 		/* set up camera */
@@ -230,7 +235,16 @@ public class Renderer
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing, optionShadow);
 
 
-		BufferedImage result = rayTracer.render(optionProgress);
+		BufferedImage result = null;
+		try
+		{
+			result = rayTracer.render(optionProgress);
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return result;
 	}
 }

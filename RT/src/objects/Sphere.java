@@ -10,8 +10,8 @@ import scene.Transformation;
 public class Sphere extends AbstractSceneObject {
 	public float radius = 1;
 	public Vector3d position = new Vector3d(0, 0, 0);
-	public float zmin = 0;
-	public float zmax = 1;
+	public float zmin = -1f;
+	public float zmax = 1f;
 	public float thetaMin = 0;
 	public float thetaMax = (float) 360;
 	public float phiMax = (float) Math.PI*2; // Why is this in Radians when everything else isn't?

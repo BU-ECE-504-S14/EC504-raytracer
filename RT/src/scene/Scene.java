@@ -35,7 +35,7 @@ public class Scene implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	protected Collection<SceneObject> objects;
-	protected Collection<PointLight> lights;
+	protected Collection<Light> lights;
 	protected Camera camera;
 
 	public Scene()
@@ -43,7 +43,7 @@ public class Scene implements Serializable
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
 				(float) (Math.PI / 4));
 		objects = new HashSet<SceneObject>();
-		lights = new HashSet<PointLight>();
+		lights = new HashSet<Light>();
 	}
 
 	public static void writeSceneToFile(Scene targetScene, String filePath)
@@ -91,7 +91,7 @@ public class Scene implements Serializable
 		return s;
 	}
 
-	protected Scene(Collection<SceneObject> objects, Collection<PointLight> lights, Camera camera)
+	protected Scene(Collection<SceneObject> objects, Collection<Light> lights, Camera camera)
 	{
 		this.objects = objects;
 		this.lights = lights;
@@ -103,7 +103,7 @@ public class Scene implements Serializable
 		this.objects.add(obj);
 	}
 
-	public void addLight(PointLight light)
+	public void addLight(Light light)
 	{
 		this.lights.add(light);
 	}
@@ -118,7 +118,7 @@ public class Scene implements Serializable
 		return objects;
 	}
 
-	public Collection<PointLight> getLights()
+	public Collection<Light> getLights()
 	{
 		return lights;
 	}
@@ -166,7 +166,7 @@ public class Scene implements Serializable
 			System.out.println("  " + s.toString());
 		}
 		System.out.println("Lights:");
-		for (PointLight p : lights)
+		for (Light p : lights)
 		{
 			System.out.println("  " + p.toString());
 		}
