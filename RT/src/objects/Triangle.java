@@ -126,6 +126,28 @@ public class Triangle extends AbstractSceneObject {
 			n.cross(e2, e1);
 			n.normalize();
 			Util.makeCoordinateSystem(n, dpdu, dpdv);
+		} else {
+			/* use matrix multiplication with axis vectors and inverse uv axis matrix
+			   to determine change in u and v */
+			
+			float invdet = 1f/determinant;
+			
+			Vec dp1_copy = new Vec(dp1);
+			Vec dp2_copy = new Vec(dp2);
+			
+			dp1.scale(dv2); 		//dv2*dp1
+			dp2.scale(dv1); 		//dv1*dp2
+			dp1.sub(dp2);			//dv2*dp1 - dv1*dp2
+			dp1.scale(invdet); 		//(dv2*dp1 - dv1*dp2)invdet
+			dpdu = new Vec(dp1);	//dpdu = (dv2*dp1 - dv1*dp2)invdet
+			
+			dp1_copy.scale(-du2);		//-du2*dp1
+			dp2_copy.scale(du1);		//du1*dp2
+			dp1_copy.add(dp2_copy);		//-du2 * dp1 + du1 * dp2
+			dp1_copy.scale(invdet);		//(-du2 * dp1 + du1 * dp2) * invdet
+			dpdv = new Vec(dp1_copy);	//dpdv = (-du2 * dp1 + du1 * dp2) * invdet
+			
+			// (David's note) I really love it that Java doesn't let me overload operators!
 		}
 		
 		//compute triangle parameterizations based on intersection point's distance from triangle origin.
