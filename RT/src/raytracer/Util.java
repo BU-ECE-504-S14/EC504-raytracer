@@ -22,7 +22,6 @@ public class Util {
 				newValues[i] += matrix.getElement(i, j) * oldValues[j];
 			}
 		}
-
 		result.setX(newValues[0]);
 		result.setY(newValues[1]);
 		result.setZ(newValues[2]);
@@ -69,5 +68,11 @@ public class Util {
 	
 	public static double randomBetween(double min, double max) {
 		return min + Math.random() * (max - min);
+	}
+	
+	public static float clamp(float val,float min, float max){
+		if (val<min) return min;
+		else if(val>max) return max;
+		else return val;
 	}
 }

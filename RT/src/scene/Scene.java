@@ -15,9 +15,9 @@ import java.util.Set;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
+import objects.Ray;
 import objects.SceneObject;
 import raytracer.Camera;
-import raytracer.Ray;
 import raytracer.Util;
 
 /**
@@ -35,7 +35,7 @@ public class Scene implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	protected Collection<SceneObject> objects;
-	protected Collection<PointLight> lights;
+	protected Collection<Light> lights;
 	protected Camera camera;
 
 	public Scene()
@@ -43,7 +43,7 @@ public class Scene implements Serializable
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
 				(float) (Math.PI / 4));
 		objects = new HashSet<SceneObject>();
-		lights = new HashSet<PointLight>();
+		lights = new HashSet<Light>();
 	}
 
 	public static void writeSceneToFile(Scene targetScene, String filePath)
@@ -91,7 +91,7 @@ public class Scene implements Serializable
 		return s;
 	}
 
-	protected Scene(Collection<SceneObject> objects, Collection<PointLight> lights, Camera camera)
+	protected Scene(Collection<SceneObject> objects, Collection<Light> lights, Camera camera)
 	{
 		this.objects = objects;
 		this.lights = lights;
@@ -103,7 +103,7 @@ public class Scene implements Serializable
 		this.objects.add(obj);
 	}
 
-	public void addLight(PointLight light)
+	public void addLight(Light light)
 	{
 		this.lights.add(light);
 	}
@@ -118,7 +118,7 @@ public class Scene implements Serializable
 		return objects;
 	}
 
-	public Collection<PointLight> getLights()
+	public Collection<Light> getLights()
 	{
 		return lights;
 	}
@@ -126,13 +126,6 @@ public class Scene implements Serializable
 	public Camera getCamera()
 	{
 		return camera;
-	}
-
-	public Intersection getFirstIntersectedObject(Ray ray)
-	{
-		Intersection ret = new Intersection();
-		getFirstIntersectedObject(ray, ret, objects);
-		return ret;
 	}
 
 	/**
@@ -145,41 +138,23 @@ public class Scene implements Serializable
 	 *            , output parameter.
 	 * @return intersected object.
 	 */
-	public SceneObject getFirstIntersectedObject(Ray ray, Intersection intersection)
-	{
-		return getFirstIntersectedObject(ray, intersection, objects);
+	public boolean getFirstIntersectedObject(Ray ray,
+			Intersection inter) {
+		return getFirstIntersectedObject(ray, inter, objects);
 	}
 
-	/* ask aaron about this coding practice. Is this overloading. */
-	public SceneObject getFirstIntersectedObject(Ray ray, Intersection intersection,
-			Collection<SceneObject> objs)
-	{
+	/*ask aaron about this coding practice. Is this overloading.*/
+	public boolean getFirstIntersectedObject(Ray ray,
+			Intersection inter, Collection<SceneObject> objs) {
+
 		SceneObject nearest = null;
-		Intersection currentIntersection, nearestIntersection = null;
-		double nearestDistance = Double.MAX_VALUE;
 
-		for (SceneObject o : objs)
-		{
-			if ((currentIntersection = o.intersectsRay(ray)) == null)
-				continue;
-
-			Vector3d aux = new Vector3d(currentIntersection.point);
-			double currentDistance;
-			aux.sub(ray.position);
-			currentDistance = Util.Norm(aux);
-
-			if (nearestIntersection == null || currentDistance < nearestDistance)
-			{
-				nearest = o;
-				nearestIntersection = currentIntersection;
-				nearestDistance = currentDistance;
-			}
+		for (SceneObject o : objs) {
+			if ( o.IntersectP(ray)) nearest = o;
 		}
-		if (nearestIntersection == null)
-			return null;
-		intersection.point = nearestIntersection.point;
-		intersection.normal = nearestIntersection.normal;
-		return nearest;
+		if (nearest == null)
+			return false;
+		return nearest.Intersect(ray, inter);
 	}
 
 	public void dumpScene()
@@ -191,7 +166,7 @@ public class Scene implements Serializable
 			System.out.println("  " + s.toString());
 		}
 		System.out.println("Lights:");
-		for (PointLight p : lights)
+		for (Light p : lights)
 		{
 			System.out.println("  " + p.toString());
 		}

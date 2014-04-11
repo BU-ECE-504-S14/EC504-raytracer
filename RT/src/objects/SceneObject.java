@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import javax.vecmath.Vector3d;
 
-import raytracer.Ray;
 import scene.Intersection;
 import scene.Transformation;
 
@@ -22,16 +21,24 @@ public interface SceneObject {
 
 	/** @return Material properties of the object */
 	public Material getMaterial();
+	
+	/**
+	 * Simplified intersection test. If ray intersects object simply return true.
+	 * 
+	 * @param ray that is shooting
+	 * @return boolean as to whether or not object was intersected
+	 */
+	boolean IntersectP(Ray ray);
 
 	/**
-	 * Test if a ray intersects an object.  If an intersection occurs, return the
-	 * relevant point on the surface of the object where the ray intersects.
-	 * If no intersection occurs, return null. 
+	 * Test if a ray intersects an object.  If an intersection occurs, update inter object.
+	 * with information about the intersection.
 	 * 
 	 * @param ray Ray that is shooting.
-	 * @return point of intersection or null
+	 * @param inter differential geometry to fill with intersection information
+	 * @return boolean as to whether or not object was intersected
 	 */
-	public Intersection intersectsRay(Ray ray);
+	public boolean Intersect(Ray ray, Intersection inter);
 
 	/**
 	 * Return the normal at a point on the object's surface.   It is the responsibility of the
@@ -43,14 +50,6 @@ public interface SceneObject {
 	public Vector3d getNormalAt(Vector3d point);
 
 	/**
-	 * Transform the object's vertices in accordance with the determined 
-	 * transformation matrix
-	 * 
-	 * @param transformationMatrix The matrix to be applied
-	 */
-	public void transform(Transformation t);
-
-	/**
 	 * @param bb BoundingBox to intersect
 	 * @return boolean Return true if the object intersects the box
 	 */
@@ -59,5 +58,6 @@ public interface SceneObject {
 	 * @return Set of child objects (e.g. triangles in TriangleSets)
 	 */
 	public Collection<? extends SceneObject> getChildren();
+
 
 }

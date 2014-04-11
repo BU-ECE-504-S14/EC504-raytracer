@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import javax.vecmath.Vector3d;
 
-import raytracer.Ray;
 import scene.Intersection;
 import scene.Transformation;
 
@@ -41,12 +40,10 @@ public abstract class AbstractSceneObject implements SceneObject, Serializable
 
 	@Override
 	public abstract Vector3d getNormalAt(Vector3d point);
+	
+	public abstract boolean IntersectP(Ray ray);
 
-	@Override
-	public abstract void transform(Transformation t);
-
-	@Override
-	public abstract Intersection intersectsRay(Ray ray);
+	public abstract boolean Intersect(Ray ray, Intersection inter);
 
 	@Override
 	public Collection<? extends SceneObject> getChildren()

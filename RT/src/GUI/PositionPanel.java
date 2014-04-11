@@ -53,8 +53,8 @@ public class PositionPanel extends JPanel
 	public Vector3d getPosition()
 	{
 		double x = Double.parseDouble(xField.getText());
-		double y = Double.parseDouble(xField.getText());
-		double z = Double.parseDouble(xField.getText());
+		double y = Double.parseDouble(yField.getText());
+		double z = Double.parseDouble(zField.getText());
 		return new Vector3d(x, y, z);
 	}
 

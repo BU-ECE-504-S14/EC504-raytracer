@@ -47,8 +47,7 @@ public class SpherePanel extends JPanel
 	JButton updateButton;
 
 	PreviewPanel previewPanel;
-	
-	
+
 	JPanel lowerLeftPanel;
 
 	BufferedImage preview;
@@ -56,17 +55,15 @@ public class SpherePanel extends JPanel
 	public static void main(String[] args)
 	{
 		Sphere demoSphere = new Sphere();
-		demoSphere.radius = .5;
+		demoSphere.radius = .5f;
 		demoSphere.position = new Vector3d(0, 0, 2);
+		demoSphere.material.diffuseColor = new Vector3d(.8, .15, .15);
 		JFrame testFrame = new JFrame("Scene Object Information: Sphere");
-		testFrame.setMinimumSize(new Dimension(650, 510));
-		testFrame.setPreferredSize(new Dimension(650, 510));
-		testFrame.setMaximumSize(new Dimension(650, 510));
-		testFrame.setResizable(false);
+		//testFrame.setMinimumSize(new Dimension(650, 600));
+		//testFrame.setPreferredSize(new Dimension(650, 600));
+		testFrame.setResizable(true);
 		testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
-		
+
 		SpherePanel testPanel = new SpherePanel(demoSphere);
 		testFrame.add(testPanel);
 		testFrame.pack();
@@ -123,6 +120,7 @@ public class SpherePanel extends JPanel
 		};
 
 		infoPanel = new SphereInfoPanel(mySphere);
+		infoPanel.mySpherePanel = this;
 		infoPanel.addFieldListeners(up);
 		//infoPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, 150));
 		matPanel = new MaterialPanel(mySphere.material);
@@ -138,7 +136,7 @@ public class SpherePanel extends JPanel
 		lowerLeftPanel = new JPanel();
 		lowerLeftPanel.setLayout(new BorderLayout());
 		lowerLeftPanel.add(previewPanel);
-		leftPanel.add(lowerLeftPanel);
+		rightPanel.add(lowerLeftPanel);
 
 		add(leftPanel);
 		add(rightPanel);
@@ -150,6 +148,6 @@ public class SpherePanel extends JPanel
 		matPanel.updateMaterialInfo();
 		updatePreviewImage();
 
-		System.out.println(mySphere.toString());
+		//System.out.println(mySphere.toString());
 	}
 }
