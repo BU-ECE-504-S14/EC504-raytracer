@@ -52,6 +52,10 @@ public class TriangleMesh extends AbstractSceneObject
 			Points[i] = t.object2World(P[i]); // for triangle mesh object points are
 												// stored in world space
 	}
+	
+	public int getPointCount(){
+		return Points.length;
+	}
 
 	@Override
 	public boolean isIntersectable()
