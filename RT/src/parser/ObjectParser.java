@@ -120,9 +120,11 @@ public class ObjectParser
 			{
 				if (currentObject != ""){
 					TriangleMesh obj;
-					obj = readObject(currentObject, offset);
-					objects.add(obj);
-					offset += obj.getPointCount();
+					if (currentObject.startsWith("o")){
+						obj = readObject(currentObject, offset);
+						objects.add(obj);
+						offset += obj.getPointCount();
+					}
 					currentObject = "";
 				}
 				currentObject += currentLine + "\n";

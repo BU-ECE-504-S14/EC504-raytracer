@@ -51,6 +51,7 @@ public class TriangleMesh extends AbstractSceneObject
 		for (int i = 0; i < nverts; i++)
 			Points[i] = t.object2World(P[i]); // for triangle mesh object points are
 												// stored in world space
+		setName("New Triangle Mesh");
 	}
 	
 	public int getPointCount(){

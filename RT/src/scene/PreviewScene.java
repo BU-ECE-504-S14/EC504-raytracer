@@ -72,6 +72,10 @@ public class PreviewScene extends Scene
 		objects.add(demoSphere);
 		objects.add(demoSphere2);
 		for (int i = 0 ; i < meshes.size(); i ++){
+			TriangleMesh curr = meshes.get(i);
+			curr.material.ambientIntensity = 1.0;
+			curr.material.diffuseColor = new Vector3d(1,0,0);
+			curr.t.setRotation(new AxisAngle4d(1,0,0,Math.PI/3));
 			objects.add(meshes.get(i));
 		}
 	}

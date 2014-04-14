@@ -156,6 +156,8 @@ public class SimpleRayTracer
 		diffuse.scale(dotProd);
 		diffuse.scale(inter.shape.getMaterial().diffuseIndex);
 		diffuse.scale(light.getRadio());
+		diffuse.clamp(0.0, 1.0);
+
 		return diffuse;
 	}
 
@@ -165,9 +167,11 @@ public class SimpleRayTracer
 	 */
 	private Vector3d getAmbientComponent(Intersection inter, Light light)
 	{
-		Vector3d newColor = calculateDiffuseColor(inter, light);
-		newColor.scale(inter.shape.getMaterial().ambientIntensity);
-		return newColor;
+		Vector3d ambient = calculateDiffuseColor(inter, light);
+		ambient.scale(inter.shape.getMaterial().ambientIntensity);
+		ambient.clamp(0.0, 1.0);
+
+		return ambient;
 	}
 
 	/**
@@ -215,6 +219,7 @@ public class SimpleRayTracer
 
 			specular.scale(specAmt);
 		}
+		specular.clamp(0.0, 1.0);
 		return specular;
 	}
 
@@ -225,6 +230,9 @@ public class SimpleRayTracer
 	 */
 	private Vector3d getPhongColor(Ray ray, Intersection inter, Light light) throws Exception
 	{
+		if (inter.nn.x <= 0.0001 && inter.nn.y <= 0.0001 && inter.nn.z <= 0.0001 ){
+			System.out.println("This normal is 0 for : " + inter.shape.getName());
+		}
 		// ******** Color components for each light
 		Vector3d ambient = new Vector3d(0, 0, 0);
 		Vector3d diffuse = new Vector3d(0, 0, 0);

@@ -21,6 +21,7 @@ public class Triangle extends AbstractSceneObject {
 		 this.material = m.material;
 		 material.ambientIntensity = 1;
 		 material.diffuseColor = new Vector3d(0,0,0);
+		 setName("New Triangle");
 	}
 	
 	@Override
