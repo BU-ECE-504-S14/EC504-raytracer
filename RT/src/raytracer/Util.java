@@ -4,6 +4,9 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
+import objects.Normal;
+import objects.Vec;
+
 /**
  * Utility class, contains various methods for working with vectors.
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
@@ -74,5 +77,23 @@ public class Util {
 		if (val<min) return min;
 		else if(val>max) return max;
 		else return val;
+	}
+	
+	/**
+	 * Set up orthonormal arbitrary coordinate system based on v1
+	 * 
+	 * @param n
+	 * @param v2
+	 * @param v3
+	 */
+	public static void makeCoordinateSystem(Normal n, Vec v2, Vec v3) {
+	       if (Math.abs(n.x) > Math.abs(n.y)) {
+	           float invLen = (float) (1.f / Math.sqrt(n.x*n.x + n.z*n.z));
+	           v2.set(-n.z * invLen, 0.f, n.x * invLen);
+	       } else {
+	           float invLen = (float) (1.f / Math.sqrt(n.y*n.y + n.z*n.z));
+	           v2.set(0.f, n.z * invLen, -n.y * invLen);
+	       }
+	       v3.cross(n, v2);
 	}
 }

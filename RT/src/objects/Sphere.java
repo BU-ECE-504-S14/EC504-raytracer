@@ -46,15 +46,6 @@ public class Sphere extends AbstractSceneObject {
 
 	}
 
-	public Vector3d getNormalAt(Vector3d pointOfIntersection) {
-		Vector3d ret = new Vector3d(pointOfIntersection);
-		ret.sub(position); // ret = point of intersection - sphere center
-							// position
-		ret.scale(-1);
-		ret.normalize(); // make into unit normal vector
-		return ret;
-	}
-
 	@Override
 	public boolean IntersectP(Ray ray) {
 

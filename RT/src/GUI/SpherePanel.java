@@ -97,9 +97,17 @@ public class SpherePanel extends JPanel
 			Scene preScene = new PreviewScene(mySphere);
 			Scene.writeSceneToFile(preScene, "sceneTest.scn");
 			Scene preScene2 = Scene.readSceneFromFile("sceneTest.scn");
-			preview = previewRenderer.renderScene(preScene2);
+			try
+			{
+				preview = previewRenderer.renderScene(preScene2);
+			}
+			catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -148,6 +156,6 @@ public class SpherePanel extends JPanel
 		matPanel.updateMaterialInfo();
 		updatePreviewImage();
 
-		//System.out.println(mySphere.toString());
+		System.out.println(mySphere.toString());
 	}
 }

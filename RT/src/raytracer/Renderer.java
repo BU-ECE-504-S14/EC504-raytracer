@@ -17,8 +17,12 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Matrix4d;
 
 import objects.Material;
+import objects.Normal;
+import objects.Pt;
 import objects.SceneObject;
 import objects.Sphere;
+import objects.TriangleMesh;
+import objects.Vec;
 import scene.PointLight;
 import scene.Scene;
 import scene.Transformation;
@@ -61,7 +65,7 @@ public class Renderer
 		{
 			new RenderViewer(renderScene(constructSampleScene()));
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,15 +110,17 @@ public class Renderer
 	public static Scene constructSampleScene()
 	{
 		
+		SceneObject shape1,shape2,shape3,shape4;
 
-		Sphere shape1,shape2,shape3;
 
 		Material m1 = new Material();
 		Material m2 = new Material();
 		Material m3 = new Material();
+		Material m4 = new Material();
 
 		/* set poisitions and material of sphere objects */
 		/* shape */
+		
 
 		/* shape1 */
 		Vector3d scale = new Vector3d(1,1,1);
@@ -150,6 +156,24 @@ public class Renderer
 		m3.ambientIntensity = .5;
 
 		shape3.getMaterial().set(m3);
+		
+		/*shape4*/
+		scale = new Vector3d(100,100,100);
+		pos = new Vector3d(0, 30, -10);
+		rot = new AxisAngle4d(0,0,0,0);
+		Pt[] P = new Pt[3];
+		P[0] = new Pt(1,0,0);
+		P[1] = new Pt(0,1,0);
+		P[2] = new Pt(-1,0,0);
+		
+		int[] vi = {0,1,2};
+		Transformation t4 = new Transformation(scale,pos,rot);
+		shape4 = new TriangleMesh(t4, 1, 3, vi,P, null, null, null);
+		m4.diffuseColor = new Vector3d(1, 1, 1);
+		m4.reflectionIndex = 0;
+		m4.diffuseIndex = 1;
+		m4.specularIndex = 1;
+		shape4.getMaterial().set(m4);
 
 		/* set up camera */
 		double fieldofView = 1;
@@ -200,9 +224,9 @@ public class Renderer
 		/* add objects & lights & camera to scene */
 		Scene scene = new Scene();
 		//scene.addSceneObject(shape0);
-		scene.addSceneObject(shape1);
-		scene.addSceneObject(shape2);
-		scene.addSceneObject(shape3);
+		//scene.addSceneObject(shape1);
+		//scene.addSceneObject(shape2);
+		scene.addSceneObject(shape4);
 		scene.addLight(l1);
 		scene.addLight(l2);
 	    scene.addLight(l4);
@@ -224,7 +248,7 @@ public class Renderer
 	 * @throws IOException
 	 *             if there are errors in the file access input/output
 	 */
-	public static BufferedImage renderScene(Scene scene) throws IOException
+	public static BufferedImage renderScene(Scene scene) throws Exception
 	{
 
 		progress = 0.0;
@@ -234,17 +258,7 @@ public class Renderer
 		/* Ultra simple raytracer */
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing, optionShadow);
 
-
-		BufferedImage result = null;
-		try
-		{
-			result = rayTracer.render(optionProgress);
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		BufferedImage result = rayTracer.render(optionProgress);
 		return result;
 	}
 }

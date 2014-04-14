@@ -85,8 +85,7 @@ public class SimpleRayTracer
 	 *            Flag indicating whether or not to show progress on the screen
 	 * @return The generated image
 	 */
-
-	public BufferedImage render(boolean showProgress)
+	public BufferedImage render(boolean showProgress) throws Exception
 	{
 		totalRays = imageSize.height * imageSize.width;
 		currentRay = 1;
@@ -222,8 +221,9 @@ public class SimpleRayTracer
 	/**
 	 * Calculates the color for the given intersection and light based on the Phong
 	 * shading model.
+	 * @throws Exception 
 	 */
-	private Vector3d getPhongColor(Ray ray, Intersection inter, Light light)
+	private Vector3d getPhongColor(Ray ray, Intersection inter, Light light) throws Exception
 	{
 		// ******** Color components for each light
 		Vector3d ambient = new Vector3d(0, 0, 0);
@@ -282,8 +282,9 @@ public class SimpleRayTracer
 	 * @param currentRefraction
 	 *            Refractive index of the current environment (not used yet)
 	 * @return The first intersected object (may be null)
+	 * @throws Exception 
 	 */
-	private Vector3d getColor(Ray ray, int currentLevel, Vector3d viewerPosition)
+	private Vector3d getColor(Ray ray, int currentLevel, Vector3d viewerPosition) throws Exception
 	{
 
 		Vector3d color = new Vector3d(0, 0, 0);
@@ -292,6 +293,8 @@ public class SimpleRayTracer
 		if (!scene.getFirstIntersectedObject(ray, inter))
 		{
 			return color;
+
+
 		}
 
 		// ******** Cycle through all of the lights, adding the sum of the diffuse,
@@ -397,9 +400,10 @@ public class SimpleRayTracer
 	 * @param shadowRay
 	 * @param lightDist
 	 * @return true if in shadow, false otherwise
+	 * @throws Exception 
 	 */
 
-	private boolean inShadow(Ray shadowRay, Light l)
+	private boolean inShadow(Ray shadowRay, Light l) throws Exception
 	{
 		Intersection inter = new Intersection();
 		Vector3d lightPosition = new Vector3d(l.getPosition());

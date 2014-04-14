@@ -123,7 +123,7 @@ public class BasicGUI extends JFrame
 		{
 			renderOutput = render.renderScene(targetScene);
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}

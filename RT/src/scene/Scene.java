@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -139,18 +140,27 @@ public class Scene implements Serializable
 	 * @return intersected object.
 	 */
 	public boolean getFirstIntersectedObject(Ray ray,
-			Intersection inter) {
+			Intersection inter) throws Exception{
 		return getFirstIntersectedObject(ray, inter, objects);
 	}
 
 	/*ask aaron about this coding practice. Is this overloading.*/
 	public boolean getFirstIntersectedObject(Ray ray,
-			Intersection inter, Collection<SceneObject> objs) {
 
+			Intersection inter, Collection<SceneObject> objs) throws Exception{
 		SceneObject nearest = null;
+		ArrayList<SceneObject> refinedObject = new ArrayList<SceneObject>();
 
 		for (SceneObject o : objs) {
-			if ( o.IntersectP(ray)) nearest = o;
+			if(o.isIntersectable()){
+				if ( o.IntersectP(ray)) nearest = o;
+			} else {
+				refinedObject.clear();
+				o.refine(refinedObject);
+				for(SceneObject ro : refinedObject){
+					if( ro.IntersectP(ray)) nearest = ro;
+				}
+			}
 		}
 		if (nearest == null)
 			return false;
