@@ -70,15 +70,17 @@ public class PreviewScene extends Scene
 		demoSphere.trans = o.trans;
 
 		
+		TriangleMesh plane = meshes.get(0);
 		TriangleMesh parse = meshes.get(0);
-		parse.material = demoSphere.material;
-		Transformation target = new Transformation(parse.trans);
-		target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
+		plane.material = demoSphere.material;
+		parse.material = demoSphere2.material;
+		Transformation target = new Transformation(demoSphere.trans);
+		//target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
 		parse.updateTransform(target);
 		
-		
-		objects.add(parse);
-		objects.add(demoSphere);
-		objects.add(demoSphere2);
+		objects.add(plane);
+		//objects.add(parse);
+		//objects.add(demoSphere);
+		//objects.add(demoSphere2);
 	}
 }
