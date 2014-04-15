@@ -22,10 +22,10 @@ import raytracer.Camera;
  */
 public class MeshPreviewScene extends Scene
 {
-	public MeshPreviewScene(Sphere o)
+	public MeshPreviewScene()
 	{
 		super();
-		
+
 		List<TriangleMesh> meshes = null;
 		try
 		{
@@ -36,7 +36,7 @@ public class MeshPreviewScene extends Scene
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
 				(float) (Math.PI / 4));
 		PointLight demoLight = new PointLight();
@@ -59,28 +59,16 @@ public class MeshPreviewScene extends Scene
 		demoSphere2.trans.setScale(new Vector3d(100, 100, 100));
 		demoSphere2.material.reflectionIndex = 0;
 
-		demoSphere.position = new Vector3d(0, 0, 0);
-		demoSphere.radius = o.radius;
-		demoSphere.material = o.material;
-		demoSphere.zmin = o.zmin;
-		demoSphere.zmax = o.zmax;
-		demoSphere.thetaMin = o.thetaMin;
-		demoSphere.thetaMax = o.thetaMax;
-		demoSphere.phiMax = o.phiMax;
-		demoSphere.trans = o.trans;
-
-		
-		TriangleMesh plane = meshes.get(0);
 		TriangleMesh parse = meshes.get(0);
-		plane.material = demoSphere.material;
 		parse.material = demoSphere2.material;
 		Transformation target = new Transformation(demoSphere.trans);
-		//target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
+		target.setScale(new Vector3d(1.5, 1.5, 1.5));
+		// target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
 		parse.updateTransform(target);
-		
-		objects.add(plane);
-		//objects.add(parse);
-		//objects.add(demoSphere);
-		//objects.add(demoSphere2);
+
+		// objects.add(plane);
+		objects.add(parse);
+		// objects.add(demoSphere);
+		objects.add(demoSphere2);
 	}
 }

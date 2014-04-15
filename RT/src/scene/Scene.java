@@ -1,5 +1,6 @@
 package scene;
 
+import java.awt.List;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +20,8 @@ import javax.vecmath.Vector3d;
 
 import objects.Ray;
 import objects.SceneObject;
+import objects.Sphere;
+import objects.TriangleMesh;
 import raytracer.Camera;
 import raytracer.Util;
 
@@ -36,7 +40,7 @@ public class Scene implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	protected Collection<SceneObject> objects;
-	protected Collection<Light> lights;
+	protected Collection<Light> lights = new HashSet<Light>();;
 	protected Camera camera;
 
 	public Scene()
@@ -45,6 +49,35 @@ public class Scene implements Serializable
 				(float) (Math.PI / 4));
 		objects = new HashSet<SceneObject>();
 		lights = new HashSet<Light>();
+	}
+
+	public Scene(Scene s)
+	{
+		camera = new Camera(s.camera);
+		objects = new HashSet<SceneObject>();
+		for (SceneObject so : s.objects)
+		{
+			if (so instanceof TriangleMesh)
+			{
+				objects.add(((TriangleMesh) so).getCopy());
+			}
+			else if (so instanceof Sphere)
+			{
+				objects.add(((Sphere) so).getCopy());
+			}
+		}
+		lights = new HashSet<Light>();
+		for (Light l : s.lights)
+		{
+			if (l instanceof PointLight)
+			{
+				lights.add(((PointLight) l).getCopy());
+			}
+			else if (l instanceof SphereLight)
+			{
+				lights.add(((SphereLight) l).getCopy());
+			}
+		}
 	}
 
 	public static void writeSceneToFile(Scene targetScene, String filePath)
@@ -139,26 +172,34 @@ public class Scene implements Serializable
 	 *            , output parameter.
 	 * @return intersected object.
 	 */
-	public boolean getFirstIntersectedObject(Ray ray,
-			Intersection inter) throws Exception{
+	public boolean getFirstIntersectedObject(Ray ray, Intersection inter) throws Exception
+	{
 		return getFirstIntersectedObject(ray, inter, objects);
 	}
 
-	/*ask aaron about this coding practice. Is this overloading.*/
+	/* ask aaron about this coding practice. Is this overloading. */
 	public boolean getFirstIntersectedObject(Ray ray,
 
-			Intersection inter, Collection<SceneObject> objs) throws Exception{
+	Intersection inter, Collection<SceneObject> objs) throws Exception
+	{
 		SceneObject nearest = null;
 		ArrayList<SceneObject> refinedObject = new ArrayList<SceneObject>();
 
-		for (SceneObject o : objs) {
-			if(o.isIntersectable()){
-				if ( o.IntersectP(ray)) nearest = o;
-			} else {
+		for (SceneObject o : objs)
+		{
+			if (o.isIntersectable())
+			{
+				if (o.IntersectP(ray))
+					nearest = o;
+			}
+			else
+			{
 				refinedObject.clear();
 				o.refine(refinedObject);
-				for(SceneObject ro : refinedObject){
-					if( ro.IntersectP(ray)) nearest = ro;
+				for (SceneObject ro : refinedObject)
+				{
+					if (ro.IntersectP(ray))
+						nearest = ro;
 				}
 			}
 		}
