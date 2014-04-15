@@ -23,6 +23,7 @@ import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
 import objects.Vec;
+import scene.MeshPreviewScene;
 import scene.PointLight;
 import scene.Scene;
 import scene.Transformation;
@@ -63,7 +64,8 @@ public class Renderer
 	{
 		try
 		{
-			new RenderViewer(renderScene(constructSampleScene()));
+			//new RenderViewer(renderScene(constructSampleScene()));
+			new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
 		{
