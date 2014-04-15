@@ -1,8 +1,11 @@
 package raytracer;
 
+import java.io.Serializable;
+
 import javax.vecmath.*;
 import javax.media.j3d.Transform3D;
 
+import objects.Pt;
 import scene.Transformation;
 
 
@@ -13,10 +16,15 @@ import scene.Transformation;
  * (to apply to rays that are created) and a transformation matrix (combined translation and rotation)
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
-public class Camera {
+public class Camera implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** Camera position */
-	public Vector3d position;
+	public Pt position;
 
 	/** Orientation.  An axis and an angle about said axis. 
 	 *  the axis is the axis that you want to rotate around (right hand rule)
@@ -46,19 +54,16 @@ public class Camera {
 	 */
 	public Camera(Vector3d position, AxisAngle4d orientation, double fieldOfView) {
 		super();
-		this.position = position;
+		this.position = new Pt(position);
 		this.fieldOfView = fieldOfView;
 		this.orientation = orientation;
 		
-		Transformation t = new Transformation();
+		Transformation t = new Transformation(new Vector3d(1,1,1), position, orientation);
 		this.rotationMatrix = new Matrix4d();
 		this.rotationMatrix.setIdentity();
 		this.rotationMatrix.set(orientation);
 		
-		t.translation = this.position;
-		this.transformationMatrix = t.getTransformationMatrix();
-		this.transformationMatrix.mul(this.rotationMatrix);
-		
+		this.transformationMatrix = t.o2w;
 	}
 	
 	/**
@@ -73,7 +78,7 @@ public class Camera {
 	 */
 	public Camera(Point3d eye, Point3d center, Vector3d up, double fieldOfView){
 		super();
-		this.position = new Vector3d(eye.x,eye.y,eye.z);
+		this.position = new Pt(eye.x,eye.y,eye.z);
 		this.fieldOfView = fieldOfView;
 		
 		/* create matrix to look at point center from eye */
@@ -88,16 +93,12 @@ public class Camera {
 		orientation = new AxisAngle4d();
 		orientation.set(rotation);
 		
-		Transformation t = new Transformation();
+		Transformation t = new Transformation(new Vector3d(1,1,1), position, orientation);
 		this.rotationMatrix = new Matrix4d();
 		this.rotationMatrix.setIdentity();
 		this.rotationMatrix.set(orientation);
-		//this.rotationMatrix = rotation;
 		
-		//System.out.println(this.rotationMatrix.toString());
-		t.translation = position;
-		this.transformationMatrix = t.getTransformationMatrix();
-		this.transformationMatrix.mul(this.rotationMatrix);		
+		this.transformationMatrix = t.o2w;	
 	}
 
 	public void transform(Transformation t) {
