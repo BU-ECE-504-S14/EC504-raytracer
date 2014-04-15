@@ -29,8 +29,8 @@ import scene.Scene;
 import scene.Transformation;
 
 /**
- * Ray tracing renderer, for EC504 at Boston University
- * based on the work of Rafael Martin Bigio <rbigio@itba.edu.ar>
+ * Ray tracing renderer, for EC504 at Boston University based on the work of Rafael Martin
+ * Bigio <rbigio@itba.edu.ar>
  * 
  * 
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
@@ -42,8 +42,8 @@ public class Renderer
 	private static int optionAntialiasing = 1;
 	private static String optionOutputFile;
 	private static String optionInputFile;
-	private static int optionWidth = 400;
-	private static int optionHeight = 300;
+	private static int optionWidth = 100;
+	private static int optionHeight = 100;
 	private static int optionShadow = 20;
 
 	public static double progress = 0.0;
@@ -53,10 +53,10 @@ public class Renderer
 	public static void main(String[] args)
 	{
 		optionProgress = true;
-		optionAntialiasing = 1;
-		optionWidth = 400;
-		optionHeight = 300;
-		optionShadow = 20;
+		optionAntialiasing = 2;
+		optionWidth = 200;
+		optionHeight = 200;
+		optionShadow = 0;
 		showSampleScene();
 	}
 
@@ -64,7 +64,7 @@ public class Renderer
 	{
 		try
 		{
-			//new RenderViewer(renderScene(constructSampleScene()));
+			// new RenderViewer(renderScene(constructSampleScene()));
 			new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
@@ -111,9 +111,8 @@ public class Renderer
 
 	public static Scene constructSampleScene()
 	{
-		
-		SceneObject shape1,shape2,shape3,shape4;
 
+		SceneObject shape1, shape2, shape3, shape4;
 
 		Material m1 = new Material();
 		Material m2 = new Material();
@@ -122,13 +121,12 @@ public class Renderer
 
 		/* set poisitions and material of sphere objects */
 		/* shape */
-		
 
 		/* shape1 */
-		Vector3d scale = new Vector3d(1,1,1);
+		Vector3d scale = new Vector3d(1, 1, 1);
 		Vector3d pos = new Vector3d(-50, -50, 0);
-		AxisAngle4d rot = new AxisAngle4d(0,0,1,0);
-		Transformation t1 = new Transformation(scale,pos,rot);
+		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
+		Transformation t1 = new Transformation(scale, pos, rot);
 		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
 		m1.diffuseColor = new Vector3d(0, 1, 0);
 		m1.specularIndex = 0.5;
@@ -136,11 +134,11 @@ public class Renderer
 		shape1.getMaterial().set(m1);
 
 		/* shape2 */
-		scale = new Vector3d(1,1,1);
+		scale = new Vector3d(1, 1, 1);
 		pos = new Vector3d(-50, 30, 0);
-		rot = new AxisAngle4d(0,0,1,0);
-		Transformation t2 = new Transformation(scale,pos,rot);
-		shape2 = new Sphere(25f, -102f, 250f, 200f,t2);
+		rot = new AxisAngle4d(0, 0, 1, 0);
+		Transformation t2 = new Transformation(scale, pos, rot);
+		shape2 = new Sphere(25f, -102f, 250f, 200f, t2);
 		m2.diffuseColor = new Vector3d(0, 0, 1);
 		m2.specularIndex = 0.5;
 		m2.ambientIntensity = .5;
@@ -148,29 +146,29 @@ public class Renderer
 		shape2.getMaterial().set(m2);
 
 		/* shape3 */
-		scale = new Vector3d(1,1,1);
+		scale = new Vector3d(1, 1, 1);
 		pos = new Vector3d(0, 30, -10);
-		rot = new AxisAngle4d(0,0,1,0);
-		Transformation t3 = new Transformation(scale,pos,rot);
-		shape3 = new Sphere(10f, -10f, 10f, 360f,t3);
+		rot = new AxisAngle4d(0, 0, 1, 0);
+		Transformation t3 = new Transformation(scale, pos, rot);
+		shape3 = new Sphere(10f, -10f, 10f, 360f, t3);
 		m3.diffuseColor = new Vector3d(1, 0, 0);
 		m3.specularIndex = 0.5;
 		m3.ambientIntensity = .5;
 
 		shape3.getMaterial().set(m3);
-		
-		/*shape4*/
-		scale = new Vector3d(100,100,100);
+
+		/* shape4 */
+		scale = new Vector3d(100, 100, 100);
 		pos = new Vector3d(0, 30, -10);
-		rot = new AxisAngle4d(0,0,0,0);
+		rot = new AxisAngle4d(0, 0, 0, 0);
 		Pt[] P = new Pt[3];
-		P[0] = new Pt(1,0,0);
-		P[1] = new Pt(0,1,0);
-		P[2] = new Pt(-1,0,0);
-		
-		int[] vi = {0,1,2};
-		Transformation t4 = new Transformation(scale,pos,rot);
-		shape4 = new TriangleMesh(t4, 1, 3, vi,P, null, null, null);
+		P[0] = new Pt(1, 0, 0);
+		P[1] = new Pt(0, 1, 0);
+		P[2] = new Pt(-1, 0, 0);
+
+		int[] vi = { 0, 1, 2 };
+		Transformation t4 = new Transformation(scale, pos, rot);
+		shape4 = new TriangleMesh(t4, 1, 3, vi, P, null, null, null);
 		m4.diffuseColor = new Vector3d(1, 1, 1);
 		m4.reflectionIndex = 0;
 		m4.diffuseIndex = 1;
@@ -212,8 +210,6 @@ public class Renderer
 		l4.setColor(new Vector3d(.9, .9, .9));
 		l4.setPosition(new Vector3d(50, 5, -5));
 		l4.setPosition(new Vector3d(50, -20, -5));
-		
-
 
 		PointLight l5 = new PointLight();
 		l5.setColor(new Vector3d(0, .5, 0));
@@ -222,21 +218,20 @@ public class Renderer
 		l6.setPosition(new Vector3d(16, 0, 5));
 		l6.setColor(new Vector3d(0, 0, 1));
 
-
 		/* add objects & lights & camera to scene */
 		Scene scene = new Scene();
-		//scene.addSceneObject(shape0);
-		//scene.addSceneObject(shape1);
-		//scene.addSceneObject(shape2);
+		// scene.addSceneObject(shape0);
+		// scene.addSceneObject(shape1);
+		// scene.addSceneObject(shape2);
 		scene.addSceneObject(shape4);
 		scene.addLight(l1);
 		scene.addLight(l2);
-	    scene.addLight(l4);
-
-		//scene.addLight(l3);
 		scene.addLight(l4);
-		//scene.addLight(l5);
-		//scene.addLight(l6);
+
+		// scene.addLight(l3);
+		scene.addLight(l4);
+		// scene.addLight(l5);
+		// scene.addLight(l6);
 		scene.setCamera(cam);
 
 		return scene;
@@ -258,9 +253,11 @@ public class Renderer
 		Dimension imageSize = new Dimension(optionWidth, optionHeight);
 
 		/* Ultra simple raytracer */
-		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing, optionShadow);
+		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
+				optionShadow);
 
-		BufferedImage result = rayTracer.render(optionProgress);
+		//BufferedImage result = rayTracer.render(optionProgress);
+		BufferedImage result = rayTracer.renderThreads(optionProgress);
 		return result;
 	}
 }
