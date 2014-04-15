@@ -44,6 +44,14 @@ public class Camera implements Serializable{
 	/** Transformation matrix (rotation and translation) */  
 	public Matrix4d transformationMatrix;
 
+	
+	public Camera(Camera c){
+		position = new Pt(c.position);
+		fieldOfView = c.fieldOfView;
+		orientation = new AxisAngle4d(c.orientation);
+		rotationMatrix = new Matrix4d(c.rotationMatrix);
+		transformationMatrix = new Matrix4d(c.transformationMatrix);
+	}
 	/**
 	 * Create a new camera with the data parameters
 	 * 

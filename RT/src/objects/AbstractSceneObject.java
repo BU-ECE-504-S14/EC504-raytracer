@@ -49,7 +49,6 @@ public abstract class AbstractSceneObject implements SceneObject, Serializable
 	{
 		return material;
 	}
-
 	
 	public boolean isIntersectable(){
 		return true;

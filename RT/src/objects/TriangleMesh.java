@@ -13,6 +13,49 @@ public class TriangleMesh extends AbstractSceneObject
 	public float uvs[];
 	public Transformation trans;
 
+	public TriangleMesh(TriangleMesh t)
+	{
+		ntris = t.ntris;
+		nverts = t.nverts;
+		Points = new Pt[t.Points.length];
+		for (int i = 0; i < t.Points.length; i++)
+		{
+			Points[i] = t.Points[i];
+		}
+
+		if (t.normals != null)
+		{
+			normals = new Normal[t.normals.length];
+			for (int i = 0; i < t.normals.length; i++)
+			{
+				normals[i] = t.normals[i];
+			}
+		}
+
+		if (t.tangents != null)
+		{
+			tangents = new Vec[t.tangents.length];
+			for (int i = 0; i < t.tangents.length; i++)
+			{
+				tangents[i] = t.tangents[i];
+			}
+		}
+		if (t.uvs != null)
+		{
+			uvs = new float[t.uvs.length];
+			for (int i = 0; i < t.uvs.length; i++)
+			{
+				uvs[i] = t.uvs[i];
+			}
+		}
+		trans = new Transformation(t.trans);
+	}
+
+	public TriangleMesh getCopy()
+	{
+		return new TriangleMesh(this);
+	}
+
 	// Points are expected to be in object space
 	public TriangleMesh(Transformation t, int nt, int nv, int[] vi, Pt[] P, Normal[] N, Vec[] S,
 			float[] uv)
@@ -57,14 +100,14 @@ public class TriangleMesh extends AbstractSceneObject
 	public void updateTransform(Transformation t)
 	{
 		for (int i = 0; i < Points.length; i++)
-		{	
+		{
 			Points[i] = trans.world2Object(Points[i]);
 		}
-		
-		this.trans = t; 
-		
+
+		this.trans = t;
+
 		for (int i = 0; i < Points.length; i++)
-		{	
+		{
 			Points[i] = trans.object2World(Points[i]);
 		}
 	}
