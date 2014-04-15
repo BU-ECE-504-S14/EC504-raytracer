@@ -11,13 +11,13 @@ public class TriangleMesh extends AbstractSceneObject
 	public Normal[] normals;
 	public Vec[] tangents;
 	public float uvs[];
-	public Transformation t;
+	public Transformation trans;
 
 	// Points are expected to be in object space
 	public TriangleMesh(Transformation t, int nt, int nv, int[] vi, Pt[] P, Normal[] N, Vec[] S,
 			float[] uv)
 	{
-		this.t = new Transformation(t);
+		this.trans = new Transformation(t);
 		ntris = nt;
 		nverts = nv;
 		vertexIndex = new int[ntris * 3];
@@ -53,8 +53,24 @@ public class TriangleMesh extends AbstractSceneObject
 												// stored in world space
 		setName("New Triangle Mesh");
 	}
-	
-	public int getPointCount(){
+
+	public void updateTransform(Transformation t)
+	{
+		for (int i = 0; i < Points.length; i++)
+		{	
+			Points[i] = trans.world2Object(Points[i]);
+		}
+		
+		this.trans = t; 
+		
+		for (int i = 0; i < Points.length; i++)
+		{	
+			Points[i] = trans.object2World(Points[i]);
+		}
+	}
+
+	public int getPointCount()
+	{
 		return Points.length;
 	}
 

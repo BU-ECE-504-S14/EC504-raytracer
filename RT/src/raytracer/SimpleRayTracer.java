@@ -111,7 +111,7 @@ public class SimpleRayTracer
 				color.set(0, 0, 0);
 
 				/* do ray trace */
-				color.add(getColor(ray, 0, scene.getCamera().position));
+				color.add(getColor(ray, 0));
 
 				/* set color into image at screen position (i,j) */
 				image.setRGB(j, i,
@@ -164,6 +164,11 @@ public class SimpleRayTracer
 	/**
 	 * Calculates the ambient component of the Phong shading model for the given
 	 * intersection, light, and eye position.
+	 * 
+	 * @param inter
+	 *            is an Intersection describing the point where the ray hit an object.
+	 * @param light
+	 *            is the Light object that should be used in color calculations.
 	 */
 	private Vector3d getAmbientComponent(Intersection inter, Light light)
 	{
@@ -226,13 +231,11 @@ public class SimpleRayTracer
 	/**
 	 * Calculates the color for the given intersection and light based on the Phong
 	 * shading model.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	private Vector3d getPhongColor(Ray ray, Intersection inter, Light light) throws Exception
 	{
-		if (inter.nn.x <= 0.0001 && inter.nn.y <= 0.0001 && inter.nn.z <= 0.0001 ){
-			System.out.println("This normal is 0 for : " + inter.shape.getName());
-		}
 		// ******** Color components for each light
 		Vector3d ambient = new Vector3d(0, 0, 0);
 		Vector3d diffuse = new Vector3d(0, 0, 0);
@@ -290,9 +293,9 @@ public class SimpleRayTracer
 	 * @param currentRefraction
 	 *            Refractive index of the current environment (not used yet)
 	 * @return The first intersected object (may be null)
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	private Vector3d getColor(Ray ray, int currentLevel, Vector3d viewerPosition) throws Exception
+	private Vector3d getColor(Ray ray, int currentLevel) throws Exception
 	{
 
 		Vector3d color = new Vector3d(0, 0, 0);
@@ -301,7 +304,6 @@ public class SimpleRayTracer
 		if (!scene.getFirstIntersectedObject(ray, inter))
 		{
 			return color;
-
 
 		}
 
@@ -321,7 +323,7 @@ public class SimpleRayTracer
 			if (refIndex > 0)
 			{
 				Ray reflection = makeReflectionRay(inter, ray.position);
-				Vector3d refColor = getColor(reflection, currentLevel + 1, inter.p);
+				Vector3d refColor = getColor(reflection, currentLevel + 1);
 				refColor.scale(refIndex);
 				color.add(refColor);
 			}
@@ -408,7 +410,7 @@ public class SimpleRayTracer
 	 * @param shadowRay
 	 * @param lightDist
 	 * @return true if in shadow, false otherwise
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 
 	private boolean inShadow(Ray shadowRay, Light l) throws Exception

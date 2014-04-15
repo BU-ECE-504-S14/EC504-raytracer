@@ -69,14 +69,16 @@ public class PreviewScene extends Scene
 		demoSphere.phiMax = o.phiMax;
 		demoSphere.trans = o.trans;
 
+		
+		TriangleMesh parse = meshes.get(0);
+		parse.material = demoSphere.material;
+		Transformation target = new Transformation(parse.trans);
+		target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
+		parse.updateTransform(target);
+		
+		
+		objects.add(parse);
 		objects.add(demoSphere);
 		objects.add(demoSphere2);
-		for (int i = 0 ; i < meshes.size(); i ++){
-			TriangleMesh curr = meshes.get(i);
-			curr.material.ambientIntensity = 1.0;
-			curr.material.diffuseColor = new Vector3d(1,0,0);
-			curr.t.setRotation(new AxisAngle4d(1,0,0,Math.PI/3));
-			objects.add(meshes.get(i));
-		}
 	}
 }

@@ -63,6 +63,18 @@ public class Util {
 		v1.y = v1.y * v2.y;
 		v1.z = v1.z * v2.z;
 	}
+	
+	/**
+	 * Multiply two vectors component by component leaving the result in the first vector.
+	 * 
+	 * @param v1 Vector to multiply and where the result will be left 
+	 * @param v2 Second operand
+	 */
+	public static void multiplyVectors(Vec v1, Vec v2) {
+		v1.x = v1.x * v2.x;
+		v1.y = v1.y * v2.y;
+		v1.z = v1.z * v2.z;
+	}
 
 	/** @return Scalar product between two Vector3d */
 	public static double dotProduct(Vector3d v1, Vector3d v2) {
