@@ -4,6 +4,9 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
+import objects.Normal;
+import objects.Vec;
+
 /**
  * Utility class, contains various methods for working with vectors.
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
@@ -22,7 +25,6 @@ public class Util {
 				newValues[i] += matrix.getElement(i, j) * oldValues[j];
 			}
 		}
-
 		result.setX(newValues[0]);
 		result.setY(newValues[1]);
 		result.setZ(newValues[2]);
@@ -61,6 +63,18 @@ public class Util {
 		v1.y = v1.y * v2.y;
 		v1.z = v1.z * v2.z;
 	}
+	
+	/**
+	 * Multiply two vectors component by component leaving the result in the first vector.
+	 * 
+	 * @param v1 Vector to multiply and where the result will be left 
+	 * @param v2 Second operand
+	 */
+	public static void multiplyVectors(Vec v1, Vec v2) {
+		v1.x = v1.x * v2.x;
+		v1.y = v1.y * v2.y;
+		v1.z = v1.z * v2.z;
+	}
 
 	/** @return Scalar product between two Vector3d */
 	public static double dotProduct(Vector3d v1, Vector3d v2) {
@@ -69,5 +83,29 @@ public class Util {
 	
 	public static double randomBetween(double min, double max) {
 		return min + Math.random() * (max - min);
+	}
+	
+	public static float clamp(float val,float min, float max){
+		if (val<min) return min;
+		else if(val>max) return max;
+		else return val;
+	}
+	
+	/**
+	 * Set up orthonormal arbitrary coordinate system based on v1
+	 * 
+	 * @param n
+	 * @param v2
+	 * @param v3
+	 */
+	public static void makeCoordinateSystem(Normal n, Vec v2, Vec v3) {
+	       if (Math.abs(n.x) > Math.abs(n.y)) {
+	           float invLen = (float) (1.f / Math.sqrt(n.x*n.x + n.z*n.z));
+	           v2.set(-n.z * invLen, 0.f, n.x * invLen);
+	       } else {
+	           float invLen = (float) (1.f / Math.sqrt(n.y*n.y + n.z*n.z));
+	           v2.set(0.f, n.z * invLen, -n.y * invLen);
+	       }
+	       v3.cross(n, v2);
 	}
 }

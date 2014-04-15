@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * A generic TextForm generator, used 
+ * A generic TextForm generator, used
  * 
  * Modular GUI panel adapted from:
  * http://www.java2s.com/Code/Java/Swing-JFC/Asimplelabelforfieldformpanel.htm
+ * 
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
-
  */
 public class TextForm extends JPanel
 {
