@@ -1,12 +1,12 @@
 package raytracer;
 
+import geometry.Pt;
+import geometry.Transformation;
+
 import java.io.Serializable;
 
 import javax.vecmath.*;
 import javax.media.j3d.Transform3D;
-
-import objects.Pt;
-import scene.Transformation;
 
 
 /**

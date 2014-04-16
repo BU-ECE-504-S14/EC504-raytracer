@@ -1,7 +1,11 @@
 package objects;
 
+import geometry.Normal;
+import geometry.Pt;
+import geometry.Transformation;
+import geometry.Vec;
+
 import java.util.ArrayList;
-import scene.Transformation;
 
 public class TriangleMesh extends AbstractSceneObject
 {

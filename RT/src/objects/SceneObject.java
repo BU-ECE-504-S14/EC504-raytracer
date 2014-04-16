@@ -1,5 +1,8 @@
 package objects;
 
+import geometry.Ray;
+import geometry.Transformation;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -8,7 +11,6 @@ import javax.vecmath.Vector3d;
 import objects.AbstractSceneObject.NotIntersectableException;
 import objects.AbstractSceneObject.RefinementException;
 import scene.Intersection;
-import scene.Transformation;
 
 
 /**

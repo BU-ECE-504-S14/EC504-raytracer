@@ -4,13 +4,15 @@
 
 package scene;
 
+import geometry.Pt;
+import geometry.Transformation;
+
 import java.io.IOException;
 import java.util.List;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
-import objects.Pt;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;

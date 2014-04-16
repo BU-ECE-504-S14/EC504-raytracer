@@ -1,5 +1,10 @@
 package raytracer;
 
+import geometry.Normal;
+import geometry.Pt;
+import geometry.Transformation;
+import geometry.Vec;
+
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,16 +22,12 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Matrix4d;
 
 import objects.Material;
-import objects.Normal;
-import objects.Pt;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
-import objects.Vec;
 import scene.MeshPreviewScene;
 import scene.PointLight;
 import scene.Scene;
-import scene.Transformation;
 
 /**
  * Ray tracing renderer, for EC504 at Boston University based on the work of Rafael Martin

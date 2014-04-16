@@ -4,6 +4,9 @@
 
 package parser;
 
+import geometry.Pt;
+import geometry.Transformation;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,10 +17,8 @@ import java.util.List;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
-import objects.Pt;
 import objects.TriangleMesh;
 import objects.TriangleMesh;
-import scene.Transformation;
 
 /**
  * @author Aaron Heuckroth

@@ -1,5 +1,8 @@
 package objects;
 
+import geometry.Ray;
+import geometry.Transformation;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,7 +10,6 @@ import java.util.Collection;
 import javax.vecmath.Vector3d;
 
 import scene.Intersection;
-import scene.Transformation;
 
 /**
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist

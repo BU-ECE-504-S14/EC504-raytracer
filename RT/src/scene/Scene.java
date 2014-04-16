@@ -1,5 +1,7 @@
 package scene;
 
+import geometry.Ray;
+
 import java.awt.List;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +20,6 @@ import java.util.Set;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
-import objects.Ray;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;

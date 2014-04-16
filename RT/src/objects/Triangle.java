@@ -1,5 +1,10 @@
 package objects;
 
+import geometry.Normal;
+import geometry.Pt;
+import geometry.Ray;
+import geometry.Vec;
+
 import javax.vecmath.Vector3d;
 
 import com.sun.org.apache.xml.internal.serializer.utils.Utils;

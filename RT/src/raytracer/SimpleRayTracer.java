@@ -1,5 +1,10 @@
 package raytracer;
 
+import geometry.Normal;
+import geometry.Pt;
+import geometry.Ray;
+import geometry.Vec;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -11,12 +16,8 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
 import objects.Material;
-import objects.Normal;
-import objects.Pt;
-import objects.Ray;
 import objects.SceneObject;
 import objects.Sphere;
-import objects.Vec;
 import scene.Intersection;
 import scene.Light;
 import scene.Scene;

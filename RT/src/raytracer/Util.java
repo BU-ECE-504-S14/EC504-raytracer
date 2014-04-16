@@ -1,11 +1,11 @@
 package raytracer;
 
+import geometry.Normal;
+import geometry.Vec;
+
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
-
-import objects.Normal;
-import objects.Vec;
 
 /**
  * Utility class, contains various methods for working with vectors.
@@ -107,5 +107,17 @@ public class Util {
 	           v2.set(0.f, n.z * invLen, -n.y * invLen);
 	       }
 	       v3.cross(n, v2);
+	}
+	
+	/**
+	 *  Perform linear interpolation on points a and b. 
+	 *  
+	 * @param t percentage of linear interpolation between a and b
+	 * @param a min float
+	 * @param b max float
+	 * @return
+	 */
+	public static float lerp(float t, float a, float b) {
+		return (float) ((1f - t)*a + t*b);
 	}
 }

@@ -1,11 +1,16 @@
 package objects;
 
+import geometry.Normal;
+import geometry.Pt;
+import geometry.Ray;
+import geometry.Transformation;
+import geometry.Vec;
+
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
 import raytracer.Util;
 import scene.Intersection;
-import scene.Transformation;
 
 public class Sphere extends AbstractSceneObject
 {
