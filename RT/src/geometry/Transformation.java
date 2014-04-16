@@ -217,6 +217,7 @@ public class Transformation implements Serializable
 				+ o2w.m21 * z, o2w.m02 * x + o2w.m12 * y + o2w.m22 * z);
 	}
 
+	/*
 	public BBox object2World(BBox b) {
 		
 		BBox wBox = new BBox(this.object2World(	new Pt( (float) b.getpMin().x,
@@ -227,4 +228,5 @@ public class Transformation implements Serializable
 		wbox = 
 		
 	}
+	*/
 }
