@@ -217,16 +217,65 @@ public class Transformation implements Serializable
 				+ o2w.m21 * z, o2w.m02 * x + o2w.m12 * y + o2w.m22 * z);
 	}
 
-	/*
+	/**
+	 * creates bounding box in world space based on the bounding box b stored in object space.
+	 * 
+	 * @param b BBox in object space. 
+	 * @return world BBox based on b.
+	 */
 	public BBox object2World(BBox b) {
+	       
+	    Pt P000 = new Pt( b.getpMin().x, b.getpMin().y, b.getpMin().z );
+	    Pt P100 = new Pt( b.getpMax().x, b.getpMin().y, b.getpMin().z );
+	    Pt P010 = new Pt( b.getpMin().x, b.getpMax().y, b.getpMin().z );
+	    Pt P001 = new Pt( b.getpMin().x, b.getpMin().y, b.getpMax().z );
+	    Pt P110 = new Pt( b.getpMax().x, b.getpMax().y, b.getpMin().z );
+	    Pt P101 = new Pt( b.getpMax().x, b.getpMin().y, b.getpMax().z );
+	    Pt P011 = new Pt( b.getpMin().x, b.getpMax().y, b.getpMax().z );
+	    Pt P111 = new Pt( b.getpMax().x, b.getpMax().y, b.getpMax().z );
 		
-		BBox wBox = new BBox(this.object2World(	new Pt( (float) b.getpMin().x,
-														(float) b.getpMin().y,
-														(float) b.getpMin().z )  );
-		wBox = BBox.union(wBox, this.object2World( new Pt(b.getpMax().x,b.getpMin().y,b.getpMin().z));
-		wBox = BBox.union(wBox, new Pt(b.getpMin().x,b.getpMax().y,b.getpMin().z));
-		wbox = 
+		BBox wBox = new BBox( this.object2World( P000 ) );
+		wBox = BBox.union(wBox, this.object2World( P100 ) );
+		wBox = BBox.union(wBox, this.object2World( P010 ) );
+		wBox = BBox.union(wBox, this.object2World( P001 ) );
+		wBox = BBox.union(wBox, this.object2World( P110 ) );
+		wBox = BBox.union(wBox, this.object2World( P101 ) );
+		wBox = BBox.union(wBox, this.object2World( P011 ) );
+		wBox = BBox.union(wBox, this.object2World( P111 ) );
 		
+		return wBox;
 	}
-	*/
+	
+	
+	/**
+	 * creates bounding box in object space based on the bounding box b stored in world space.
+	 * 
+	 * @param b BBox in world space. 
+	 * @return object BBox based on b.
+	 */
+	public BBox world2Object(BBox b) {
+	       
+	    Pt P000 = new Pt( b.getpMin().x, b.getpMin().y, b.getpMin().z );
+	    Pt P100 = new Pt( b.getpMax().x, b.getpMin().y, b.getpMin().z );
+	    Pt P010 = new Pt( b.getpMin().x, b.getpMax().y, b.getpMin().z );
+	    Pt P001 = new Pt( b.getpMin().x, b.getpMin().y, b.getpMax().z );
+	    Pt P110 = new Pt( b.getpMax().x, b.getpMax().y, b.getpMin().z );
+	    Pt P101 = new Pt( b.getpMax().x, b.getpMin().y, b.getpMax().z );
+	    Pt P011 = new Pt( b.getpMin().x, b.getpMax().y, b.getpMax().z );
+	    Pt P111 = new Pt( b.getpMax().x, b.getpMax().y, b.getpMax().z );
+		
+		BBox wBox = new BBox( this.world2Object( P000 ) );
+		wBox = BBox.union(wBox, this.world2Object( P100 ) );
+		wBox = BBox.union(wBox, this.world2Object( P010 ) );
+		wBox = BBox.union(wBox, this.world2Object( P001 ) );
+		wBox = BBox.union(wBox, this.world2Object( P110 ) );
+		wBox = BBox.union(wBox, this.world2Object( P101 ) );
+		wBox = BBox.union(wBox, this.world2Object( P011 ) );
+		wBox = BBox.union(wBox, this.world2Object( P111 ) );
+		
+		return wBox;
+	}
+	
+	
+	
 }

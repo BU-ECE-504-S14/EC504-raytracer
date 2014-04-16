@@ -1,5 +1,6 @@
 package objects;
 
+import geometry.BBox;
 import geometry.Ray;
 import geometry.Transformation;
 
@@ -64,6 +65,11 @@ public interface SceneObject {
 	 * @param bb BoundingBox to intersect
 	 * @return boolean Return true if the object intersects the box
 	 */
+	
+	/**
+	 * @return BBox representing a bounding box for sceneObject in world space.
+	 */
+	public BBox getWorldBound();
 
 	/**
 	 * @return Set of child objects (e.g. triangles in TriangleSets)

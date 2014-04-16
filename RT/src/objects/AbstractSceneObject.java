@@ -1,5 +1,6 @@
 package objects;
 
+import geometry.BBox;
 import geometry.Ray;
 import geometry.Transformation;
 
@@ -16,7 +17,6 @@ import scene.Intersection;
  */
 public abstract class AbstractSceneObject implements SceneObject, Serializable
 {
-
 
 	private static final long serialVersionUID = 1L;
 
@@ -67,6 +67,8 @@ public abstract class AbstractSceneObject implements SceneObject, Serializable
 	public boolean Intersect(Ray ray, Intersection inter) throws NotIntersectableException {
 		throw new NotIntersectableException();
 	}
+	
+	public abstract BBox getWorldBound();
 
 	@Override
 	public Collection<? extends SceneObject> getChildren()

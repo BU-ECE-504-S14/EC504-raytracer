@@ -1,5 +1,6 @@
 package objects;
 
+import geometry.BBox;
 import geometry.Normal;
 import geometry.Pt;
 import geometry.Ray;
@@ -31,7 +32,7 @@ public class Triangle extends AbstractSceneObject
 	@Override
 	public boolean IntersectP(Ray ray)
 	{
-		// get triangle positions
+		// get triangle positions. Handedness does not matter in IntersectP
 		Pt p1 = new Pt(mesh.Points[v[0]]);
 		Pt p2 = new Pt(mesh.Points[v[1]]);
 		Pt p3 = new Pt(mesh.Points[v[2]]);
@@ -212,6 +213,19 @@ public class Triangle extends AbstractSceneObject
 			uvs[2][0] = 1f;
 			uvs[2][1] = 1f;
 		}
+	}
+
+	@Override
+	public BBox getWorldBound() {
+		Pt p1 = new Pt(mesh.Points[v[0]]);
+		Pt p2 = new Pt(mesh.Points[v[1]]);
+		Pt p3 = new Pt(mesh.Points[v[2]]);
+		
+		BBox wBox = new BBox(p1);
+		wBox = BBox.union(wBox, p2);
+		wBox = BBox.union(wBox, p3);
+		
+		return wBox;
 	}
 
 }

@@ -1,5 +1,6 @@
 package objects;
 
+import geometry.BBox;
 import geometry.Normal;
 import geometry.Pt;
 import geometry.Transformation;
@@ -133,6 +134,17 @@ public class TriangleMesh extends AbstractSceneObject
 		SOA.ensureCapacity(ntris); // avoid vector doubling copy cost
 		for (int i = 0; i < ntris; i++)
 			SOA.add(new Triangle(this, i));
+	}
+
+	@Override
+	public BBox getWorldBound() {
+		BBox wBox = new BBox();
+		
+		for(Pt p : Points) {
+			wBox = BBox.union(wBox, p);
+		}
+		
+		return wBox;
 	}
 
 }

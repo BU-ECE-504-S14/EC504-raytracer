@@ -1,5 +1,6 @@
 package objects;
 
+import geometry.BBox;
 import geometry.Normal;
 import geometry.Pt;
 import geometry.Ray;
@@ -279,6 +280,19 @@ public class Sphere extends AbstractSceneObject
 		}
 		return true;
 	}
+	
+	@Override
+	public BBox getWorldBound() {
+		return trans.object2World(getobjectBound());
+	}
+	
+	/**
+	 * @return a BBox representing the bounding box of this sphere in object space
+	 */
+	private BBox getobjectBound() {
+		return new BBox( new Pt(-radius,-radius, zmin),
+						 new Pt( radius, radius, zmax)  );
+	}
 
 	@Override
 	public String toString()
@@ -286,4 +300,6 @@ public class Sphere extends AbstractSceneObject
 		return "Sphere name= " + name + ", radius=" + radius + ", position=" + position + ")"
 				+ material.toString() + trans.toString();
 	}
+
+
 }
