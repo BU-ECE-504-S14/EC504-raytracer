@@ -1,5 +1,7 @@
 package geometry;
 
+import javax.vecmath.Tuple3d;
+
 import raytracer.Util;
 
 public class BBox {
@@ -172,6 +174,66 @@ public class BBox {
 		return new Vec(	(p.x - pMin.x) / (pMax.x - pMin.x),
                 		(p.y - pMin.y) / (pMax.y - pMin.y),
                 		(p.z - pMin.z) / (pMax.z - pMin.z)   );
+	}
+	
+	/**
+	 * checks if ray hits bounding box. Computes hitT[0] = parameterized first contact with BB 
+	 * and hitT1[1] = parameterized final contact with BB. Returns whether or not box was intersected. 
+	 * 
+	 * @param Ray ray that is striking bounding box
+	 * @param hitT 
+	 * 			float array that will receive the parametric beginning and end points of bound.
+	 * 			Set hitT[0] != 0 if hitT[0] is supposed to be set.
+	 * 			Set hitT[1] != 0 if hitT[1] is suppoed to be set. 
+	 * @return boolean true == box intersected. false == box not intersected.
+	 */
+	public boolean IntersectP(Ray Ray, float[] hitT) {
+		float t0 = Ray.mint;
+		float t1 = Ray.maxt;
+		
+		float[] o = setFloatArrayFromTuple(Ray.position);
+		float[] d = setFloatArrayFromTuple(Ray.direction);
+		float[] mins = setFloatArrayFromTuple(pMin);
+		float[] maxs = setFloatArrayFromTuple(pMax);
+		
+		for(int i = 0; i < 3; i++){
+			
+			//compute near and far for x, y, and z bbox planes based on simplified para/intr solution pharr 195
+			float invRayDir = 1/d[i];
+			float tNear = (mins[i] - o[i])*invRayDir;
+			float tFar = (maxs[0] - o[i])*invRayDir;
+			
+			//swap tNear and tFar if near is greater than far
+			if(tNear > tFar) {
+				float tmp = tNear;
+				tNear = tFar;
+				tFar = tmp;
+			}
+			
+			//update t0 t1
+			t0 = tNear > t0 ? tNear : t0;
+			t1 = tFar < t1 ? tFar : t1;
+			
+			//if t0 is greater than t1 ray does not intersect bounding box
+			if(t0 > t1) {return false;}
+		}
+		
+		if(hitT[0] != 0) hitT[0] = t0;
+		if(hitT[1] != 0) hitT[1] = t1;
+		
+		return true;
+	}
+	/**
+	 * 
+	 * @param t tuple used to set float array
+	 * @return a float array with f[0] set to t.x, f[1] set to t.y, f[2] set to t.z.
+	 */
+	private float[] setFloatArrayFromTuple(Tuple3d t ) {
+		float[] f = new float[3];
+		f[0] = (float) t.x;
+		f[1] = (float) t.y;
+		f[2] = (float) t.z;
+		return f;
 	}
 	
 	
