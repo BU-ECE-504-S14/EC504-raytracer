@@ -8,6 +8,7 @@ import geometry.Ray;
 
 import java.util.ArrayList;
 
+import accelerators.Octnode.SplitBeyondMaxDepthException;
 import objects.AbstractSceneObject.NotIntersectableException;
 import objects.AbstractSceneObject.RefinementException;
 import objects.SceneObject;
@@ -23,7 +24,7 @@ public class Octree {
 	private Octnode root;
 	private ArrayList<SceneObject> lastIntersectedObject = new ArrayList<SceneObject>();
 	
-	public Octree(Scene scn,int maxdepth) throws RefinementException {
+	public Octree(Scene scn,int maxdepth) throws RefinementException, SplitBeyondMaxDepthException {
 		
 		//create bounding box for root node
 		BBox rootBox = new BBox();
@@ -47,8 +48,9 @@ public class Octree {
 	 * 
 	 * @param ray Intersection test ray
 	 * @return true if intersection occurs. False otherwise.
+	 * @throws NotIntersectableException 
 	 */
-	public boolean IntersectP(Ray ray){
+	public boolean IntersectP(Ray ray) throws NotIntersectableException{
 		lastIntersectedObject.clear(); //protection against users misusing IntersectP and filling lastIntersectedObject list
 		return root.IntersectP(ray, lastIntersectedObject);
 	}
