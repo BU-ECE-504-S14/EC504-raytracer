@@ -184,7 +184,7 @@ public class BBox {
 	 * @param hitT 
 	 * 			float array that will receive the parametric beginning and end points of bound.
 	 * 			Set hitT[0] != 0 if hitT[0] is supposed to be set.
-	 * 			Set hitT[1] != 0 if hitT[1] is suppoed to be set. 
+	 * 			Set hitT[1] != 0 if hitT[1] is supposed to be set. 
 	 * @return boolean true == box intersected. false == box not intersected.
 	 */
 	public boolean IntersectP(Ray Ray, float[] hitT) {
@@ -272,6 +272,22 @@ public class BBox {
 	 */
 	public void setpMax(Pt pMax) {
 		this.pMax = pMax;
+	}
+	/**
+	 * Returns the corner points of the bounding box
+	 * @return contains 8 corner points of the bounding box
+	 */
+	public Pt[] getCorners(){
+		Pt[] P = new Pt[8];
+		P[0] = new Pt( pMin.x, pMin.y, pMin.z ); //000
+	    P[4] = new Pt( pMax.x, pMin.y, pMin.z ); //100
+	    P[2] = new Pt( pMin.x, pMax.y, pMin.z ); //010
+	    P[1] = new Pt( pMin.x, pMin.y, pMax.z ); //001
+	    P[6] = new Pt( pMax.x, pMax.y, pMin.z ); //110
+	    P[5] = new Pt( pMax.x, pMin.y, pMax.z ); //101
+	    P[3] = new Pt( pMin.x, pMax.y, pMax.z ); //011
+	    P[7] = new Pt( pMax.x, pMax.y, pMax.z ); //111
+	    return P;
 	}
 }
 

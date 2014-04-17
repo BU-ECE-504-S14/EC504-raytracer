@@ -40,7 +40,7 @@ public class Scene implements Serializable
 	 */
 	private static final long serialVersionUID = 1L;
 
-	protected Collection<SceneObject> objects;
+	protected ArrayList<SceneObject> objects;
 	protected Collection<Light> lights = new HashSet<Light>();;
 	protected Camera camera;
 
@@ -48,14 +48,14 @@ public class Scene implements Serializable
 	{
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
 				(float) (Math.PI / 4));
-		objects = new HashSet<SceneObject>();
+		objects = new ArrayList<SceneObject>();
 		lights = new HashSet<Light>();
 	}
 
 	public Scene(Scene s)
 	{
 		camera = new Camera(s.camera);
-		objects = new HashSet<SceneObject>();
+		objects = new ArrayList<SceneObject>();
 		for (SceneObject so : s.objects)
 		{
 			if (so instanceof TriangleMesh)
@@ -126,7 +126,7 @@ public class Scene implements Serializable
 		return s;
 	}
 
-	protected Scene(Collection<SceneObject> objects, Collection<Light> lights, Camera camera)
+	protected Scene(ArrayList<SceneObject> objects, Collection<Light> lights, Camera camera)
 	{
 		this.objects = objects;
 		this.lights = lights;
@@ -148,7 +148,7 @@ public class Scene implements Serializable
 		this.camera = camera;
 	}
 
-	public Collection<SceneObject> getObjects()
+	public ArrayList<SceneObject> getObjects()
 	{
 		return objects;
 	}

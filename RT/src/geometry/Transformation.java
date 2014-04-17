@@ -225,23 +225,16 @@ public class Transformation implements Serializable
 	 */
 	public BBox object2World(BBox b) {
 	       
-	    Pt P000 = new Pt( b.getpMin().x, b.getpMin().y, b.getpMin().z );
-	    Pt P100 = new Pt( b.getpMax().x, b.getpMin().y, b.getpMin().z );
-	    Pt P010 = new Pt( b.getpMin().x, b.getpMax().y, b.getpMin().z );
-	    Pt P001 = new Pt( b.getpMin().x, b.getpMin().y, b.getpMax().z );
-	    Pt P110 = new Pt( b.getpMax().x, b.getpMax().y, b.getpMin().z );
-	    Pt P101 = new Pt( b.getpMax().x, b.getpMin().y, b.getpMax().z );
-	    Pt P011 = new Pt( b.getpMin().x, b.getpMax().y, b.getpMax().z );
-	    Pt P111 = new Pt( b.getpMax().x, b.getpMax().y, b.getpMax().z );
+		Pt[] P = b.getCorners(); 
 		
-		BBox wBox = new BBox( this.object2World( P000 ) );
-		wBox = BBox.union(wBox, this.object2World( P100 ) );
-		wBox = BBox.union(wBox, this.object2World( P010 ) );
-		wBox = BBox.union(wBox, this.object2World( P001 ) );
-		wBox = BBox.union(wBox, this.object2World( P110 ) );
-		wBox = BBox.union(wBox, this.object2World( P101 ) );
-		wBox = BBox.union(wBox, this.object2World( P011 ) );
-		wBox = BBox.union(wBox, this.object2World( P111 ) );
+		BBox wBox = new BBox( this.object2World( P[0] ) );
+		wBox = BBox.union(wBox, this.object2World( P[4] ) );
+		wBox = BBox.union(wBox, this.object2World( P[2] ) );
+		wBox = BBox.union(wBox, this.object2World( P[1] ) );
+		wBox = BBox.union(wBox, this.object2World( P[6] ) );
+		wBox = BBox.union(wBox, this.object2World( P[5] ) );
+		wBox = BBox.union(wBox, this.object2World( P[3] ) );
+		wBox = BBox.union(wBox, this.object2World( P[7] ) );
 		
 		return wBox;
 	}
