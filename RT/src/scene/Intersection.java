@@ -58,6 +58,7 @@ public class Intersection {
 		/*if(false){//shape && shape.ReverseOrientation shape.TransformSwapsHandedness)
 			nn.negate(); 
 		}*/
+
 	}
 	
 	public void update(Vector3d p, Vector3d dpdu, Vector3d dpdv,Vector3d dndu,Vector3d dndv,float u,float v,SceneObject shape){

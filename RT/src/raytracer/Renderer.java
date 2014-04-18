@@ -42,8 +42,8 @@ public class Renderer
 	private static int optionAntialiasing = 1;
 	private static String optionOutputFile;
 	private static String optionInputFile;
-	private static int optionWidth = 100;
-	private static int optionHeight = 100;
+	private static int optionWidth = 400;
+	private static int optionHeight = 300;
 	private static int optionShadow = 20;
 
 	public static double progress = 0.0;
@@ -54,8 +54,8 @@ public class Renderer
 	{
 		optionProgress = true;
 		optionAntialiasing = 2;
-		optionWidth = 200;
-		optionHeight = 200;
+		optionWidth = 1280;
+		optionHeight = 720;
 		optionShadow = 0;
 		showSampleScene();
 	}
@@ -256,8 +256,8 @@ public class Renderer
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
 				optionShadow);
 
-		//BufferedImage result = rayTracer.render(optionProgress);
-		BufferedImage result = rayTracer.renderThreads(optionProgress);
+		BufferedImage result = rayTracer.render(optionProgress);
+		//BufferedImage result = rayTracer.renderThreads(optionProgress);
 		return result;
 	}
 }

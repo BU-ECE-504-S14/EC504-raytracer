@@ -42,7 +42,7 @@ public class MaterialPanel extends JPanel
 	ParameterPanel diffuseIndexPanel;
 	ParameterPanel specularIndexPanel;
 	ParameterPanel ambientPanel;
-	ParameterPanel transparencyPanel;
+	ParameterPanel alphaPanel;
 	ParameterPanel refractionPanel;
 	ParameterPanel reflectionPanel;
 	ParameterPanel shininessPanel;
@@ -77,7 +77,7 @@ public class MaterialPanel extends JPanel
 		diffuseIndexPanel.addFieldListener(go);
 		specularIndexPanel.addFieldListener(go);
 		ambientPanel.addFieldListener(go);
-		transparencyPanel.addFieldListener(go);
+		alphaPanel.addFieldListener(go);
 		reflectionPanel.addFieldListener(go);
 		refractionPanel.addFieldListener(go);
 		shininessPanel.addFieldListener(go);
@@ -92,7 +92,7 @@ public class MaterialPanel extends JPanel
 				4);
 		ambientPanel = new ParameterPanel("Ambient intensity: ", "" + myMaterial.ambientIntensity,
 				4);
-		transparencyPanel = new ParameterPanel("Transparency: ", "" + myMaterial.transparency, 4);
+		alphaPanel = new ParameterPanel("Alpha: ", "" + myMaterial.alpha, 4);
 		reflectionPanel = new ParameterPanel("Reflection: ", "" + myMaterial.reflectionIndex, 4);
 		refractionPanel = new ParameterPanel("Refraction: ", "" + myMaterial.refractionIndex, 4);
 		shininessPanel = new ParameterPanel("Shininess: ", "" + myMaterial.shininess, 4);
@@ -102,7 +102,7 @@ public class MaterialPanel extends JPanel
 		add(diffuseIndexPanel);
 		add(specularIndexPanel);
 		add(ambientPanel);
-		add(transparencyPanel);
+		add(alphaPanel);
 		add(reflectionPanel);
 		add(refractionPanel);
 		add(shininessPanel);
@@ -136,7 +136,7 @@ public class MaterialPanel extends JPanel
 			double diffuseIndex = Double.parseDouble(diffuseIndexPanel.getValue());
 			double specularIndex = Double.parseDouble(specularIndexPanel.getValue());
 			double ambientIntensity = Double.parseDouble(ambientPanel.getValue());
-			double transparency = Double.parseDouble(transparencyPanel.getValue());
+			double alpha = Double.parseDouble(alphaPanel.getValue());
 			double reflection = Double.parseDouble(reflectionPanel.getValue());
 			double refraction = Double.parseDouble(refractionPanel.getValue());
 			double shininess = Double.parseDouble(shininessPanel.getValue());
@@ -146,7 +146,7 @@ public class MaterialPanel extends JPanel
 			myMaterial.diffuseIndex = diffuseIndex;
 			myMaterial.specularIndex = specularIndex;
 			myMaterial.ambientIntensity = ambientIntensity;
-			myMaterial.transparency = transparency;
+			myMaterial.alpha = alpha;
 			myMaterial.reflectionIndex = reflection;
 			myMaterial.refractionIndex = refraction;
 			myMaterial.shininess = shininess;

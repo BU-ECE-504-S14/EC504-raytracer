@@ -5,6 +5,8 @@ import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import scene.Intersection;
+
 /*
  * simple wrapper for Vector3d class. Reduces potential for performing an incorrect tranformation.
  */
@@ -52,6 +54,25 @@ public class Pt extends Vector3d
 	public String toString()
 	{
 		return this.x + ", " + this.y + ", " + this.z;
+	}
+	
+	public static Pt fixPointIn(Intersection inter, double correction)
+	{
+		Pt newPt = new Pt(inter.p);
+		Vec EPSILON = new Vec(inter.nn.x, inter.nn.y, inter.nn.z);
+		EPSILON.scale(correction);
+		newPt.add(EPSILON);
+		return newPt;
+	}
+	
+	public static Pt fixPointOut(Intersection inter, double correction)
+	{
+		Pt newPt = new Pt(inter.p);
+		Vec EPSILON = new Vec(inter.nn.x, inter.nn.y, inter.nn.z);
+		EPSILON.negate();
+		EPSILON.scale(correction);
+		newPt.add(EPSILON);
+		return newPt;
 	}
 
 }
