@@ -125,7 +125,7 @@ public class Renderer
 
 		/* shape1 */
 		Vector3d scale = new Vector3d(1, 1, 1);
-		Vector3d pos = new Vector3d(-50, -50, 0);
+		Vector3d pos = new Vector3d(0, 0, 0);
 		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t1 = new Transformation(scale, pos, rot);
 		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
@@ -178,13 +178,13 @@ public class Renderer
 
 		/* set up camera */
 		double fieldofView = 1;
-		Point3d position = new Point3d(200, 0, 0);
-		Point3d sphereLocation = new Point3d(0, 0, 0);
+		Pt position = new Pt(200, 0, 0);
+		Pt lookAt = new Pt(0, 0, 0);
 		Point3d takePos = new Point3d(position.x, position.y, position.z);
-		Point3d takeSL = new Point3d(sphereLocation.x, sphereLocation.y, sphereLocation.z);
+		Pt takeSL = new Pt(lookAt);
 		takePos.sub(takeSL);
 
-		Vector3d up = new Vector3d(0, 0, 1);
+		Vec up = new Vec(0, 1, 1);
 
 		/*
 		 * uses axisangle to create camera (I hate axisangle) you will need to modify the
@@ -194,7 +194,7 @@ public class Renderer
 		// Camera cam = new Camera(position, new AxisAngle4d(1,0,0,0.55), fieldofView);
 
 		/* uses look at type constructor to create camera */
-		Camera cam = new Camera(position, sphereLocation, up, fieldofView);
+		Camera cam = new Camera(position, lookAt, up, fieldofView);
 		// System.out.println(cam.toString()); //debug
 
 		/* set lights */
@@ -221,10 +221,9 @@ public class Renderer
 
 		/* add objects & lights & camera to scene */
 		Scene scene = new Scene();
-		// scene.addSceneObject(shape0);
-		// scene.addSceneObject(shape1);
+		scene.addSceneObject(shape1);
 		// scene.addSceneObject(shape2);
-		scene.addSceneObject(shape4);
+		// scene.addSceneObject(shape4);
 		scene.addLight(l1);
 		scene.addLight(l2);
 		scene.addLight(l4);

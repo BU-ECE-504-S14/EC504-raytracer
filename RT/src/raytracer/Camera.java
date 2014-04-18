@@ -2,6 +2,7 @@ package raytracer;
 
 import geometry.Pt;
 import geometry.Transformation;
+import geometry.Vec;
 
 import java.io.Serializable;
 
@@ -75,23 +76,37 @@ public class Camera implements Serializable{
 	}
 	
 	/**
-	 * create a new camera facing the direction of "center" from the base position
+	 * create a new camera facing the direction of interest"lookAt" from the base position
 	 * "eye," with up equal to "up." This is essentially constructing the camera using
 	 * a "look-at" rotation matrix.
 	 * 
 	 * @param eye The base translated position of the camera.
-	 * @param center The forward point of the camera axis system (the spot at which the eye is looking/centered).
-	 * @param up The up point of the camera axis system.
+	 * @param lookAt The forward point of the camera axis system (the spot at which the eye is looking/centered).
+	 * @param up The up point of the camera axis system (does not have to be orthogonal.
 	 * @param fieldOfView Viewing angle width.
 	 */
-	public Camera(Point3d eye, Point3d center, Vector3d up, double fieldOfView){
+	public Camera(Pt eye, Pt lookAt, Vec up, double fieldOfView){
 		super();
-		this.position = new Pt(eye.x,eye.y,eye.z);
+		this.position = new Pt(eye);
 		this.fieldOfView = fieldOfView;
+
+		lookAt(lookAt, up);
+	}
+	
+	/**
+	 *  change orientation of camera to look at a desired position "lookAt".
+	 *  
+	 * @param lookAt point of interest
+	 * @param up relative up axis (does not have to be orthogonal)
+	 */
+	public void lookAt(Pt lookAt, Vec up) {
+		Vec center = findDirectionOfLookAt(lookAt);
+		Vec trueUp = calculateTrueUp(up, center);
+		Vec right = correctCoordinateSystem(trueUp,center);
 		
 		/* create matrix to look at point center from eye */
 		Transform3D findOrientation = new Transform3D();
-		findOrientation.lookAt(eye, center, up);
+		findOrientation.lookAt(new Point3d(position), new Point3d(center), new Vector3d(trueUp));
 		findOrientation.invert();
 		
 		/* set matrix */
@@ -108,6 +123,17 @@ public class Camera implements Serializable{
 		
 		this.transformationMatrix = t.o2w;	
 	}
+	
+	/** 
+	 * change current position of camera to desired position "newPos."
+	 * 
+	 * @param newPos desired position of camera.
+	 */
+	public void changePostion(Pt newPos) {
+		this.position = new Pt(newPos);
+		Transformation t = new Transformation(new Vector3d(1,1,1), position, orientation);
+		this.transformationMatrix = t.o2w;
+	}
 
 	public void transform(Transformation t) {
 		Vector4d aux = new Vector4d(position.x, position.y, position.z, 1);
@@ -121,6 +147,64 @@ public class Camera implements Serializable{
 		this.orientation.x = aux.x;
 		this.orientation.y = aux.y;
 		this.orientation.z = aux.z;		
+	}
+	
+	/**
+	 * correct trueUp and Center to ensure coordinate system is orthogonal. Return right coordinate vector for coord system
+	 * 
+	 * @param trueUp true up of coordinate system (may be modified)
+	 * @param center center of the coordinate system
+	 * @return vector representing the right coordinate axis of coord system
+	 */
+	private Vec correctCoordinateSystem(Vec trueUp, Vec center) {
+		
+		//check to see if up was initialized to center if so make arbitrary up
+		if(	trueUp.x == center.x &&
+			trueUp.y == center.y &&
+			trueUp.z == center.z) {
+			trueUp.set(0f,1f,0f);
+		}
+		
+		//create right handed coordinate system
+		Vec right = new Vec();
+		right.cross(trueUp, center);
+		trueUp.cross(right, center); //ensure that coordinate system is orthogonal
+		
+		return right;
+	}
+	
+	/**
+	 * use vector up and point look at to calculate the true up for the coordinate system of this camera
+	 * 
+	 * @param up vector representing approximate up
+	 * @param lookAt point representing point of interest for camera
+	 * @return a vector representing the true up based on the coordinate System generated from center up and worldUp
+	 */
+	private Vec calculateTrueUp(Vec up, Vec c) {
+		Vec projection = new Vec(c);
+		Vec trueUp = new Vec(up);
+		
+		//project up onto center = (up dot center)*center
+		double magnitude = Util.dotProduct(up, c);
+		projection.scale(magnitude);
+		
+		//subtract projection from up to find true up for coordinate system
+		trueUp.sub(projection);
+		
+		return trueUp;
+	}
+	
+	/**
+	 * remove translation bias from lookAt to generate a vector in the direction of lookAt from the camera's world positon
+	 *  
+	 * @param lookAt point of interest for the camera
+	 * @return normalized vector representing the direction that the camera is looking
+	 */
+	private Vec findDirectionOfLookAt(Pt lookAt) {
+		Vec center = new Vec(lookAt);
+		center.sub(this.position);
+		center.normalize();
+		return center;
 	}
 	
 	@Override
