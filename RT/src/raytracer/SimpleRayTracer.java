@@ -751,7 +751,7 @@ public class SimpleRayTracer
 		Vector4d result = Util.MultiplyMatrixAndVector(scene.getCamera().rotationMatrix, dir);
 		Vector3d direction = new Vector3d(result.x, result.y, result.z);
 		direction.normalize();
-		return new Ray(scene.getCamera().position, new Vec(direction), 0f);
+		return new Ray(scene.getCamera().getPosition(), new Vec(direction), 0f);
 	}
 
 	public static List<Ray> constructRaysThroughPixel(double i, double j)

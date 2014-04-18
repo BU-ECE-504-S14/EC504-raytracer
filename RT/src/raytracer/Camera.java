@@ -15,22 +15,33 @@ import javax.media.j3d.Transform3D;
  * (using a 4d vector: the first three components create the orientation axis and the fourth component is the angle that rotates around the axis),
  * and a field of view. Additionally, the construction of a camera calculates the rotation matrix 
  * (to apply to rays that are created) and a transformation matrix (combined translation and rotation)
+ * 
+ * A camera can also be initialized using a Pt representing the camera's position "eye," at look at Pt representing a center of 
+ * focus of the camera "lookAt," and a Vec "up" representing an approximate up axis. Together eye lookAt and up are used to create
+ * a coordinate system trueUp, center, and right used to direct the camera's focus.
+ * 
+ * camera position and orientation can be adjusted after initialization using public functions.
+ *  
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
 public class Camera implements Serializable{
 
 	/**
-	 * 
+	 * Serial Identification for camera
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/** Camera position */
-	public Pt position;
+	/** Camera position can be set with changePostion */
+	private Pt position;
+	
+	/** Transformation matrix (rotation and translation) */  
+	private Matrix4d transformationMatrix;
 
 	/** Orientation.  An axis and an angle about said axis. 
 	 *  the axis is the axis that you want to rotate around (right hand rule)
 	 *  the angle is the angle in radians that you rotate about that axis
-	 *  example: (1,0,0,.55) means rotate in the x-z plane .55 radians counterclockwise (again right hand)*/
+	 *  example: (1,0,0,.55) means rotate in the x-z plane .55 radians counterclockwise (again right hand)
+	 *  can be set with lookAt*/
 	public AxisAngle4d orientation;
 
 	/** angle representing the field of view of camera. 
@@ -41,10 +52,6 @@ public class Camera implements Serializable{
 	
 	/** Rotation matrix */
 	public Matrix4d rotationMatrix;
-
-	/** Transformation matrix (rotation and translation) */  
-	public Matrix4d transformationMatrix;
-
 	
 	public Camera(Camera c){
 		position = new Pt(c.position);
@@ -53,6 +60,7 @@ public class Camera implements Serializable{
 		rotationMatrix = new Matrix4d(c.rotationMatrix);
 		transformationMatrix = new Matrix4d(c.transformationMatrix);
 	}
+	
 	/**
 	 * Create a new camera with the data parameters
 	 * 
@@ -102,17 +110,16 @@ public class Camera implements Serializable{
 	public void lookAt(Pt lookAt, Vec up) {
 		Vec center = findDirectionOfLookAt(lookAt);
 		Vec trueUp = calculateTrueUp(up, center);
-		Vec right = correctCoordinateSystem(trueUp,center);
+		Vec right = correctCoordinateSystem(trueUp,center); //not currently used can be used to manually create rotation matrix
 		
 		/* create matrix to look at point center from eye */
 		Transform3D findOrientation = new Transform3D();
 		findOrientation.lookAt(new Point3d(position), new Point3d(center), new Vector3d(trueUp));
 		findOrientation.invert();
 		
-		/* set matrix */
+		/* set orientation */
 		Matrix3d rotation = new Matrix3d();
 		findOrientation.getRotationScale(rotation);
-		
 		orientation = new AxisAngle4d();
 		orientation.set(rotation);
 		
@@ -129,10 +136,23 @@ public class Camera implements Serializable{
 	 * 
 	 * @param newPos desired position of camera.
 	 */
-	public void changePostion(Pt newPos) {
+	public void setPostion(Pt newPos) {
 		this.position = new Pt(newPos);
 		Transformation t = new Transformation(new Vector3d(1,1,1), position, orientation);
 		this.transformationMatrix = t.o2w;
+	}
+	
+	/**
+	 * get current camera position.
+	 * 
+	 * @return Pt representing the current camera position.
+	 */
+	public Pt getPosition(){
+		return new Pt(position);
+	}
+	
+	public Matrix4d getTransformationMatrix(){
+		return new Matrix4d(transformationMatrix);
 	}
 
 	public void transform(Transformation t) {
@@ -152,9 +172,9 @@ public class Camera implements Serializable{
 	/**
 	 * correct trueUp and Center to ensure coordinate system is orthogonal. Return right coordinate vector for coord system
 	 * 
-	 * @param trueUp true up of coordinate system (may be modified)
+	 * @param trueUp true up of coordinate system (may be modified by function call)
 	 * @param center center of the coordinate system
-	 * @return vector representing the right coordinate axis of coord system
+	 * @return vector representing the right coordinate axis of coord system.
 	 */
 	private Vec correctCoordinateSystem(Vec trueUp, Vec center) {
 		
@@ -176,9 +196,9 @@ public class Camera implements Serializable{
 	/**
 	 * use vector up and point look at to calculate the true up for the coordinate system of this camera
 	 * 
-	 * @param up vector representing approximate up
-	 * @param lookAt point representing point of interest for camera
-	 * @return a vector representing the true up based on the coordinate System generated from center up and worldUp
+	 * @param up vector representing approximate up.
+	 * @param lookAt point representing point of interest for camera.
+	 * @return a vector representing the true up based on the coordinate System generated from center up and worldUp.
 	 */
 	private Vec calculateTrueUp(Vec up, Vec c) {
 		Vec projection = new Vec(c);
@@ -195,10 +215,10 @@ public class Camera implements Serializable{
 	}
 	
 	/**
-	 * remove translation bias from lookAt to generate a vector in the direction of lookAt from the camera's world positon
+	 * remove translation bias from lookAt to generate a vector in the direction of lookAt from the camera's world position.
 	 *  
 	 * @param lookAt point of interest for the camera
-	 * @return normalized vector representing the direction that the camera is looking
+	 * @return normalized vector representing the direction that the camera is looking "center."
 	 */
 	private Vec findDirectionOfLookAt(Pt lookAt) {
 		Vec center = new Vec(lookAt);
