@@ -85,7 +85,6 @@ public class SpherePanel extends JPanel
 	{
 		previewRenderer.setOptionAntialiasing(1);
 		previewRenderer.setOptionShadow(1);
-		previewRenderer.setOptionShadow(1);
 		previewRenderer.setOptionWidth(300);
 		previewRenderer.setOptionHeight(300);
 	}

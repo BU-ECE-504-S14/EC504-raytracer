@@ -5,11 +5,13 @@
 package scene;
 
 import geometry.Pt;
+import geometry.Vec;
 
 import java.io.IOException;
 import java.util.List;
 
 import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import objects.SceneObject;
@@ -26,14 +28,13 @@ public class PreviewScene extends Scene
 	public PreviewScene(Sphere o)
 	{
 		super();
-		
-		
-		camera = new Camera(new Vector3d(0, 0, 5), new AxisAngle4d(0, 0, -1, 0),
-				(float) (Math.PI / 4));
+
+		camera = new Camera(new Pt(0, 0, -5), new Pt(0, 0, 300), new Vec(0, 1, 0),
+				(double) (Math.PI / 4));
 		PointLight demoLight = new PointLight();
 		PointLight demoLight2 = new PointLight();
 		demoLight.setPosition(new Vector3d(100, 100, 50));
-		demoLight2.setPosition(new Vector3d(1, 1, 5));
+		demoLight2.setPosition(new Vector3d(1, 1, -5));
 		demoLight2.setColor(new Vector3d(1, 1, 1));
 		demoLight.setColor(new Vector3d(1, 1, 1));
 		demoLight.setRadio(.5);
@@ -44,11 +45,13 @@ public class PreviewScene extends Scene
 		Sphere demoSphere = new Sphere();
 		Sphere demoSphere2 = new Sphere();
 		demoSphere2.material.ambientIntensity = .3;
-		demoSphere2.material.diffuseIndex = 1;
-		demoSphere2.material.specularIndex = 1;
-		demoSphere2.trans.setTranslation(new Vector3d(0, 0, -200));
-		demoSphere2.trans.setScale(new Vector3d(100, 100, 100));
-		demoSphere2.material.reflectionIndex = 0;
+		demoSphere2.material.diffuseIndex = .5;
+		demoSphere2.material.specularIndex = .5;
+		demoSphere2.material.shininess = 1;
+		demoSphere2.material.diffuseColor = new Vector3d(0,0,0);
+		demoSphere2.trans.setTranslation(new Vector3d(0, 0, -20));
+		demoSphere2.trans.setScale(new Vector3d(100, 100, 10));
+		demoSphere2.material.reflectionIndex = 1;
 
 		demoSphere.position = new Vector3d(0, 0, 0);
 		demoSphere.radius = o.radius;
@@ -59,7 +62,7 @@ public class PreviewScene extends Scene
 		demoSphere.thetaMax = o.thetaMax;
 		demoSphere.phiMax = o.phiMax;
 		demoSphere.trans = o.trans;
-		
+
 		objects.add(demoSphere);
 		objects.add(demoSphere2);
 	}

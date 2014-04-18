@@ -25,6 +25,7 @@ import objects.Material;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
+
 import scene.MeshPreviewScene;
 import scene.PointLight;
 import scene.Scene;
@@ -54,9 +55,11 @@ public class Renderer
 	public static void main(String[] args)
 	{
 		optionProgress = true;
-		optionAntialiasing = 2;
+		optionAntialiasing = 1;
+
 		optionWidth = 200;
 		optionHeight = 200;
+
 		optionShadow = 0;
 		showSampleScene();
 	}
@@ -65,7 +68,8 @@ public class Renderer
 	{
 		try
 		{
-			//new RenderViewer(renderScene(constructSampleScene()));
+
+			// new RenderViewer(renderScene(constructSampleScene()));
 			new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
@@ -128,7 +132,9 @@ public class Renderer
 
 		/* shape1 */
 		Vector3d scale = new Vector3d(1, 1, 1);
+
 		Vector3d pos = new Vector3d(14, 45, 20);
+
 		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t1 = new Transformation(scale, pos, rot);
 		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
@@ -258,6 +264,7 @@ public class Renderer
 
 		//BufferedImage result = rayTracer.render(optionProgress);
 		BufferedImage result = rayTracer.renderThreads(optionProgress);
+
 		return result;
 	}
 }

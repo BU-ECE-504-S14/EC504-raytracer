@@ -52,6 +52,7 @@ public class Camera implements Serializable{
 	
 	/** Rotation matrix */
 	public Matrix4d rotationMatrix;
+
 	
 	public Camera(Camera c){
 		position = new Pt(c.position);
@@ -60,7 +61,7 @@ public class Camera implements Serializable{
 		rotationMatrix = new Matrix4d(c.rotationMatrix);
 		transformationMatrix = new Matrix4d(c.transformationMatrix);
 	}
-	
+
 	/**
 	 * Create a new camera with the data parameters
 	 * 

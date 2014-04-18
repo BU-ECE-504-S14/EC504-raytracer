@@ -38,9 +38,12 @@ public class SimpleRayTracer
 	private static final int NOT_REFRACTIVE = -1;
 	private static final int AIR_REFRACTIVE_INDEX = 1;
 
-	private static final int MAX_LEVELS = 2;
-	/** Maximum number of levels in the recursion of getColor */
-	private static final double EPSILON_EQUALS = 0.000000000001;
+	// private static final int MAX_LEVELS = 3;
+
+	private static final int MAX_REFRACTIONS = 2;
+
+	private static final int MAX_REFLECTIONS = 2;
+
 	/** Margin of error when comparing doubles */
 	private static final double FLOAT_CORRECTION = 0.001;
 
@@ -59,12 +62,8 @@ public class SimpleRayTracer
 	public static int currentRay;
 
 	/**
-	 * <<<<<<< HEAD Create the new ray tracer with the given parameters. The camera is set
-	 * up to the size of the image to generate so that we can construct the rays. =======
 	 * Create the new ray tracer with the given parameters. The camera is set up to the
 	 * size of the image to generate so that we can construct the rays.
-	 * 
-	 * >>>>>>> Bryant
 	 * 
 	 * @param scene
 	 *            Scene to render
@@ -108,7 +107,6 @@ public class SimpleRayTracer
 		{
 			for (int j = 0; j < imageSize.width; j++)
 			{
-
 				currentRay++;
 				if (showProgress
 						&& (i * imageSize.width + j) % (imageSize.width * imageSize.height / 80) == 0)
@@ -122,7 +120,7 @@ public class SimpleRayTracer
 															 * pixel (i,j)
 															 */
 					/* do ray trace */
-					color.add(getColor(ray, 0));
+					color.set(getColor(ray, 0, 0, null));
 				}
 				else
 				{
@@ -130,10 +128,10 @@ public class SimpleRayTracer
 					Vector3d newColor = new Vector3d(0, 0, 0);
 					for (int ii = 0; ii < rays.size(); ii++)
 					{
-						newColor.add(getColor(rays.get(ii), 0));
+						newColor.add(getColor(rays.get(ii), 0, 0, null));
 					}
 					newColor.scale(1.0 / rays.size());
-					color.add(newColor);
+					color.set(newColor);
 				}
 
 				/* set color into image at screen position (i,j) */
@@ -230,7 +228,7 @@ public class SimpleRayTracer
 																 * pixel (i,j)
 																 */
 					/* do ray trace */
-					color.add(getColor(ray, 0));
+					color.set(getColor(ray, 0, 0, null));
 				}
 				else
 				{
@@ -238,10 +236,10 @@ public class SimpleRayTracer
 					Vector3d newColor = new Vector3d(0, 0, 0);
 					for (int kk = 0; kk < rays.size(); kk++)
 					{
-						newColor.add(getColor(rays.get(kk), 0));
+						newColor.add(getColor(rays.get(kk), 0, 0, null));
 					}
 					newColor.scale(1.0 / rays.size());
-					color.add(newColor);
+					color.set(newColor);
 				}
 
 				/* set color into image at screen position (i,j) */
@@ -340,7 +338,7 @@ public class SimpleRayTracer
 		Vector3d reflection = new Vector3d();
 		eye.sub(inter.p);
 		eye.normalize();
-		reflection = reflect(lightVect, inter.nn);
+		reflection = Ray.reflectVector(lightVect, inter.nn);
 		double dotProd = eye.dot(reflection);
 
 		if (dotProd > 0)
@@ -377,7 +375,7 @@ public class SimpleRayTracer
 		ambient = getAmbientComponent(inter, light);
 
 		// ******** Check to see whether in shadow, for diffuse lighting
-		Ray shadowRay = makeShadowRay(inter, light);
+		Ray shadowRay = Ray.makeShadowRay(inter, light, FLOAT_CORRECTION);
 
 		// ******** if object is in shadow for this light, only add ambient color
 		// ******** if (scene.getFirstIntersectedObject(shadowRay, new Intersection()))
@@ -391,6 +389,9 @@ public class SimpleRayTracer
 
 		}
 
+		double alpha = inter.shape.getMaterial().alpha;
+		ambient.scale(alpha);
+		diffuse.scale(alpha);
 		return addColorComponents(ambient, diffuse, specular);
 
 	}
@@ -415,8 +416,9 @@ public class SimpleRayTracer
 	 * 
 	 * @param ray
 	 *            Ray being shot
-	 * @param currentLevel
-	 *            Current level of recursion (0 at invocation) (not used yet)
+	 * @param currentReflection
+	 *            , int currentRefraction Current level of recursion (0 at invocation)
+	 *            (not used yet)
 	 * @param viewerPosition
 	 *            Position of the observer. In the first invocation, it is the origin (not
 	 *            used yet)
@@ -427,7 +429,8 @@ public class SimpleRayTracer
 	 * @return The first intersected object (may be null)
 	 * @throws Exception
 	 */
-	private static Vector3d getColor(Ray ray, int currentLevel) throws Exception
+	private static Vector3d getColor(Ray ray, int currentReflection, int currentRefraction,
+			SceneObject lastObject) throws Exception
 	{
 
 		Vector3d color = new Vector3d(0, 0, 0);
@@ -446,93 +449,91 @@ public class SimpleRayTracer
 		{
 			color.add(getPhongColor(ray, inter, light));
 		}
+		// Reflect and refract!!
+		// if( material.reflectionIndex > 0 || material.refractionIndex > 0)
+		// getReflectiveRefractiveLighting(ray, intersectedObject, intersection,
+		// illumination, currentLevel, currentRefraction);
+
+		// illumination.add(ReflectRefract);
+		/* Reflection */
+
+		// if (inter.shape.getMaterial().reflectionIndex > 0)
+		// computeReflection(ray, intersectedObject, intersection, illumination,
+		// currentLevel,
+		// currentRefraction);
+
+		/* Refraction */
+
+		// if (inter.shape.getMaterial().transparency > 0)
+		// computeRefraction(ray, intersectedObject, intersection, illumination,
+		// currentLevel,
+		// currentRefraction);
 
 		// ******** Restrict the color of this pixel to the range [0,1]
 
-		if (currentLevel < MAX_LEVELS)
+		Material mat = inter.shape.getMaterial();
+		double reflectionIndex = mat.reflectionIndex;
+		double refractionIndex = mat.refractionIndex;
+		double alpha = mat.alpha;
+
+		SceneObject nextObject;
+
+		/**
+		 * If the reflectivity of the object is greater than 0, generate a reflection ray
+		 * and get the color of the object it hits, recursively.
+		 */
+		if (lastObject != null && lastObject.equals(inter.shape))
 		{
-			double refIndex = inter.shape.getMaterial().reflectionIndex;
-			if (refIndex > 0)
+			// don't reflect, you're inside yourself!
+		}
+		else
+		{
 			{
-				Ray reflection = makeReflectionRay(inter, ray.position);
-				Vector3d refColor = getColor(reflection, currentLevel + 1);
-				refColor.scale(refIndex);
-				color.add(refColor);
+				if (currentReflection < MAX_REFLECTIONS)
+				{
+					if (reflectionIndex > 0)
+					{
+						Ray reflection = Ray.reflectRay(ray, inter, FLOAT_CORRECTION);
+						Vector3d refColor = getColor(reflection, currentReflection + 1,
+								currentRefraction, lastObject);
+						refColor.scale(reflectionIndex);
+						refColor.clamp(0.0, 1.0);
+						color.add(refColor);
+					}
+				}
+			}
+		}
+
+		if (alpha < 1)
+		{
+			if (currentRefraction < MAX_REFRACTIONS)
+			{
+				Ray refraction;
+				if (refractionIndex == -1 || (lastObject != null && lastObject.getMaterial().refractionIndex == -1))
+				{
+					refraction = new Ray(Pt.fixPointIn(inter, FLOAT_CORRECTION), ray.direction);
+				}
+				else
+				{
+					double lastRefIndex = 1.0;
+					if (lastObject != null)
+					{
+						lastRefIndex = lastObject.getMaterial().refractionIndex;
+					}
+					refraction = Ray.refractRay(ray, inter, lastRefIndex, FLOAT_CORRECTION);
+				}
+				nextObject = inter.shape;
+				Vector3d refractColor = getColor(refraction, currentReflection,
+						currentRefraction + 1, nextObject);
+				// refractColor.scale(1 - alpha);
+				refractColor.clamp(0.0, 1.0);
+				color.add(refractColor);
 			}
 		}
 
 		color.clamp(0.0, 1.0);
 
 		return color;
-	}
-
-	/**
-	 * Find reflected ray
-	 * 
-	 * @param vector
-	 *            to be reflected
-	 * @param normal
-	 *            to the eye
-	 * @return reflected vector
-	 */
-	private static Vector3d reflect(Vector3d v1, Vector3d normal)
-	{
-		Vector3d reflected = new Vector3d(v1);
-		Vector3d adjVect = new Vector3d(normal);
-
-		double adj = v1.dot(normal) * 2;
-		adjVect.scale(adj);
-		reflected.sub(adjVect);
-		reflected.normalize();
-
-		return reflected;
-	}
-
-	/**
-	 * Create a shadow ray from the given intersection point towards the provided light
-	 * source.
-	 * 
-	 * @param shadowRay
-	 * @param distance
-	 * @return ray
-	 */
-	private static Ray makeShadowRay(Intersection inter, Light light)
-	{
-		// ******** Construct the shadow ray
-		Pt interP = fixPoint(inter);
-		Vec lightDir = new Vec(new Vector3d(light.getPosition()));
-		lightDir.sub(interP);
-
-		return new Ray(interP, lightDir, 0);
-	}
-
-	private static Pt fixPoint(Intersection inter)
-	{
-		Pt newPt = new Pt(inter.p);
-		Vec EPSILON = new Vec(inter.nn.x, inter.nn.y, inter.nn.z);
-		EPSILON.negate();
-		EPSILON.scale(FLOAT_CORRECTION);
-		newPt.add(EPSILON);
-		return newPt;
-	}
-
-	/**
-	 * Create a reflection ray from the given intersection poiint towards the provided
-	 * light source.
-	 * 
-	 * @param shadowRay
-	 * @param distance
-	 * @return ray
-	 */
-	private static Ray makeReflectionRay(Intersection inter, Vector3d eye)
-	{
-		Vector3d ref = reflectVector(eye, inter.nn);
-		ref.negate();
-		Vec reflected = new Vec(ref);
-		// ******** Find the shadow ray
-		Pt reflectPoint = fixPoint(inter);
-
-		return new Ray(reflectPoint, reflected, 0);
 	}
 
 	/**
@@ -610,117 +611,6 @@ public class SimpleRayTracer
 		return new Vector3d(newRColor, newGColor, newBColor);
 	}
 
-	// private Vector3d getReflectiveRefractiveLighting(Ray ray, SceneObject
-	// intersectedObject,
-	// Intersection intersection, Vector3d ambientIntensity, int currentLevel,
-	// double currentRefraction)
-	// {
-	// double reflectivity = intersectedObject.getMaterial().reflectionIndex;
-	// double startRefractiveIndex = intersectedObject.getMaterial().refractionIndex;//
-	// intersection.startMaterial->getRefractiveIndex();
-	// double endRefractiveIndex = intersectedObject.getMaterial().refractionIndex;
-	// int reflectionsRemaining = intersection.ray.remainingReflections;
-	//
-	// /**
-	// * Don't perform lighting if the object is not reflective or refractive or we have
-	// * hit our recursion limit.
-	// */
-	// if (reflectivity == NOT_REFLECTIVE && endRefractiveIndex == NOT_REFRACTIVE
-	// || reflectionsRemaining <= 0)
-	// {
-	// return new Vector3d(0, 0, 0);
-	// }
-	//
-	// // Default to exclusively reflective values.
-	// double reflectivePercentage = reflectivity;
-	// double refractivePercentage = 0;
-	//
-	// // Refractive index overrides the reflective property.
-	// if (endRefractiveIndex != NOT_REFRACTIVE)
-	// {
-	// reflectivePercentage = getReflectance(intersection.normal,
-	// intersection.ray.direction,
-	// startRefractiveIndex, endRefractiveIndex);
-	// refractivePercentage = 1 - reflectivePercentage;
-	// }
-	//
-	// // No ref{ra,le}ctive properties - bail early.
-	// if (refractivePercentage <= 0 && reflectivePercentage <= 0)
-	// {
-	// return new Vector3d(0, 0, 0);
-	// }
-	//
-	// Vector3d reflectiveColor = new Vector3d(0, 0, 0);
-	// Vector3d refractiveColor = new Vector3d(0, 0, 0);
-	//
-	// if (reflectivePercentage > 0)
-	// {
-	// Vector3d reflected = reflect(intersection.ray.position, intersection.normal);
-	// Ray reflectedRay = new Ray(intersection.point, intersection.ray.origin, reflected,
-	// reflectionsRemaining - 1);
-	// reflectiveColor.x = (reflectiveColor.x * reflectivePercentage);
-	// reflectiveColor.y = (reflectiveColor.y * reflectivePercentage);
-	// reflectiveColor.z = (reflectiveColor.z * reflectivePercentage);
-	// if (getColor(reflectedRay, currentLevel + 1, reflectedRay.position,
-	// reflectiveColor,
-	// currentRefraction) != null)
-	// {
-	// Material material = intersectedObject.getMaterial();
-	// Util.multiplyVectors(reflectiveColor, material.diffuseColor);
-	// reflectiveColor.scale(material.reflectionIndex);
-	// ambientIntensity.add(reflectiveColor);
-	// }
-	// }
-	//
-	// if (refractivePercentage > 0)
-	// {
-	// Vector3d refracted = refract(intersection.normal, intersection.ray.direction,
-	// startRefractiveIndex, endRefractiveIndex);
-	// Ray refractedRay = new Ray(intersection.point, intersection.ray.origin, refracted,
-	// reflectionsRemaining - 1);// , 1, intersection.endMaterial);
-	// // refractiveColor = castRay(refractedRay);// * refractivePercentage;
-	// refractiveColor.x = (refractiveColor.x * refractivePercentage);
-	// refractiveColor.y = (refractiveColor.y * refractivePercentage);
-	// refractiveColor.z = (refractiveColor.z * refractivePercentage);
-	// if (refractedRay != null)
-	// {
-	// // TODO
-	// if (refractedRay.direction.dot(intersection.normal) > 0)
-	// {
-	// currentRefraction = intersectedObject.getMaterial().refractionIndex;
-	// }
-	// else
-	// {
-	// currentRefraction = 1;
-	// }
-	// Vector3d refractedColor = new Vector3d();
-	// SceneObject instersectedObject2 = getColor(refractedRay, currentLevel + 1,
-	// refractedRay.position, refractedColor, currentRefraction);
-	// if (instersectedObject2 != null)
-	// {
-	//
-	// Vector3d pointOfIntersection =
-	// instersectedObject2.intersectsRay(refractedRay).point;
-	// pointOfIntersection.sub(intersection.point);
-	// double distancia = intersection.distance;
-	//
-	// Material material = intersectedObject.getMaterial();
-	// Vector3d absorbance = new Vector3d(material.diffuseColor);
-	// absorbance.scale(-0.15 * distancia);
-	// Vector3d transparency = new Vector3d(Math.exp(absorbance.x),
-	// Math.exp(absorbance.y), Math.exp(absorbance.z));
-	//
-	// Util.multiplyVectors(refractedColor, transparency);
-	// refractedColor.scale(material.transparency);
-	// ambientIntensity.add(refractedColor);
-	// }
-	// }
-	//
-	// }
-	// refractiveColor.add(reflectiveColor);
-	// return refractiveColor;
-	// }
-
 	/**
 	 * 
 	 * Construct a ray that exits that camera and passes through the pixel (i,j) of the
@@ -783,55 +673,4 @@ public class SimpleRayTracer
 		}
 		return rays;
 	}
-
-	double getReflectance(Vector3d normal, Vector3d incident, double n1, double n2)
-	{
-		double n = n1 / n2;
-		double cosI = -normal.dot(incident);
-		double sinT2 = n * n * (1.0 - cosI * cosI);
-
-		if (sinT2 > 1.0)
-		{
-			// ******** Total Internal Reflection.
-			return 1.0;
-		}
-
-		double cosT = Math.sqrt(1.0 - sinT2);
-		double r0rth = (n1 * cosI - n2 * cosT) / (n1 * cosI + n2 * cosT);
-		double rPar = (n2 * cosI - n1 * cosT) / (n2 * cosI + n1 * cosT);
-		return (r0rth * r0rth + rPar * rPar) / 2.0;
-	}
-
-	static Vector3d refractVector(Vector3d normal, Vector3d incident, double n1, double n2)
-	{
-		double n = n1 / n2;
-		double cosI = -normal.dot(incident);
-		double sinT2 = n * n * (1.0 - cosI * cosI);
-
-		if (sinT2 > 1.0)
-		{
-			System.out.print("Bad refraction vector!\n");
-			System.exit(-1);
-		}
-
-		double cosT = Math.sqrt(1.0 - sinT2);
-		incident.x *= n;
-		incident.y *= n;
-		incident.z *= n;
-		normal.x *= (n * cosI - cosT);
-		normal.y *= (n * cosI - cosT);
-		normal.z *= (n * cosI - cosT);
-		incident.add(normal);
-		return incident;
-	}
-
-	static Vector3d reflectVector(Vector3d vector, Vector3d normal)
-	{
-		normal.x *= 2 * vector.dot(normal);
-		normal.y *= 2 * vector.dot(normal);
-		normal.z *= 2 * vector.dot(normal);
-		normal.sub(vector);
-		return normal;// ******** - vector;
-	}
-
 }
