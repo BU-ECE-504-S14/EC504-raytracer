@@ -65,8 +65,8 @@ public class Renderer
 	{
 		try
 		{
-			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new MeshPreviewScene()));
+			new RenderViewer(renderScene(constructSampleScene()));
+			//new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
 		{
@@ -124,8 +124,8 @@ public class Renderer
 		/* shape */
 
 		/* shape1 */
-		Vector3d scale = new Vector3d(1, 1, 1);
-		Vector3d pos = new Vector3d(0, 0, 0);
+		Vector3d scale = new Vector3d(10, 10, 10);
+		Vector3d pos = new Vector3d(0, 45, 200);
 		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t1 = new Transformation(scale, pos, rot);
 		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
@@ -178,13 +178,9 @@ public class Renderer
 
 		/* set up camera */
 		double fieldofView = 1;
-		Pt position = new Pt(200, 0, 0);
-		Pt lookAt = new Pt(0, 0, 0);
-		Point3d takePos = new Point3d(position.x, position.y, position.z);
-		Pt takeSL = new Pt(lookAt);
-		takePos.sub(takeSL);
-
-		Vec up = new Vec(0, 1, 1);
+		Pt position = new Pt(0, 0, 0);
+		Pt lookAt = new Pt(0, 45, 200);
+		Vec up = new Vec(1, 1, 0);
 
 		/*
 		 * uses axisangle to create camera (I hate axisangle) you will need to modify the
@@ -223,7 +219,8 @@ public class Renderer
 		Scene scene = new Scene();
 		scene.addSceneObject(shape1);
 		// scene.addSceneObject(shape2);
-		// scene.addSceneObject(shape4);
+		//scene.addSceneObject(shape3);
+		//scene.addSceneObject(shape4);
 		scene.addLight(l1);
 		scene.addLight(l2);
 		scene.addLight(l4);

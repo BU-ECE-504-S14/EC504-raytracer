@@ -110,25 +110,40 @@ public class Camera implements Serializable{
 	public void lookAt(Pt lookAt, Vec up) {
 		Vec center = findDirectionOfLookAt(lookAt);
 		Vec trueUp = calculateTrueUp(up, center);
-		Vec right = correctCoordinateSystem(trueUp,center); //not currently used can be used to manually create rotation matrix
+		Vec right = correctCoordinateSystem(trueUp,center);
+		Matrix3d rotation = createRotFromCoords(right,trueUp,center); //not currently working for AxisAngle4d
 		
-		/* create matrix to look at point center from eye */
+		
+		/* create rotation matrix to look at point center from eye
+		 * requires javax.media.j3d.Transform3D library*/
 		Transform3D findOrientation = new Transform3D();
-		findOrientation.lookAt(new Point3d(position), new Point3d(center), new Vector3d(trueUp));
+		findOrientation.lookAt(new Point3d(position), new Point3d(lookAt), new Vector3d(trueUp));
 		findOrientation.invert();
-		
+		Matrix3d T3dRotation = new Matrix3d();
+		findOrientation.getRotationScale(T3dRotation);
+
 		/* set orientation */
-		Matrix3d rotation = new Matrix3d();
-		findOrientation.getRotationScale(rotation);
 		orientation = new AxisAngle4d();
-		orientation.set(rotation);
+		orientation.set(T3dRotation);
 		
+		/*set remaining camera fields for rotation */
 		Transformation t = new Transformation(new Vector3d(1,1,1), position, orientation);
 		this.rotationMatrix = new Matrix4d();
 		this.rotationMatrix.setIdentity();
 		this.rotationMatrix.set(orientation);
 		
 		this.transformationMatrix = t.o2w;	
+		
+		/*Debug: confirm correctness of rotation matrix */
+		System.out.print( "rotation matrix:\n"+ 
+				  rotation.m00 +","+ rotation.m01+","+rotation.m02+"\n"+
+				  rotation.m10 +","+ rotation.m11+","+rotation.m12+"\n"+
+				  rotation.m20 +","+ rotation.m21+","+rotation.m22+"\n");
+		
+		System.out.print( "\ncheck rotation matrix:\n"+ 
+				T3dRotation.m00 +","+ T3dRotation.m01+","+T3dRotation.m02+"\n"+
+				T3dRotation.m10 +","+ T3dRotation.m11+","+T3dRotation.m12+"\n"+
+				T3dRotation.m20 +","+ T3dRotation.m21+","+T3dRotation.m22+"\n");
 	}
 	
 	/** 
@@ -169,6 +184,17 @@ public class Camera implements Serializable{
 		this.orientation.z = aux.z;		
 	}
 	
+	private Matrix3d createRotFromCoords(Vec u, Vec v, Vec n) {
+		Matrix3d r = new Matrix3d();
+		r.m00 = u.x; r.m01 = u.y; r.m02 = u.z;
+		r.m10 = v.x; r.m11 = v.y; r.m12 = v.z;
+		r.m20 = n.x; r.m21 = n.y; r.m22 = n.z;
+		r.normalize();
+		r.transpose(); // David's note: not sure why this is necessary possible problem with world/camera coord relationship.
+		r.negate();
+		
+		return r;
+	}
 	/**
 	 * correct trueUp and Center to ensure coordinate system is orthogonal. Return right coordinate vector for coord system
 	 * 
@@ -222,7 +248,7 @@ public class Camera implements Serializable{
 	 */
 	private Vec findDirectionOfLookAt(Pt lookAt) {
 		Vec center = new Vec(lookAt);
-		center.sub(this.position);
+		center.sub(position);
 		center.normalize();
 		return center;
 	}
