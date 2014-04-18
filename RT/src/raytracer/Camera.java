@@ -105,7 +105,7 @@ public class Camera implements Serializable{
 	 *  change orientation of camera to look at a desired position "lookAt".
 	 *  
 	 * @param lookAt point of interest
-	 * @param up relative up axis (does not have to be orthogonal)
+	 * @param up relative up axis (does not have to be orthogonal but should be normalized)
 	 */
 	public void lookAt(Pt lookAt, Vec up) {
 		Vec center = findDirectionOfLookAt(lookAt);
