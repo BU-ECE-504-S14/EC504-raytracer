@@ -40,8 +40,8 @@ public class Scene implements Serializable
 	 */
 	private static final long serialVersionUID = 1L;
 
-	protected Collection<SceneObject> objects;
-	protected Collection<Light> lights = new HashSet<Light>();;
+	protected ArrayList<SceneObject> objects;
+	protected Collection<Light> lights = new HashSet<Light>(); //TODO possibly need to change data type 
 	protected Camera camera;
 
 	public Scene()
@@ -148,7 +148,7 @@ public class Scene implements Serializable
 		this.camera = camera;
 	}
 
-	public Collection<SceneObject> getObjects()
+	public ArrayList<SceneObject> getObjects()
 	{
 		return objects;
 	}
