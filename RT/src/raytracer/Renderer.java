@@ -109,7 +109,10 @@ public class Renderer
 	{
 		optionShadow = 20;
 	}
-
+	/**
+	 * function used to construct simple test scenes. Edit this function to test various aspects of Raytracer.
+	 * @return a sample scene used to test an aspect of the raytracer.
+	 */
 	public static Scene constructSampleScene()
 	{
 
@@ -124,8 +127,8 @@ public class Renderer
 		/* shape */
 
 		/* shape1 */
-		Vector3d scale = new Vector3d(10, 10, 10);
-		Vector3d pos = new Vector3d(0, 45, 200);
+		Vector3d scale = new Vector3d(1, 1, 1);
+		Vector3d pos = new Vector3d(14, 45, 20);
 		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t1 = new Transformation(scale, pos, rot);
 		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
@@ -179,7 +182,7 @@ public class Renderer
 		/* set up camera */
 		double fieldofView = 1;
 		Pt position = new Pt(0, 0, 0);
-		Pt lookAt = new Pt(0, 45, 200);
+		Pt lookAt = new Pt(14, 45, 20);
 		Vec up = new Vec(1, 1, 0);
 
 		/*

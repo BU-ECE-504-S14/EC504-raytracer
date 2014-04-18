@@ -111,7 +111,7 @@ public class Camera implements Serializable{
 		Vec center = findDirectionOfLookAt(lookAt);
 		Vec trueUp = calculateTrueUp(up, center);
 		Vec right = correctCoordinateSystem(trueUp,center);
-		Matrix3d rotation = createRotFromCoords(right,trueUp,center); //not currently working for AxisAngle4d
+		Matrix3d rotation = createRotFromCoords(right,trueUp,center); //TODO fix rotation matrix so that we can remove j3d library.
 		
 		
 		/* create rotation matrix to look at point center from eye
@@ -134,7 +134,7 @@ public class Camera implements Serializable{
 		
 		this.transformationMatrix = t.o2w;	
 		
-		/*Debug: confirm correctness of rotation matrix */
+		/*Debug: confirm correctness of rotation matrix 
 		System.out.print( "rotation matrix:\n"+ 
 				  rotation.m00 +","+ rotation.m01+","+rotation.m02+"\n"+
 				  rotation.m10 +","+ rotation.m11+","+rotation.m12+"\n"+
@@ -144,6 +144,7 @@ public class Camera implements Serializable{
 				T3dRotation.m00 +","+ T3dRotation.m01+","+T3dRotation.m02+"\n"+
 				T3dRotation.m10 +","+ T3dRotation.m11+","+T3dRotation.m12+"\n"+
 				T3dRotation.m20 +","+ T3dRotation.m21+","+T3dRotation.m22+"\n");
+		*/
 	}
 	
 	/** 
