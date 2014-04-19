@@ -4,6 +4,8 @@
 
 package GUI;
 
+import geometry.Transformation;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Event;
@@ -55,9 +57,12 @@ public class SphereInfoPanel extends JPanel
 
 	public static void main(String[] args)
 	{
-		Sphere demoSphere = new Sphere();
-		demoSphere.radius = 20;
-		demoSphere.position = new Vector3d(15, 10, 5);
+		Vector3d scale = new Vector3d(20,20,20);
+		Vector3d position = new Vector3d(15,10,5);
+		AxisAngle4d rotation = new AxisAngle4d(0,0,0,0);
+		Transformation trans = new Transformation(scale, position, rotation);
+		
+		Sphere demoSphere = new Sphere(1f,-1f,360, trans);
 		JFrame testFrame = new JFrame();
 		SphereInfoPanel testPanel = new SphereInfoPanel(demoSphere);
 		testFrame.add(testPanel);
@@ -97,24 +102,24 @@ public class SphereInfoPanel extends JPanel
 		removeAll();
 		namePanel = new ParameterPanel("Name: ", mySphere.getName(), 20);
 
-		radiusPanel = new ParameterPanel("Radius: ", "" + mySphere.radius, 5);
+		radiusPanel = new ParameterPanel("Radius: ", "" + mySphere.getRadius(), 5);
 
-		posPanel = new PositionPanel("Position: ", mySphere.position);
+		posPanel = new PositionPanel("Position: ", mySphere.getPosition());
 		
-		zMinPanel = new ParameterPanel("zMin: ", ""+mySphere.zmin, 5);
-		zMaxPanel = new ParameterPanel("zMax: ", ""+mySphere.zmax, 5);
-		thetaMinPanel = new ParameterPanel("thetaMin: ", ""+mySphere.thetaMin, 5);
-		thetaMaxPanel = new ParameterPanel("thetaMax: ", ""+mySphere.thetaMax, 5);
+		zMinPanel = new ParameterPanel("zMin: ", ""+ mySphere.getzMin(), 5);
+		zMaxPanel = new ParameterPanel("zMax: ", ""+ mySphere.getzMax(), 5);
+		thetaMinPanel = new ParameterPanel("thetaMin: ", ""+ mySphere.getThetaMin(), 5);
+		thetaMaxPanel = new ParameterPanel("thetaMax: ", ""+ mySphere.getThetaMax(), 5);
 		phiMaxPanel = new ParameterPanel("phiMax: " , ""+Math.toDegrees(mySphere.phiMax), 5);
 		
-		transformPosition = new PositionPanel("Transform position: ", mySphere.trans.getTranslation());
+		transformPosition = new PositionPanel("Transform position: ", mySphere.getTransform().getTranslation());
 		
-		Vector3d transformationAxis = new Vector3d(mySphere.trans.getRotation().x, mySphere.trans.getRotation().y, mySphere.trans.getRotation().z);
-		Vector3d transformationScale = new Vector3d(mySphere.trans.getScale());
+		Vector3d transformationAxis = new Vector3d(mySphere.getRotation().x, mySphere.getRotation().y, mySphere.getRotation().z);
+		Vector3d transformationScale = new Vector3d(mySphere.getScale());
 		
 		transformScale = new PositionPanel("Transform scale: " , transformationScale);
 		transformRotationAxis = new PositionPanel("Transform rotation axis: ", transformationAxis);
-		transformRotationAngle = new ParameterPanel("Transform rotation angle: ", ""+Math.toDegrees(mySphere.trans.getRotation().angle), 5);
+		transformRotationAngle = new ParameterPanel("Transform rotation angle: ", ""+Math.toDegrees(mySphere.getRotation().angle), 5);
 
 		add(namePanel);
 		add(posPanel);
@@ -157,18 +162,15 @@ public class SphereInfoPanel extends JPanel
 						+ "): Radius is less than or equal to zero!");
 			}
 			String newName = namePanel.getValue();
-
-			mySphere.position = newPos;
-			mySphere.radius = newRad;
+			
 			mySphere.setName(newName);
-			mySphere.zmin = Float.parseFloat(zMinPanel.getValue());
-			mySphere.zmax = Float.parseFloat(zMaxPanel.getValue());
-			mySphere.thetaMin = Float.parseFloat(thetaMinPanel.getValue());
-			mySphere.thetaMax = Float.parseFloat(thetaMaxPanel.getValue());
+			mySphere.setPosition(newPos);
+			mySphere.setScaleRad(transformScale.getPosition());
+			mySphere.setzMinMax( Float.parseFloat(zMinPanel.getValue()), 
+								 Float.parseFloat(zMaxPanel.getValue())  );
 			mySphere.phiMax = (float)Math.toRadians(Float.parseFloat(phiMaxPanel.getValue()));
-			mySphere.trans.setRotation(new AxisAngle4d(transformRotationAxis.getPosition(), Math.toRadians(Double.parseDouble(transformRotationAngle.getValue()))));
-			mySphere.trans.setTranslation(transformPosition.getPosition());
-			mySphere.trans.setScale(transformScale.getPosition());
+			mySphere.setRotation(new AxisAngle4d(transformRotationAxis.getPosition(), Math.toRadians(Double.parseDouble(transformRotationAngle.getValue()))));
+			
 			
 		}
 		catch (Exception e)

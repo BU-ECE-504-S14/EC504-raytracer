@@ -131,24 +131,24 @@ public class Renderer
 		/* shape */
 
 		/* shape1 */
-		Vector3d scale = new Vector3d(1, 1, 1);
+		Vector3d scale = new Vector3d(10, 10, 10);
 
 		Vector3d pos = new Vector3d(-27, 45, 20);
 
 		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t1 = new Transformation(scale, pos, rot);
-		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
+		shape1 = new Sphere(-1f, 1f, 360f, t1);
 		m1.diffuseColor = new Vector3d(0, 1, 0);
 		m1.specularIndex = 0.5;
 		m1.ambientIntensity = .5;
 		shape1.getMaterial().set(m1);
 
 		/* shape2 */
-		scale = new Vector3d(1, 1, 1);
+		scale = new Vector3d(25, 25, 25);
 		pos = new Vector3d(-50, 30, 0);
 		rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t2 = new Transformation(scale, pos, rot);
-		shape2 = new Sphere(25f, -102f, 250f, 200f, t2);
+		shape2 = new Sphere(.5f, -.5f, 200f, t2);
 		m2.diffuseColor = new Vector3d(0, 0, 1);
 		m2.specularIndex = 0.5;
 		m2.ambientIntensity = .5;
@@ -156,11 +156,11 @@ public class Renderer
 		shape2.getMaterial().set(m2);
 
 		/* shape3 */
-		scale = new Vector3d(1, 1, 1);
+		scale = new Vector3d(10, 10, 10);
 		pos = new Vector3d(0, 30, -10);
 		rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t3 = new Transformation(scale, pos, rot);
-		shape3 = new Sphere(10f, -10f, 10f, 360f, t3);
+		shape3 = new Sphere(-1f, 1f, 360f, t3);
 		m3.diffuseColor = new Vector3d(1, 0, 0);
 		m3.specularIndex = 0.5;
 		m3.ambientIntensity = .5;

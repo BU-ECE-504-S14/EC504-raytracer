@@ -49,19 +49,13 @@ public class PreviewScene extends Scene
 		demoSphere2.material.specularIndex = .5;
 		demoSphere2.material.shininess = 1;
 		demoSphere2.material.diffuseColor = new Vector3d(0,0,0);
-		demoSphere2.trans.setTranslation(new Vector3d(0, 0, -20));
-		demoSphere2.trans.setScale(new Vector3d(100, 100, 10));
+		demoSphere2.setTransform(new Vector3d(100, 100, 10), new Vector3d(0, 0, -20), new AxisAngle4d(0,0,0,0));
 		demoSphere2.material.reflectionIndex = 1;
 
-		demoSphere.position = new Vector3d(0, 0, 0);
-		demoSphere.radius = o.radius;
 		demoSphere.material = o.material;
-		demoSphere.zmin = o.zmin;
-		demoSphere.zmax = o.zmax;
-		demoSphere.thetaMin = o.thetaMin;
-		demoSphere.thetaMax = o.thetaMax;
+		demoSphere.setzMinMax(o.getzMin(), o.getzMax());
 		demoSphere.phiMax = o.phiMax;
-		demoSphere.trans = o.trans;
+		demoSphere.setTransform(o.getTransform());
 
 		objects.add(demoSphere);
 		objects.add(demoSphere2);

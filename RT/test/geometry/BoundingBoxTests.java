@@ -180,7 +180,7 @@ public class BoundingBoxTests {
 		Vector3d pos = new Vector3d(0, 0, 2);
 		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t = new Transformation(scale, pos, rot);
-		SceneObject testSphere = new Sphere(1f, 1f, -1f, 360f, t);
+		SceneObject testSphere = new Sphere(1f, -1f, 360f, t);
 		
 		Ray testHitBBandS = new Ray(new Pt(0,0,0), new Vec(0,0,1));
 		Ray testHitBB = new Ray(new Pt(0,0,0), new Vec(-1,-1,1));

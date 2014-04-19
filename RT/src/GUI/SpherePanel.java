@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
 import objects.Material;
@@ -55,8 +56,11 @@ public class SpherePanel extends JPanel
 	public static void main(String[] args)
 	{
 		Sphere demoSphere = new Sphere();
-		demoSphere.radius = .5f;
-		demoSphere.position = new Vector3d(0, 0, 2);
+		float radius = .5f;
+		Vector3d position = new Vector3d(0, 0, 2);
+		AxisAngle4d rotation = new AxisAngle4d(0,0,0,0);
+		demoSphere.setTransform(new Vector3d(radius,radius,radius), position, rotation);
+		
 		demoSphere.material.diffuseColor = new Vector3d(.8, .15, .15);
 		JFrame testFrame = new JFrame("Scene Object Information: Sphere");
 		//testFrame.setMinimumSize(new Dimension(650, 600));

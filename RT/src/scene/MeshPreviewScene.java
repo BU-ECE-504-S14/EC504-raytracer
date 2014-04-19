@@ -66,14 +66,18 @@ public class MeshPreviewScene extends Scene
 		demoSphere2.material.ambientIntensity = .2;
 		demoSphere2.material.diffuseIndex = .5;
 		demoSphere2.material.specularIndex = 1;
-		demoSphere2.trans.setTranslation(new Vector3d(0, 0, -200));
-		demoSphere2.trans.setScale(new Vector3d(100, 100, 100));
+		
+		Vector3d scale = new Vector3d(100,100,100);
+		Vector3d position = new Vector3d(0,0,-200);
+		AxisAngle4d rotation = new AxisAngle4d(0,0,0,0);
+		
+		demoSphere2.setTransform(scale, position, rotation);
 		demoSphere2.material.reflectionIndex = 1;
 
 		TriangleMesh parse = meshes.get(0);
 		parse.material = demoSphere2.material;
 		parse.material.reflectionIndex = .5;
-		Transformation target = new Transformation(demoSphere.trans);
+		Transformation target = new Transformation(demoSphere.getTransform());
 		target.setScale(new Vector3d(1.5, 1.5, 1.5));
 		// target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
 		parse.updateTransform(target);
