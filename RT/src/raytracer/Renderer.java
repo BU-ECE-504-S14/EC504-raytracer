@@ -1,5 +1,10 @@
 package raytracer;
 
+import geometry.Normal;
+import geometry.Pt;
+import geometry.Transformation;
+import geometry.Vec;
+
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,19 +22,17 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Matrix4d;
 
 import objects.Material;
-import objects.Normal;
-import objects.Pt;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
-import objects.Vec;
+
+import scene.MeshPreviewScene;
 import scene.PointLight;
 import scene.Scene;
-import scene.Transformation;
 
 /**
- * Ray tracing renderer, for EC504 at Boston University
- * based on the work of Rafael Martin Bigio <rbigio@itba.edu.ar.
+ * Ray tracing renderer, for EC504 at Boston University based on the work of Rafael Martin
+ * Bigio <rbigio@itba.edu.ar>
  * 
  * 
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
@@ -41,8 +44,8 @@ public class Renderer
 	private static int optionAntialiasing = 1;
 	private static String optionOutputFile;
 	private static String optionInputFile;
-	private static int optionWidth = 400;
-	private static int optionHeight = 300;
+	private static int optionWidth = 100;
+	private static int optionHeight = 100;
 	private static int optionShadow = 20;
 
 	public static double progress = 0.0;
@@ -52,10 +55,12 @@ public class Renderer
 	public static void main(String[] args)
 	{
 		optionProgress = true;
-		optionAntialiasing = 1;
-		optionWidth = 400;
-		optionHeight = 300;
-		optionShadow = 20;
+		optionAntialiasing = 3;
+
+		optionWidth = 500;
+		optionHeight = 500;
+
+		optionShadow = 0;
 		showSampleScene();
 	}
 
@@ -63,7 +68,9 @@ public class Renderer
 	{
 		try
 		{
+
 			new RenderViewer(renderScene(constructSampleScene()));
+			// new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
 		{
@@ -106,12 +113,14 @@ public class Renderer
 	{
 		optionShadow = 20;
 	}
-
+	/**
+	 * function used to construct simple test scenes. Edit this function to test various aspects of Raytracer.
+	 * @return a sample scene used to test an aspect of the raytracer.
+	 */
 	public static Scene constructSampleScene()
 	{
-		
 
-		SceneObject shape1,shape2,shape3,shape4;
+		SceneObject shape1, shape2, shape3, shape4;
 
 		Material m1 = new Material();
 		Material m2 = new Material();
@@ -120,62 +129,67 @@ public class Renderer
 
 		/* set poisitions and material of sphere objects */
 		/* shape */
-		
 
 		/* shape1 */
-		Vector3d scale = new Vector3d(1,1,1);
-		Vector3d pos = new Vector3d(-50, -50, 0);
-		AxisAngle4d rot = new AxisAngle4d(0,0,1,0);
-		Transformation t1 = new Transformation(scale,pos,rot);
+		Vector3d scale = new Vector3d(1, 1, 1);
+
+		Vector3d pos = new Vector3d(-27, 45, 20);
+
+		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
+		Transformation t1 = new Transformation(scale, pos, rot);
 		shape1 = new Sphere(10f, -10f, 10f, 360f, t1);
 		m1.diffuseColor = new Vector3d(0, 1, 0);
-		m1.reflectionIndex = 0.5;
+		m1.specularIndex = 0.5;
+		m1.ambientIntensity = .5;
 		shape1.getMaterial().set(m1);
 
 		/* shape2 */
-		scale = new Vector3d(1,1,1);
+		scale = new Vector3d(1, 1, 1);
 		pos = new Vector3d(-50, 30, 0);
-		rot = new AxisAngle4d(0,0,1,0);
-		Transformation t2 = new Transformation(scale,pos,rot);
-		shape2 = new Sphere(25f, -102f, 250f, 200f,t2);
+		rot = new AxisAngle4d(0, 0, 1, 0);
+		Transformation t2 = new Transformation(scale, pos, rot);
+		shape2 = new Sphere(25f, -102f, 250f, 200f, t2);
 		m2.diffuseColor = new Vector3d(0, 0, 1);
-		m2.reflectionIndex = 0.5;
+		m2.specularIndex = 0.5;
+		m2.ambientIntensity = .5;
+
 		shape2.getMaterial().set(m2);
 
 		/* shape3 */
-		scale = new Vector3d(1,1,1);
+		scale = new Vector3d(1, 1, 1);
 		pos = new Vector3d(0, 30, -10);
-		rot = new AxisAngle4d(0,0,1,0);
-		Transformation t3 = new Transformation(scale,pos,rot);
-		shape3 = new Sphere(10f, -10f, 10f, 360f,t3);
+		rot = new AxisAngle4d(0, 0, 1, 0);
+		Transformation t3 = new Transformation(scale, pos, rot);
+		shape3 = new Sphere(10f, -10f, 10f, 360f, t3);
 		m3.diffuseColor = new Vector3d(1, 0, 0);
-		m3.reflectionIndex = 0.5;
+		m3.specularIndex = 0.5;
+		m3.ambientIntensity = .5;
+
 		shape3.getMaterial().set(m3);
-		
-		/*shape4*/
-		scale = new Vector3d(100,100,100);
+
+		/* shape4 */
+		scale = new Vector3d(100, 100, 100);
 		pos = new Vector3d(0, 30, -10);
-		rot = new AxisAngle4d(0,0,1,0);
+		rot = new AxisAngle4d(0, 0, 0, 0);
 		Pt[] P = new Pt[3];
-		P[0] = new Pt(1,0,0);
-		P[1] = new Pt(0,0,1);
-		P[2] = new Pt(0,1,0);
-		int[] vi = {0,1,2};
-		Transformation t4 = new Transformation(scale,pos,rot);
-		shape4 = new TriangleMesh(t4, 1, 3, vi,P, null, null, null);
-		m4.diffuseColor = new Vector3d(1, 0, 0);
-		m4.reflectionIndex = 1;
+		P[0] = new Pt(1, 0, 0);
+		P[1] = new Pt(0, 1, 0);
+		P[2] = new Pt(-1, 0, 0);
+
+		int[] vi = { 0, 1, 2 };
+		Transformation t4 = new Transformation(scale, pos, rot);
+		shape4 = new TriangleMesh(t4, 1, 3, vi, P, null, null, null);
+		m4.diffuseColor = new Vector3d(1, 1, 1);
+		m4.reflectionIndex = 0;
+		m4.diffuseIndex = 1;
+		m4.specularIndex = 1;
 		shape4.getMaterial().set(m4);
 
 		/* set up camera */
 		double fieldofView = 1;
-		Point3d position = new Point3d(200, 0, 0);
-		Point3d sphereLocation = new Point3d(0, 0, 0);
-		Point3d takePos = new Point3d(position.x, position.y, position.z);
-		Point3d takeSL = new Point3d(sphereLocation.x, sphereLocation.y, sphereLocation.z);
-		takePos.sub(takeSL);
-
-		Vector3d up = new Vector3d(0, 0, 1);
+		Pt position = new Pt(0, 0, 0);
+		Pt lookAt = new Pt(-27, 45, 20);
+		Vec up = new Vec(0, 0, 1);
 
 		/*
 		 * uses axisangle to create camera (I hate axisangle) you will need to modify the
@@ -185,7 +199,7 @@ public class Renderer
 		// Camera cam = new Camera(position, new AxisAngle4d(1,0,0,0.55), fieldofView);
 
 		/* uses look at type constructor to create camera */
-		Camera cam = new Camera(position, sphereLocation, up, fieldofView);
+		Camera cam = new Camera(position, lookAt, up, fieldofView);
 		// System.out.println(cam.toString()); //debug
 
 		/* set lights */
@@ -202,7 +216,6 @@ public class Renderer
 		l4.setColor(new Vector3d(.9, .9, .9));
 		l4.setPosition(new Vector3d(50, 5, -5));
 		l4.setPosition(new Vector3d(50, -20, -5));
-		
 
 		PointLight l5 = new PointLight();
 		l5.setColor(new Vector3d(0, .5, 0));
@@ -211,19 +224,20 @@ public class Renderer
 		l6.setPosition(new Vector3d(16, 0, 5));
 		l6.setColor(new Vector3d(0, 0, 1));
 
-
 		/* add objects & lights & camera to scene */
 		Scene scene = new Scene();
-		//scene.addSceneObject(shape0);
 		scene.addSceneObject(shape1);
-		scene.addSceneObject(shape2);
-		scene.addSceneObject(shape4);
+		// scene.addSceneObject(shape2);
+		//scene.addSceneObject(shape3);
+		//scene.addSceneObject(shape4);
 		scene.addLight(l1);
 		scene.addLight(l2);
-	    scene.addLight(l4);
-		//scene.addLight(l3);
-		//scene.addLight(l5);
-		//scene.addLight(l6);
+		scene.addLight(l4);
+
+		// scene.addLight(l3);
+		scene.addLight(l4);
+		// scene.addLight(l5);
+		// scene.addLight(l6);
 		scene.setCamera(cam);
 
 		return scene;
@@ -248,7 +262,9 @@ public class Renderer
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
 				optionShadow);
 
-		BufferedImage result = rayTracer.render(optionProgress);
+		//BufferedImage result = rayTracer.render(optionProgress);
+		BufferedImage result = rayTracer.renderThreads(optionProgress);
+
 		return result;
 	}
 }

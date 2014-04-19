@@ -1,8 +1,18 @@
 package objects;
 
+import java.io.Serializable;
+
 import javax.vecmath.Vector3d;
 
-public class Material {
+/**
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
+public class Material implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** Color that reflects when the object is hit by a ray */
 	public Vector3d diffuseColor = new Vector3d(0.8, 0.8, 0.8);
@@ -19,11 +29,11 @@ public class Material {
 	/** General ambient intensity of reflection when not hit by a ray  */
 	public double ambientIntensity = 0.2;
 
-	/** Transparency index for the object */
-	public double transparency = 0;
+	/** Alpha index for the object */
+	public double alpha = 1.0;
 
 	/** Proportion of ray that is refracted*/
-	public double refractionIndex = 0;
+	public double refractionIndex = 1.0;
 
 	/** Proportion of ray that is reflected */
 	public double reflectionIndex = 0;
@@ -36,7 +46,7 @@ public class Material {
 		return "Material(diffuseColor=" + diffuseColor + ", specularColor="
 				+ specularColor + ", diffuseIndex=" + diffuseIndex
 				+ ", specularIndex=" + specularIndex + ", ambientIntensity="
-				+ ambientIntensity + ", transparency=" + transparency
+				+ ambientIntensity + ", transparency=" + alpha
 				+ ", refractionIndex=" + refractionIndex + ", reflectionIndex="
 				+ reflectionIndex + ")";
 	}
@@ -47,7 +57,7 @@ public class Material {
 		this.diffuseIndex = m.diffuseIndex;
 		this.specularIndex = m.specularIndex;
 		this.ambientIntensity = m.ambientIntensity;
-		this.transparency = m.transparency;
+		this.alpha = m.alpha;
 		this.refractionIndex = m.refractionIndex;
 		this.reflectionIndex = m.reflectionIndex;
 		this.shininess = m.shininess;

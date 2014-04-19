@@ -1,5 +1,9 @@
 package objects;
 
+import geometry.BBox;
+import geometry.Ray;
+import geometry.Transformation;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -8,13 +12,18 @@ import javax.vecmath.Vector3d;
 import objects.AbstractSceneObject.NotIntersectableException;
 import objects.AbstractSceneObject.RefinementException;
 import scene.Intersection;
-import scene.Transformation;
 
 
 /**
  * Object interface for the scene
  */
 public interface SceneObject {
+	
+	/** Get the name of this SceneObject, if it has one. 
+	 * 
+	 * @return a String representing the name of this SceneObject.
+	 */
+	public String getName();
 
 	/** @return Material properties of the object */
 	public Material getMaterial();
@@ -56,6 +65,11 @@ public interface SceneObject {
 	 * @param bb BoundingBox to intersect
 	 * @return boolean Return true if the object intersects the box
 	 */
+	
+	/**
+	 * @return BBox representing a bounding box for sceneObject in world space.
+	 */
+	public BBox getWorldBound();
 
 	/**
 	 * @return Set of child objects (e.g. triangles in TriangleSets)

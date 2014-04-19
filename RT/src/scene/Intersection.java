@@ -28,6 +28,21 @@ public class Intersection {
 		shape = null;
 	}
 	
+	public Intersection(Intersection i){
+		this.p = i.p;
+		this.dpdu = i.dpdu;
+		this.dpdv = i.dpdv;
+		this.dndu = i.dndu;
+		this.dndv = i.dndv;
+		this.u=i.u;
+		this.v=i.v;
+		this.shape=i.shape;
+		this.nn = i.nn;
+		/*if(false){//shape && shape.ReverseOrientation shape.TransformSwapsHandedness)
+			nn.negate(); 
+		}*/
+	}
+	
 	public Intersection(Vector3d p, Vector3d dpdu, Vector3d dpdv,Vector3d dndu,Vector3d dndv,float u,float v,SceneObject shape) {
 		this.p = new Vector3d(p);
 		this.dpdu = new Vector3d(dpdu);
@@ -43,6 +58,7 @@ public class Intersection {
 		/*if(false){//shape && shape.ReverseOrientation shape.TransformSwapsHandedness)
 			nn.negate(); 
 		}*/
+
 	}
 	
 	public void update(Vector3d p, Vector3d dpdu, Vector3d dpdv,Vector3d dndu,Vector3d dndv,float u,float v,SceneObject shape){

@@ -1,15 +1,25 @@
 package objects;
 
+import geometry.BBox;
+import geometry.Ray;
+import geometry.Transformation;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.vecmath.Vector3d;
 
 import scene.Intersection;
-import scene.Transformation;
 
+/**
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ */
+public abstract class AbstractSceneObject implements SceneObject, Serializable
+{
 
-public abstract class AbstractSceneObject implements SceneObject {
+	private static final long serialVersionUID = 1L;
+
 
 	public class RefinementException extends Exception {
 		private static final long serialVersionUID = 1L;
@@ -23,8 +33,22 @@ public abstract class AbstractSceneObject implements SceneObject {
 	}
 	
 	public Material material = new Material();
+	public String name = "N/A";
+
+	@Override
+	public String getName()
+	{
+		return name;
+	}
 	
-	public Material getMaterial() {
+	/** Sets the name of this SceneObject, for identification in the GUI. */
+	public void setName(String s){
+		name = s;
+	}
+
+	@Override
+	public Material getMaterial()
+	{
 		return material;
 	}
 	
@@ -43,8 +67,12 @@ public abstract class AbstractSceneObject implements SceneObject {
 	public boolean Intersect(Ray ray, Intersection inter) throws NotIntersectableException {
 		throw new NotIntersectableException();
 	}
+	
+	public abstract BBox getWorldBound();
 
-	public Collection<? extends SceneObject> getChildren() {
+	@Override
+	public Collection<? extends SceneObject> getChildren()
+	{
 		return null;
 	}
 
