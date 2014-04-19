@@ -55,10 +55,10 @@ public class Renderer
 	public static void main(String[] args)
 	{
 		optionProgress = true;
-		optionAntialiasing = 3;
+		optionAntialiasing = 1;
 
-		optionWidth = 500;
-		optionHeight = 500;
+		optionWidth = 100;
+		optionHeight = 100;
 
 		optionShadow = 0;
 		showSampleScene();
@@ -69,8 +69,8 @@ public class Renderer
 		try
 		{
 
-			new RenderViewer(renderScene(constructSampleScene()));
-			// new RenderViewer(renderScene(new MeshPreviewScene()));
+			// new RenderViewer(renderScene(constructSampleScene()));
+			new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
 		{

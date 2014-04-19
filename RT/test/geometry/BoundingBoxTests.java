@@ -2,6 +2,17 @@ package geometry;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Vector3d;
+
+import objects.AbstractSceneObject.NotIntersectableException;
+import objects.AbstractSceneObject.RefinementException;
+import objects.SceneObject;
+import objects.Sphere;
+import objects.TriangleMesh;
+
 import org.junit.Test;
 
 public class BoundingBoxTests {
@@ -161,6 +172,68 @@ public class BoundingBoxTests {
 		assertEquals(true, corners[5].equals(new Pt(1f,-1f,1f))); //101
 		assertEquals(true, corners[6].equals(new Pt(1f,1f,-1f))); //110
 		assertEquals(true, corners[7].equals(new Pt(1f,1f,1f))); //111
+	}
+	
+	@Test
+	public void testSphereBBIntersect() throws NotIntersectableException {
+		Vector3d scale = new Vector3d(1, 1, 1);
+		Vector3d pos = new Vector3d(0, 0, 2);
+		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
+		Transformation t = new Transformation(scale, pos, rot);
+		SceneObject testSphere = new Sphere(1f, 1f, -1f, 360f, t);
+		
+		Ray testHitBBandS = new Ray(new Pt(0,0,0), new Vec(0,0,1));
+		Ray testHitBB = new Ray(new Pt(0,0,0), new Vec(-1,-1,1));
+		Ray testMiss = new Ray(new Pt(0,0,0), new Vec(-2,-2,1));
+		
+		assertEquals(true, testSphere.IntersectP(testHitBBandS));
+		assertEquals(true, testSphere.getWorldBound().IntersectP(testHitBBandS, new float[2]));
+		
+		assertEquals(false, testSphere.IntersectP(testHitBB));
+		assertEquals(true, testSphere.getWorldBound().IntersectP(testHitBB, new float[2]));
+		
+		assertEquals(false, testSphere.IntersectP(testMiss));
+		assertEquals(false, testSphere.getWorldBound().IntersectP(testMiss, new float[2]));
+	}
+	
+	public void testTriangleMeshBBIntersect() throws NotIntersectableException, RefinementException {
+		Vector3d scale = new Vector3d(1, 1, 1);
+		Vector3d pos = new Vector3d(0, 0, 2);
+		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
+		
+		Pt[] P = new Pt[6];
+		P[0] = new Pt(-1, -1, 0);
+		P[1] = new Pt(1, 0, 0);
+		P[2] = new Pt(-1, 1, 0);
+		P[3] = new Pt(-1, -1, 2);
+		P[4] = new Pt(1, 0, 2);
+		P[5] = new Pt(-1, 1, 2);
+
+		int[] vi = { 0, 1, 2, 3, 4, 5};
+		Transformation t = new Transformation(scale, pos, rot);
+		SceneObject triMesh = new TriangleMesh(t, 2, 6, vi, P, null, null, null);
+		ArrayList<SceneObject> tris = new ArrayList<SceneObject>();
+		triMesh.refine(tris);
+		
+		
+		Ray testHitBBandT = new Ray(new Pt(0,0,0), new Vec(0,0,1));
+		Ray testHitBB = new Ray(new Pt(0,0,0), new Vec(1,1,1));
+		Ray testMiss = new Ray(new Pt(0,0,0), new Vec(2,2,1));
+		
+		assertEquals(true, triMesh.getWorldBound().IntersectP(testHitBBandT, new float[2]));
+		assertEquals(true, tris.get(0).getWorldBound().IntersectP(testHitBBandT, new float[2]));
+		assertEquals(true, triMesh.IntersectP(testHitBBandT));
+		assertEquals(true, tris.get(0).IntersectP(testHitBBandT));
+		
+		assertEquals(true, triMesh.getWorldBound().IntersectP(testHitBB, new float[2]));
+		assertEquals(true, tris.get(0).getWorldBound().IntersectP(testHitBB, new float[2]));
+		assertEquals(false, triMesh.IntersectP(testHitBB));
+		assertEquals(false, tris.get(0).IntersectP(testHitBB));
+		
+		assertEquals(false, triMesh.getWorldBound().IntersectP(testMiss, new float[2]));
+		assertEquals(false, tris.get(0).getWorldBound().IntersectP(testMiss, new float[2]));
+		assertEquals(false, triMesh.IntersectP(testMiss));
+		assertEquals(false, tris.get(0).IntersectP(testMiss));
 	}
 
 }

@@ -81,7 +81,7 @@ public class MeshPreviewScene extends Scene
 		// objects.add(plane);
 		objects.add(parse);
 		// objects.add(demoSphere);
-		objects.add(demoSphere2);
+		//objects.add(demoSphere2);
 
 	}
 }

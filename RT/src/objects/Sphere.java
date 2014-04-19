@@ -52,9 +52,9 @@ public class Sphere extends AbstractSceneObject
 	/**
 	 * 
 	 * @param radius
-	 * @param z0
-	 * @param z1
-	 * @param pm
+	 * @param z0 represents either the min or max height of sphere in object space
+	 * @param z1 represents either the min or max hieght of sphere in object space
+	 * @param pm represents max "circle" of the sphere that will be traced along the xz plane in object space
 	 * @param trans
 	 */
 	public Sphere(float radius, float z0, float z1, float pm, Transformation trans)
