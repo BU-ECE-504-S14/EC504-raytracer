@@ -69,8 +69,8 @@ public class Renderer
 		try
 		{
 
-			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new MeshPreviewScene()));
+			new RenderViewer(renderScene(constructSampleScene()));
+			// new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
 		{
@@ -133,7 +133,7 @@ public class Renderer
 		/* shape1 */
 		Vector3d scale = new Vector3d(1, 1, 1);
 
-		Vector3d pos = new Vector3d(14, 45, 20);
+		Vector3d pos = new Vector3d(-27, 45, 20);
 
 		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t1 = new Transformation(scale, pos, rot);
@@ -188,8 +188,8 @@ public class Renderer
 		/* set up camera */
 		double fieldofView = 1;
 		Pt position = new Pt(0, 0, 0);
-		Pt lookAt = new Pt(14, 45, 20);
-		Vec up = new Vec(1, 1, 0);
+		Pt lookAt = new Pt(-27, 45, 20);
+		Vec up = new Vec(0, 0, 1);
 
 		/*
 		 * uses axisangle to create camera (I hate axisangle) you will need to modify the
