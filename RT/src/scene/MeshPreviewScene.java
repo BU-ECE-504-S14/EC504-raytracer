@@ -80,8 +80,9 @@ public class MeshPreviewScene extends Scene
 
 		// objects.add(plane);
 		objects.add(parse);
+		this.buildOctree(1);
 		// objects.add(demoSphere);
-		objects.add(demoSphere2);
+		//objects.add(demoSphere2);
 
 	}
 }

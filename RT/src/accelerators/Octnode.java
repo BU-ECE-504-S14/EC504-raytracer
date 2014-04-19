@@ -53,6 +53,7 @@ public class Octnode {
 	}
 	
 	public void insert(SceneObject scnobj, BBox objbb) throws SplitBeyondMaxDepthException{
+		
 		if(occupied == false){
 			occupied = true; //I have something in me!
 			split();
@@ -67,8 +68,7 @@ public class Octnode {
 				}
 			}
 		}
-		
-		
+
 	}
 	
 	public boolean IntersectP(Ray ray, ArrayList<SceneObject> lastIntersectedObject) throws NotIntersectableException{

@@ -20,6 +20,10 @@ import java.util.Set;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
+import accelerators.AbstractAccelerator;
+import accelerators.Octnode.SplitBeyondMaxDepthException;
+import accelerators.Octree;
+import objects.AbstractSceneObject.RefinementException;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
@@ -43,6 +47,8 @@ public class Scene implements Serializable
 	protected ArrayList<SceneObject> objects;
 	protected Collection<Light> lights = new HashSet<Light>(); //TODO possibly need to change data type 
 	protected Camera camera;
+	protected boolean accelFlag; //true when the accelerator is updated and usable
+	protected AbstractAccelerator accelerator;
 
 	public Scene()
 	{
@@ -136,6 +142,7 @@ public class Scene implements Serializable
 	public void addSceneObject(SceneObject obj)
 	{
 		this.objects.add(obj);
+		accelFlag = false;
 	}
 
 	public void addLight(Light light)
@@ -183,30 +190,39 @@ public class Scene implements Serializable
 
 	Intersection inter, Collection<SceneObject> objs) throws Exception
 	{
-		SceneObject nearest = null;
-		ArrayList<SceneObject> refinedObject = new ArrayList<SceneObject>();
-
-		for (SceneObject o : objs)
-		{
-			if (o.isIntersectable())
+		boolean intersectedFlag = false;
+		
+		if(accelFlag == false){ //accelerator is not ready
+			SceneObject nearest = null;
+			ArrayList<SceneObject> refinedObject = new ArrayList<SceneObject>();
+	       
+			for (SceneObject o : objs)
 			{
-				if (o.IntersectP(ray))
-					nearest = o;
-			}
-			else
-			{
-				refinedObject.clear();
-				o.refine(refinedObject);
-				for (SceneObject ro : refinedObject)
+				if (o.isIntersectable())
 				{
-					if (ro.IntersectP(ray))
-						nearest = ro;
+					if (o.IntersectP(ray))
+						nearest = o;
+				}
+				else
+				{
+					refinedObject.clear();
+					o.refine(refinedObject);
+					for (SceneObject ro : refinedObject)
+					{
+						if (ro.IntersectP(ray))
+							nearest = ro;
+					}
 				}
 			}
+			if (nearest != null){
+				intersectedFlag = nearest.Intersect(ray, inter);
+			}
+		} else{
+			if(accelerator.IntersectP(ray)){
+				intersectedFlag = accelerator.Intersect(ray, inter);
+			}
 		}
-		if (nearest == null)
-			return false;
-		return nearest.Intersect(ray, inter);
+		return intersectedFlag;
 	}
 
 	public void dumpScene()
@@ -223,6 +239,19 @@ public class Scene implements Serializable
 			System.out.println("  " + p.toString());
 		}
 		System.out.println(camera.toString());
+	}
+	
+	public void buildOctree(int maxdepth){
+		try {
+			accelerator = new Octree(this,maxdepth);
+			accelFlag = true; 
+		} catch (RefinementException e) {
+			System.out.println("Octree build failed."); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			e.printStackTrace();
+		} catch (SplitBeyondMaxDepthException e) {
+			System.out.println("Octree build failed.");
+			e.printStackTrace();
+		}
 	}
 
 }
