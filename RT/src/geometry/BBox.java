@@ -37,12 +37,15 @@ public class BBox {
 	 * @param p2 second point (Pt) of the bounding box (not necessarily min or max).
 	 */
 	public BBox(Pt p1, Pt p2) {
-		pMin.x = Math.min(p1.x, p2.x);
-		pMin.y = Math.min(p1.y, p2.y);
-		pMin.z = Math.min(p1.z, p2.z);
-		pMax.x = Math.max(p1.x, p2.x);
-		pMax.y = Math.max(p1.y, p2.y);
-		pMax.z = Math.max(p1.z, p2.z);
+		float xm,ym,zm,xM,yM,zM;
+		xm = (float) Math.min(p1.x, p2.x);
+		ym = (float) Math.min(p1.y, p2.y);
+		zm = (float) Math.min(p1.z, p2.z);
+		xM = (float) Math.max(p1.x, p2.x);
+		yM = (float) Math.max(p1.y, p2.y);
+		zM = (float) Math.max(p1.z, p2.z);
+		pMin = new Pt(xm,ym,zm);
+		pMax = new Pt(xM,yM,zM);
 	}
 	
 	/**
@@ -51,8 +54,8 @@ public class BBox {
 	 * @param b BBox to be copied.
 	 */
 	public BBox(BBox b) {
-		this.pMax = new Pt(b.pMax);
-		this.pMin = new Pt(b.pMin);
+		this.pMax = new Pt(b.getpMax());
+		this.pMin = new Pt(b.getpMin());
 	}
 	
 	/**
@@ -64,12 +67,12 @@ public class BBox {
 	 */
 	public static BBox union(BBox b, Pt p) {
 		BBox UBox = new BBox(b);
-		UBox.pMin.x = Math.min(b.pMin.x, p.x);
-		UBox.pMin.y = Math.min(b.pMin.y, p.y);
-		UBox.pMin.z = Math.min(b.pMin.z, p.z);
-		UBox.pMax.x = Math.max(b.pMax.x, p.x);
-		UBox.pMax.y = Math.max(b.pMax.y, p.y);
-		UBox.pMax.z = Math.max(b.pMax.z, p.z);
+		UBox.pMin.x = Math.min(b.getpMin().x, p.x);
+		UBox.pMin.y = Math.min(b.getpMin().y, p.y);
+		UBox.pMin.z = Math.min(b.getpMin().z, p.z);
+		UBox.pMax.x = Math.max(b.getpMax().x, p.x);
+		UBox.pMax.y = Math.max(b.getpMax().y, p.y);
+		UBox.pMax.z = Math.max(b.getpMax().z, p.z);
 		return UBox;
 	}
 	
@@ -82,12 +85,12 @@ public class BBox {
 	 */
 	public static BBox union(BBox b1, BBox b2) {
 		BBox UBox = new BBox(b1);
-		UBox.pMin.x = Math.min(b1.pMin.x, b2.pMin.x);
-		UBox.pMin.y = Math.min(b1.pMin.y, b2.pMin.y);
-		UBox.pMin.z = Math.min(b1.pMin.z, b2.pMin.z);
-		UBox.pMax.x = Math.max(b1.pMax.x, b2.pMax.x);
-		UBox.pMax.y = Math.max(b1.pMax.y, b2.pMax.y);
-		UBox.pMax.z = Math.max(b1.pMax.z, b2.pMax.z);
+		UBox.pMin.x = Math.min(b1.getpMin().x, b2.getpMin().x);
+		UBox.pMin.y = Math.min(b1.getpMin().y, b2.getpMin().y);
+		UBox.pMin.z = Math.min(b1.getpMin().z, b2.getpMin().z);
+		UBox.pMax.x = Math.max(b1.getpMax().x, b2.getpMax().x);
+		UBox.pMax.y = Math.max(b1.getpMax().y, b2.getpMax().y);
+		UBox.pMax.z = Math.max(b1.getpMax().z, b2.getpMax().z);
 		return UBox;
 	}
 	
@@ -98,9 +101,9 @@ public class BBox {
 	 * @return boolean true == overlap. false == no overlap.
 	 */
 	public boolean overlaps(BBox b) {
-		boolean x = (pMax.x >= b.pMin.x) && (pMin.x <= b.pMax.x);
-	    boolean y = (pMax.y >= b.pMin.y) && (pMin.y <= b.pMax.y);
-	    boolean z = (pMax.z >= b.pMin.z) && (pMin.z <= b.pMax.z);
+		boolean x = (pMax.x >= b.getpMin().x) && (pMin.x <= b.getpMax().x);
+	    boolean y = (pMax.y >= b.getpMin().y) && (pMin.y <= b.getpMax().y);
+	    boolean z = (pMax.z >= b.getpMin().z) && (pMin.z <= b.getpMax().z);
 	    return (x&y&z);
 	}
 	
@@ -135,6 +138,7 @@ public class BBox {
 		Vec d = new Vec(pMax); //diagonal vector of BBox
 		d.sub(pMin);
 		
+		//add xy square, xz square, yz square twice. 
 		return (float) (2.0f * (d.x * d.y + d.x * d.z + d.y * d.z));
 	}
 	
@@ -201,7 +205,7 @@ public class BBox {
 			//compute near and far for x, y, and z bbox planes based on simplified para/intr solution pharr 195
 			float invRayDir = 1/d[i];
 			float tNear = (mins[i] - o[i])*invRayDir;
-			float tFar = (maxs[0] - o[i])*invRayDir;
+			float tFar = (maxs[i] - o[i])*invRayDir;
 			
 			//swap tNear and tFar if near is greater than far
 			if(tNear > tFar) {

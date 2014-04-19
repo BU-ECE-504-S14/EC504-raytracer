@@ -55,10 +55,10 @@ public class Renderer
 	public static void main(String[] args)
 	{
 		optionProgress = true;
-		optionAntialiasing = 1;
+		optionAntialiasing = 3;
 
-		optionWidth = 200;
-		optionHeight = 200;
+		optionWidth = 500;
+		optionHeight = 500;
 
 		optionShadow = 0;
 		showSampleScene();

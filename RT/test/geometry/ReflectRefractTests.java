@@ -245,7 +245,6 @@ public class ReflectRefractTests
 		Vector3d not = new Vector3d(0, 0, 0);
 		assertEquals(true, Util.checkEqual(inc, norm, .001));
 		assertEquals(false, Util.checkEqual(inc, not, .001));
-
 	}
 
 	@Test
