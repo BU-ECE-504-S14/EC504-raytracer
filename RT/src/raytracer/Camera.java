@@ -112,8 +112,8 @@ public class Camera implements Serializable{
 		/* create coord system */
 		Vec center = findDirectionOfLookAt(lookAt);
 		Vec trueUp = calculateTrueUp(up, center);
-		Vec right = correctCoordinateSystem(trueUp,center);
-		Matrix3d rotation = createRotFromCoords(right,trueUp,center); //TODO fix rotation matrix so that we can remove j3d library.
+		Vec right = correctCoordinateSystem(trueUp, center);
+		Matrix3d rotation = createRotFromCoords(right,trueUp,center);
 
 		/* set orientation */
 		orientation = new AxisAngle4d();
@@ -204,7 +204,7 @@ public class Camera implements Serializable{
 		if(	trueUp.x == center.x &&
 			trueUp.y == center.y &&
 			trueUp.z == center.z) {
-			trueUp.add(new Vec(0,1,0));
+			trueUp.add(new Vec(0,.1,0));
 		}
 		
 		//create right handed coordinate system
@@ -228,7 +228,13 @@ public class Camera implements Serializable{
 		
 		//project up onto center = (up dot center)*center
 		double magnitude = Util.dotProduct(up, c);
+		if(magnitude == 0) { 
+			c.y += .001f; c.x += .001f; c.y += .001f; //David's note: hacky way to avoid orthogonality of up and center. Not sure why problem???
+			magnitude = Util.dotProduct(up, c);
+		} //TODO problem with orthogonality in camera. Find bug and fix.
+		
 		projection.scale(magnitude);
+		
 		
 		//subtract projection from up to find true up for coordinate system
 		trueUp.sub(projection);

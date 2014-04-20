@@ -104,7 +104,7 @@ public class BBox {
 		boolean x = (pMax.x >= b.getpMin().x) && (pMin.x <= b.getpMax().x);
 	    boolean y = (pMax.y >= b.getpMin().y) && (pMin.y <= b.getpMax().y);
 	    boolean z = (pMax.z >= b.getpMin().z) && (pMin.z <= b.getpMax().z);
-	    return (x&y&z);
+	    return (x&&y&&z);
 	}
 	
 	/**

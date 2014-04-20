@@ -102,7 +102,7 @@ public class Octree implements AbstractAccelerator {
 			objs.add(obj);
 		} else {
 			obj.refine(tmpObjs);
-			for(SceneObject tmp: tmpObjs){
+			for(SceneObject tmp: tmpObjs) {
 				objs.add(tmp);
 				scnBoxes.add(tmp.getWorldBound());
 			}

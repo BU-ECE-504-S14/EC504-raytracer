@@ -58,14 +58,10 @@ public class Octnode {
 			occupied = true; //I have something in me!
 			split();
 		}
-		ArrayList<Pt> corners = new ArrayList<Pt>(Arrays.asList(objbb.getCorners()));
+
 		for(int i=0 ; i<8; i++){
-			for(int j=0; j < corners.size(); j++){
-				if(children[i].contains(corners.get(j))){
-					children[i].insert(scnobj, objbb);
-					corners.remove(j);
-					break;
-				}
+			if(objbb.overlaps(children[i].bbox)) {
+				children[i].insert(scnobj, objbb);
 			}
 		}
 

@@ -50,6 +50,7 @@ public class Octleaf extends Octnode {
 	    		}
 	    	}
 	    }
+	    
 	   	return intersected; 
 	}
 
