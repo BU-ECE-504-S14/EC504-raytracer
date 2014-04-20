@@ -98,13 +98,28 @@ public class BBox {
 	 * check whether this bounding box overlaps with bounding box b
 	 * 
 	 * @param b bounding box to check overlap against
+	 * @param epsilon allows for epsilon difference between bounding boxes.
 	 * @return boolean true == overlap. false == no overlap.
 	 */
-	public boolean overlaps(BBox b) {
-		boolean x = (pMax.x >= b.getpMin().x) && (pMin.x <= b.getpMax().x);
-	    boolean y = (pMax.y >= b.getpMin().y) && (pMin.y <= b.getpMax().y);
-	    boolean z = (pMax.z >= b.getpMin().z) && (pMin.z <= b.getpMax().z);
+	public boolean overlaps(BBox b, float epsilon) {
+		boolean x = (pMax.x >= b.getpMin().x - epsilon) && (pMin.x <= b.getpMax().x + epsilon);
+	    boolean y = (pMax.y >= b.getpMin().y - epsilon) && (pMin.y <= b.getpMax().y + epsilon);
+	    boolean z = (pMax.z >= b.getpMin().z - epsilon) && (pMin.z <= b.getpMax().z + epsilon);
 	    return (x&&y&&z);
+	}
+	
+	/**
+	 * less narrow comparison range. Checks whether this BBox is has a common min max in any axis x, y, z
+	 * 
+	 * @param b bounding box with inclusive relationship
+	 * @param epsilon allows for epsilon difference between bounding boxes in x, y, or z axis.
+	 * @return boolean true == inclusive. false == not inclusive.
+	 */
+	public boolean inclusive(BBox b, float epsilon) {
+		boolean x = (pMax.x >= b.getpMin().x - epsilon) && (pMin.x <= b.getpMax().x + epsilon);
+	    boolean y = (pMax.y >= b.getpMin().y - epsilon) && (pMin.y <= b.getpMax().y + epsilon);
+	    boolean z = (pMax.z >= b.getpMin().z - epsilon) && (pMin.z <= b.getpMax().z + epsilon);
+	    return (x||y||z);
 	}
 	
 	/**

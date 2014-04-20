@@ -21,6 +21,8 @@ import scene.Scene;
 public class Octree implements AbstractAccelerator {
 	
 	private Octnode root;
+	private float scnBoxEpsilon = 0;
+	private float objectBoxEpsilon = 0;
 	private ArrayList<SceneObject> lastIntersectedObject = new ArrayList<SceneObject>();
 	
 	public Octree(Scene scn,int maxdepth) throws RefinementException, SplitBeyondMaxDepthException {
@@ -35,6 +37,7 @@ public class Octree implements AbstractAccelerator {
 			fillBoxesAndObjs(obj, objs, tmpObjs, scnBoxes);
 			rootBox = BBox.union(rootBox, obj.getWorldBound());
 		}
+		rootBox.expand(scnBoxEpsilon);
 		root = new Octnode(rootBox, 0, maxdepth); //0 is root's depth
 		for(int i = 0; i< objs.size(); i++){
 			root.insert(objs.get(i), scnBoxes.get(i));
@@ -97,6 +100,7 @@ public class Octree implements AbstractAccelerator {
 	 */
 	private void fillBoxesAndObjs(SceneObject obj, ArrayList<SceneObject> objs, 
 									ArrayList<SceneObject> tmpObjs, ArrayList<BBox> scnBoxes) throws RefinementException{
+		BBox correctedBox;
 		if(obj.isIntersectable()) {
 			scnBoxes.add(obj.getWorldBound());
 			objs.add(obj);
@@ -104,7 +108,9 @@ public class Octree implements AbstractAccelerator {
 			obj.refine(tmpObjs);
 			for(SceneObject tmp: tmpObjs) {
 				objs.add(tmp);
-				scnBoxes.add(tmp.getWorldBound());
+				correctedBox = tmp.getWorldBound();
+				correctedBox.expand(objectBoxEpsilon);
+				scnBoxes.add(new BBox(correctedBox));
 			}
 			tmpObjs.clear();
 		}

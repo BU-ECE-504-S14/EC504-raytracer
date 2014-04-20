@@ -81,8 +81,8 @@ public class BoundingBoxTests {
 		BBox overlaps = new BBox(new Pt(.5,.5,.5), new Pt(2,2,2));
 		BBox DNoverlap = new BBox(new Pt(.5,2,.5), new Pt(2,2,2));
 		
-		assertEquals(true, oTest1.overlaps(overlaps));
-		assertEquals(false, oTest1.overlaps(DNoverlap));
+		assertEquals(true, oTest1.overlaps(overlaps,0));
+		assertEquals(false, oTest1.overlaps(DNoverlap,0));
 	}
 	
 	@Test

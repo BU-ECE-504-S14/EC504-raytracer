@@ -69,7 +69,7 @@ public class MeshPreviewScene extends Scene
 		
 		Vector3d scale = new Vector3d(100,100,100);
 		Vector3d position = new Vector3d(0,0,-200);
-		AxisAngle4d rotation = new AxisAngle4d(0,0,0,0);
+		AxisAngle4d rotation = new AxisAngle4d(0,0,0,.5);
 		
 		demoSphere2.setTransform(scale, position, rotation);
 		demoSphere2.material.reflectionIndex = 1;
@@ -84,7 +84,7 @@ public class MeshPreviewScene extends Scene
 
 		// objects.add(plane);
 		objects.add(parse);
-		this.buildOctree(1);
+		this.buildOctree(3);
 		// objects.add(demoSphere);
 		//objects.add(demoSphere2);
 

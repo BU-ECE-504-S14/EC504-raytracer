@@ -45,6 +45,8 @@ public class Octleaf extends Octnode {
 		if(occupied && bbox.IntersectP(ray, new float[2])){
 	    	for(SceneObject obj : containedObjects){
 	    		if (obj.IntersectP(ray)){
+	    			if(!lastIntersectedObject.isEmpty()) 
+	    				{lastIntersectedObject.clear();}
 	    			lastIntersectedObject.add(obj);
 	    			intersected = true;
 	    		}
