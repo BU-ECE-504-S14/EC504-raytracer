@@ -55,6 +55,7 @@ public class Renderer
 	public static void main(String[] args)
 	{
 		optionProgress = true;
+
 		optionAntialiasing = 1;
 
 		optionWidth = 100;
@@ -68,6 +69,7 @@ public class Renderer
 	{
 		try
 		{
+
 
 			// new RenderViewer(renderScene(constructSampleScene()));
 			new RenderViewer(renderScene(new MeshPreviewScene()));
@@ -187,7 +189,7 @@ public class Renderer
 
 		/* set up camera */
 		double fieldofView = 1;
-		Pt position = new Pt(0, 0, 0);
+		Pt position = new Pt(100, -50, 0);
 		Pt lookAt = new Pt(-27, 45, 20);
 		Vec up = new Vec(0, 0, 1);
 
@@ -227,15 +229,17 @@ public class Renderer
 		/* add objects & lights & camera to scene */
 		Scene scene = new Scene();
 		scene.addSceneObject(shape1);
-		// scene.addSceneObject(shape2);
-		//scene.addSceneObject(shape3);
-		//scene.addSceneObject(shape4);
-		scene.addLight(l1);
-		scene.addLight(l2);
+		scene.addSceneObject(shape2);
+		scene.addSceneObject(shape3);
+	    scene.addSceneObject(shape4);
+	    
+	    scene.buildOctree(3);
+		//scene.addLight(l1);
+		//scene.addLight(l2);
 		scene.addLight(l4);
 
 		// scene.addLight(l3);
-		scene.addLight(l4);
+		//scene.addLight(l4);
 		// scene.addLight(l5);
 		// scene.addLight(l6);
 		scene.setCamera(cam);
@@ -261,10 +265,10 @@ public class Renderer
 		/* Ultra simple raytracer */
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
 				optionShadow);
-
-		//BufferedImage result = rayTracer.render(optionProgress);
-		BufferedImage result = rayTracer.renderThreads(optionProgress);
-
+        long time = System.currentTimeMillis();
+		BufferedImage result = rayTracer.render(optionProgress);
+		//BufferedImage result = rayTracer.renderThreads(optionProgress);
+        System.out.println(System.currentTimeMillis() - time);
 		return result;
 	}
 }

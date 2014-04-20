@@ -16,10 +16,9 @@ import scene.Intersection;
 import scene.Scene;
 
 /**
- * @author DavidsMac
  * Octree contains the scene
  */
-public class Octree {
+public class Octree implements AbstractAccelerator {
 	
 	private Octnode root;
 	private ArrayList<SceneObject> lastIntersectedObject = new ArrayList<SceneObject>();
@@ -42,55 +41,47 @@ public class Octree {
 		}
 	}
 	
-	/**
-	 * Checks to see whether or not ray intersects an object in the Octree. this method should be called to initialize
-	 * Octree's intersect function
-	 * 
-	 * @param ray Intersection test ray
-	 * @return true if intersection occurs. False otherwise.
-	 * @throws NotIntersectableException 
+	/* (non-Javadoc)
+	 * @see accelerators.AbstractAccelerator#IntersectP(geometry.Ray)
 	 */
+	@Override
 	public boolean IntersectP(Ray ray) throws NotIntersectableException{
 		lastIntersectedObject.clear(); //protection against users misusing IntersectP and filling lastIntersectedObject list
 		return root.IntersectP(ray, lastIntersectedObject);
 	}
 	
-	/**
-	 * Populates the Intersection for the intersected object. If not called after IntersectP, 
-	 * it will first call IntersectP to find the object.
-	 * 
-	 * @param ray Intersection test ray
-	 * @param inter Intersection to be filled with object intersection information
-	 * @return true if intersect occurs. False otherwise.
-	 * @throws NotIntersectableException 
+	/* (non-Javadoc)
+	 * @see accelerators.AbstractAccelerator#Intersect(geometry.Ray, scene.Intersection)
 	 */
+	@Override
 	public boolean Intersect(Ray ray, Intersection inter) throws NotIntersectableException{
 		if(lastIntersectedObject.isEmpty()){ //Protection from people misusing IntersectP->Intersect call sequence
 			if(!root.IntersectP(ray, lastIntersectedObject)){
 				return false;
 			}
 		}
-		
+        if(lastIntersectedObject.isEmpty()){
+        	System.out.println("h");
+        }
 		SceneObject IntersectedObject = lastIntersectedObject.remove(0);
 		lastIntersectedObject.clear();
 		
 		return IntersectedObject.Intersect(ray, inter);
 	}
 	
-	/**
-	 * FILL IN THIS METHOD!!!
-	 * @param object
+	/* (non-Javadoc)
+	 * @see accelerators.AbstractAccelerator#insert(objects.SceneObject)
 	 */
+	@Override
 	public void insert(SceneObject object){
 		
 	}
 	
 	
-	/**
-	 * 
-	 *FILL IN THIS METHOD!!! 
-	 * @param id
+	/* (non-Javadoc)
+	 * @see accelerators.AbstractAccelerator#delete(int)
 	 */
+	@Override
 	public void delete(int id){
 		
 	}
