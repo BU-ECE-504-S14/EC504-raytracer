@@ -23,7 +23,7 @@ public class Octnode {
 		
 	}
 	
-	private float octBoxEpsilon = 0;
+	private float octBoxEpsilon = 0f;
 	private Octnode children[] = null;
 	protected BBox bbox;
 	protected boolean occupied = false;
@@ -72,8 +72,10 @@ public class Octnode {
 		boolean intersected = false;
 		
 	    if(occupied && bbox.IntersectP(ray, new float[2])){
-	    	for(Octnode child: children){
-	    		intersected = intersected || child.IntersectP(ray, lastIntersectedObject);
+	    	//for(Octnode child: children){
+	    	for(int ii = 7; ii >= 0; ii--) { //TODO figure out why reverse iteration is required.
+	    		//intersected = intersected || child.IntersectP(ray, lastIntersectedObject);
+	    		intersected = intersected || children[ii].IntersectP(ray, lastIntersectedObject);
 	    	}
 	    }
 	    

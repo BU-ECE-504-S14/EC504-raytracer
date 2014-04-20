@@ -48,17 +48,17 @@ public class Triangle extends AbstractSceneObject
 
 		// check if ray is parallel to triangle or all vertices are colinear
 		if (divisor == 0f)
-			return false; // bad practice should use epsilon (modify if time allows)
+			return false; // TODO bad practice should use epsilon (modify if time allows)
 		float invDivisor = 1f / divisor;
 
-		// Compute first barycentric coordinate
+		// Compute first barycentric coordinate axis
 		Vec d = new Vec(ray.position);
 		d.sub(p1);
 		float b1 = (float) (Util.dotProduct(d, s1) * invDivisor);
 		if (b1 < 0f || b1 > 1f)
 			return false; // the intersection is out of the triangle
 
-		// Compute second barycentric coordinate
+		// Compute second barycentric coordinate axis
 		Vec s2 = new Vec();
 		s2.cross(d, e1);
 		float b2 = (float) (Util.dotProduct(ray.direction, s2) * invDivisor);

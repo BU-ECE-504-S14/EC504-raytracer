@@ -41,18 +41,21 @@ public class Octleaf extends Octnode {
 	public boolean IntersectP(Ray ray, ArrayList<SceneObject> lastIntersectedObject) throws NotIntersectableException{
 		
 		boolean intersected = false;
+		SceneObject nearest = null;
 	    
 		if(occupied && bbox.IntersectP(ray, new float[2])){
 	    	for(SceneObject obj : containedObjects){
 	    		if (obj.IntersectP(ray)){
-	    			if(!lastIntersectedObject.isEmpty()) 
-	    				{lastIntersectedObject.clear();}
-	    			lastIntersectedObject.add(obj);
+	    			nearest = obj;
 	    			intersected = true;
 	    		}
 	    	}
 	    }
-	    
+		
+		if(intersected) { 
+				lastIntersectedObject.clear();
+				lastIntersectedObject.add(nearest);
+		}
 	   	return intersected; 
 	}
 
