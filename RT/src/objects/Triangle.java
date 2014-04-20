@@ -69,7 +69,7 @@ public class Triangle extends AbstractSceneObject
 		float t = (float) (Util.dotProduct(e2, s2) * invDivisor);
 		if (t < ray.mint || t > ray.maxt)
 			return false; // there is some other object closer than this or mesh is behind
-							// the ray
+						  // the ray
 
 		// triangle has definitely been intersected
 		ray.maxt = t; // update nearest
@@ -184,7 +184,7 @@ public class Triangle extends AbstractSceneObject
 		float tu = b0 * uvs[0][0] + b1 * uvs[1][0] + b2 * uvs[2][0];
 		float tv = b0 * uvs[0][1] + b1 * uvs[1][1] + b2 * uvs[2][1];
 
-		/* --create alpha mask test here if time permits-- */
+		/* TODO --create alpha mask test here if time permits-- */
 
 		Pt phit = ray.getPointAt(t);
 		Inter.update(phit, dpdu, dpdv, new Normal(0, 0, 0), new Normal(0, 0, 0), tu, tv, this);

@@ -272,7 +272,7 @@ public class BBox {
 	 * @param pMin the new minimal point of this bounding box
 	 */
 	public void setpMin(Pt pMin) {
-		this.pMin = pMin;
+		this.pMin = new Pt(pMin);
 	}
 
 	/**
@@ -290,7 +290,7 @@ public class BBox {
 	 * @param pMax	the new maximal point of this bounding box
 	 */
 	public void setpMax(Pt pMax) {
-		this.pMax = pMax;
+		this.pMax = new Pt(pMax);
 	}
 	/**
 	 * Returns the corner points of the bounding box

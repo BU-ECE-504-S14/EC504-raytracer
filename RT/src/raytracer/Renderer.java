@@ -71,8 +71,8 @@ public class Renderer
 		{
 
 
-			//new RenderViewer(renderScene(constructSampleScene()));
-			 new RenderViewer(renderScene(new MeshPreviewScene()));
+			// new RenderViewer(renderScene(constructSampleScene()));
+			new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
 		{

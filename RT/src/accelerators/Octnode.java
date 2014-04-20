@@ -39,27 +39,19 @@ public class Octnode {
 	public void split() throws SplitBeyondMaxDepthException{
 		Pt centerpt = bbox.lerp(0.5f,0.5f, 0.5f);
 		Pt[] corners = bbox.getCorners();
-		BBox correctBox;
+		boolean maxDepthReached = (depth == maxdepth - 1);
 		
 		//if depth is less than max depth initialize to ocnode, if on last level initialize to ocleaf
-		if(depth < maxdepth - 1){ 
-			children = new Octnode[8];
-			for(int i=0 ; i<8; i++){
-				correctBox = new BBox(new BBox(corners[i], centerpt));
-				correctBox.expand(octBoxEpsilon);
-				children[i] = new Octnode(new BBox(correctBox), depth+1, maxdepth);
-			}
-		} else if(depth == maxdepth - 1){
-			children = new Octleaf[8];
-			for(int i=0 ; i<8; i++){
-				correctBox = new BBox(new BBox(corners[i], centerpt));
-				correctBox.expand(octBoxEpsilon);
-				children[i] = new Octleaf(new BBox(correctBox), depth+1, maxdepth);
-			}
-		} else {
-			throw new SplitBeyondMaxDepthException();
-		}
+		if(!maxDepthReached) {children = new Octnode[8];}
+		else if(maxDepthReached) {children = new Octleaf[8];}
+		else {throw new SplitBeyondMaxDepthException();}
 		
+		for(int i=0 ; i<8; i++){
+			if(!maxDepthReached)
+				{children[i] = new Octnode(new BBox(corners[i], centerpt), depth+1, maxdepth);}
+			else
+				{children[i] = new Octleaf(new BBox(corners[i], centerpt), depth+1, maxdepth);}
+		}
 	}
 	
 	public void insert(SceneObject scnobj, BBox objbb) throws SplitBeyondMaxDepthException{
@@ -70,20 +62,21 @@ public class Octnode {
 		}
 
 		for(Octnode child: children){
-			if(objbb.overlaps(child.bbox, 0)) {
-				child.insert(scnobj, objbb);
-			}
+			if(child.bbox.overlaps(objbb, octBoxEpsilon)) 
+				{ child.insert(scnobj, objbb); }
 		}
 
 	}
 	
 	public boolean IntersectP(Ray ray, ArrayList<SceneObject> lastIntersectedObject) throws NotIntersectableException{
 		boolean intersected = false;
+		
 	    if(occupied && bbox.IntersectP(ray, new float[2])){
-	    	for(int i = 0; i<8 ; i++){
-	    		intersected = intersected || children[i].IntersectP(ray, lastIntersectedObject);
+	    	for(Octnode child: children){
+	    		intersected = intersected || child.IntersectP(ray, lastIntersectedObject);
 	    	}
 	    }
+	    
 	   	return intersected; 
 	}
 	

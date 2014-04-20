@@ -37,6 +37,7 @@ public class Octree implements AbstractAccelerator {
 			fillBoxesAndObjs(obj, objs, tmpObjs, scnBoxes);
 			rootBox = BBox.union(rootBox, obj.getWorldBound());
 		}
+		
 		rootBox.expand(scnBoxEpsilon);
 		root = new Octnode(rootBox, 0, maxdepth); //0 is root's depth
 		for(int i = 0; i< objs.size(); i++){
