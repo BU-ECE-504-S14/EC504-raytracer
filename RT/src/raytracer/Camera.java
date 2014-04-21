@@ -238,7 +238,7 @@ public class Camera implements Serializable{
 		
 		//subtract projection from up to find true up for coordinate system
 		trueUp.sub(projection);
-		
+		trueUp.y = -trueUp.y;  //TODO problem with coordinate system disagrees in camera.
 		return trueUp;
 	}
 	

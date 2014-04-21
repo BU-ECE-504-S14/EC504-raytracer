@@ -23,7 +23,7 @@ public class Octnode {
 		
 	}
 	
-	private float octBoxEpsilon = 0f;
+	private float octBoxEpsilon = .2f;
 	private Octnode children[] = null;
 	protected BBox bbox;
 	protected boolean occupied = false;

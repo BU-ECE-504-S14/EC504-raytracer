@@ -6,6 +6,7 @@ package scene;
 
 import geometry.Pt;
 import geometry.Transformation;
+import geometry.Vec;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,7 +32,7 @@ public class MeshPreviewScene extends Scene
 		List<TriangleMesh> meshes = null;
 		try
 		{
-			meshes = ObjectParser.findObjects("./res/box.obj");
+			meshes = ObjectParser.findObjects("./res/triSphere.obj");
 		}
 		catch (IOException e)
 		{
@@ -59,11 +60,11 @@ public class MeshPreviewScene extends Scene
 
 		lights.add(demoLight);
 		lights.add(demoLight2);
-		lights.add(demoLight3);
+		//lights.add(demoLight3);
 		Sphere demoSphere = new Sphere();
 		demoSphere.material.diffuseColor = new Vector3d(1, .3, .3);
 		Sphere demoSphere2 = new Sphere();
-		demoSphere2.material.ambientIntensity = .2;
+		demoSphere2.material.ambientIntensity = .1;
 		demoSphere2.material.diffuseIndex = .5;
 		demoSphere2.material.specularIndex = 1;
 		
@@ -73,18 +74,21 @@ public class MeshPreviewScene extends Scene
 		
 		demoSphere2.setTransform(scale, position, rotation);
 		demoSphere2.material.reflectionIndex = 0;
-
+		
+		camera.setPostion(new Pt(10,0f,10f));
+		camera.lookAt(new Pt(0,0,0), new Vec(0,1,0));
+		
 		TriangleMesh parse = meshes.get(0);
 		parse.material = demoSphere2.material;
 		parse.material.reflectionIndex = 0;
 		Transformation target = new Transformation(demoSphere.getTransform());
-		target.setScale(new Vector3d(1.5, 1.5, 1.5));
+		target.setScale(new Vector3d(3, 3, 3));
 		// target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
 		parse.updateTransform(target);
 
 		// objects.add(plane);
 		objects.add(parse);
-		this.buildOctree(4);
+		this.buildOctree(2);
 		// objects.add(demoSphere);
 		//objects.add(demoSphere2);
 
