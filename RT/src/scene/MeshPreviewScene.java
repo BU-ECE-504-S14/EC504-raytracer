@@ -32,7 +32,7 @@ public class MeshPreviewScene extends Scene
 		List<TriangleMesh> meshes = null;
 		try
 		{
-			meshes = ObjectParser.findObjects("./res/triSphere.obj");
+			meshes = ObjectParser.findObjects("./res/box.obj");
 		}
 		catch (IOException e)
 		{
@@ -75,7 +75,7 @@ public class MeshPreviewScene extends Scene
 		demoSphere2.setTransform(scale, position, rotation);
 		demoSphere2.material.reflectionIndex = 0;
 		
-		camera.setPostion(new Pt(10,0f,10f));
+		camera.setPostion(new Pt(0f,0f,20f));
 		camera.lookAt(new Pt(0,0,0), new Vec(0,1,0));
 		
 		TriangleMesh parse = meshes.get(0);
@@ -88,7 +88,7 @@ public class MeshPreviewScene extends Scene
 
 		// objects.add(plane);
 		objects.add(parse);
-		this.buildOctree(2);
+		this.buildOctree(5);
 		// objects.add(demoSphere);
 		//objects.add(demoSphere2);
 

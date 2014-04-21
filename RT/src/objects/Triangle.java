@@ -150,6 +150,7 @@ public class Triangle extends AbstractSceneObject
 			n.normalize();
 			Util.makeCoordinateSystem(n, dpdu, dpdv);
 		}
+		
 		else
 		{
 			/*

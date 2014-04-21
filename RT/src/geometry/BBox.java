@@ -207,8 +207,8 @@ public class BBox {
 	 * @return boolean true == box intersected. false == box not intersected.
 	 */
 	public boolean IntersectP(Ray Ray, float[] hitT) {
-		float t0 = Ray.mint;
-		float t1 = Ray.maxt;
+		float t0 = new Float (Ray.mint);
+		float t1 = new Float (Ray.maxt);
 		
 		float[] o = setFloatArrayFromTuple(Ray.position);
 		float[] d = setFloatArrayFromTuple(Ray.direction);
@@ -218,7 +218,7 @@ public class BBox {
 		for(int i = 0; i < 3; i++){
 			
 			//compute near and far for x, y, and z bbox planes based on simplified para/intr solution pharr 195
-			float invRayDir = 1/d[i];
+			float invRayDir = 1f/d[i];
 			float tNear = (mins[i] - o[i])*invRayDir;
 			float tFar = (maxs[i] - o[i])*invRayDir;
 			
@@ -249,9 +249,9 @@ public class BBox {
 	 */
 	private float[] setFloatArrayFromTuple(Tuple3d t ) {
 		float[] f = new float[3];
-		f[0] = (float) t.x;
-		f[1] = (float) t.y;
-		f[2] = (float) t.z;
+		f[0] = new Float(t.x);
+		f[1] = new Float(t.y);
+		f[2] = new Float(t.z);
 		return f;
 	}
 	
