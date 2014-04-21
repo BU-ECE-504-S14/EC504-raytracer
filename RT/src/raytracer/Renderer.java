@@ -49,14 +49,13 @@ public class Renderer
 	private static int optionShadow = 20;
 
 	public static double progress = 0.0;
-	public static boolean done = false;
 
 	/* basic setup for rendering simple scene */
 	public static void main(String[] args)
 	{
 		optionProgress = true;
 
-		optionAntialiasing = 5;
+		optionAntialiasing = 0;
 
 		optionWidth = 400;
 		optionHeight = 400;
@@ -273,16 +272,17 @@ public class Renderer
 	{
 
 		progress = 0.0;
-		done = false;
 		Dimension imageSize = new Dimension(optionWidth, optionHeight);
 
 		/* Ultra simple raytracer */
-		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
-				optionShadow);
-        long time = System.currentTimeMillis();
+		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing, optionShadow);
 		BufferedImage result = rayTracer.render(optionProgress);
-		//BufferedImage result = rayTracer.renderThreads(optionProgress);
+		
+		/*
+		long time = System.currentTimeMillis();
+		BufferedImage result = rayTracer.renderThreads(optionProgress);
         System.out.println(System.currentTimeMillis() - time);
+        */
 		return result;
 	}
 }

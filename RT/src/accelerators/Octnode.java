@@ -99,9 +99,7 @@ public class Octnode {
 		}
 		
 	    if(occupied && bbox.IntersectP(ray, new float[2])){
-	    	//for(Octnode child: children){
-	    	for(int ii = 7; ii >= 0; ii--) {
-	    		//intersected = child.IntersectP(ray, lastIntersectedObject);
+	    	for(int ii = 7; ii >= 0; ii--) { //Note: strange speedup coming from tranversing the tree backwards
 	    		intersected[ii] = children[ii].IntersectP(ray, lastIntersectedObject);
 	    	}
 	    }
