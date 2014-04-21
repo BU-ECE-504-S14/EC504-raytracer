@@ -47,7 +47,7 @@ public class MeshPreviewScene extends Scene
 		PointLight demoLight3 = new PointLight();
 
 		demoLight.setPosition(new Vector3d(100, 100, 50));
-		demoLight3.setPosition(new Vector3d(-100, -100, 50));
+		demoLight3.setPosition(new Vector3d(0, 0, -50));
 
 		demoLight2.setPosition(new Vector3d(.5, .5, 10));
 		demoLight2.setColor(new Vector3d(1, 1, 1));
@@ -60,7 +60,7 @@ public class MeshPreviewScene extends Scene
 
 		lights.add(demoLight);
 		lights.add(demoLight2);
-		//lights.add(demoLight3);
+		lights.add(demoLight3);
 		Sphere demoSphere = new Sphere();
 		demoSphere.material.diffuseColor = new Vector3d(1, .3, .3);
 		Sphere demoSphere2 = new Sphere();
@@ -75,7 +75,7 @@ public class MeshPreviewScene extends Scene
 		demoSphere2.setTransform(scale, position, rotation);
 		demoSphere2.material.reflectionIndex = 0;
 		
-		camera.setPostion(new Pt(0f,0f,20f));
+		camera.setPostion(new Pt(20f,0f,20f));
 		camera.lookAt(new Pt(0,0,0), new Vec(0,1,0));
 		
 		TriangleMesh parse = meshes.get(0);
@@ -88,7 +88,7 @@ public class MeshPreviewScene extends Scene
 
 		// objects.add(plane);
 		objects.add(parse);
-		this.buildOctree(5);
+		this.buildOctree(3);
 		// objects.add(demoSphere);
 		//objects.add(demoSphere2);
 

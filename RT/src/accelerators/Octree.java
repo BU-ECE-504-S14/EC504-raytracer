@@ -49,7 +49,6 @@ public class Octree implements AbstractAccelerator {
 	 */
 	@Override
 	public boolean IntersectP(Ray ray) throws NotIntersectableException{
-		//lastIntersectedObject.clear(); //protection against users misusing IntersectP and filling lastIntersectedObject list
 		return root.IntersectP(ray, lastIntersectedObject);
 	}
 	
@@ -58,33 +57,24 @@ public class Octree implements AbstractAccelerator {
 	 */
 	@Override
 	public boolean Intersect(Ray ray, Intersection inter) throws NotIntersectableException{
-		/*
-		if(lastIntersectedObject.isEmpty()){ //Protection from people misusing IntersectP->Intersect call sequence
-			if(!root.IntersectP(ray, lastIntersectedObject)){
-				return false;
-			}
-		}
-		*/
+		
 		lastIntersectedObject.clear();
+		boolean intersected = false;
 		root.IntersectP(ray, lastIntersectedObject);
-	
-        if(lastIntersectedObject.isEmpty()){
-        	System.out.println("h");
-        }
+		
+		if(!lastIntersectedObject.isEmpty()) {
         
-		//SceneObject IntersectedObject = lastIntersectedObject.remove(0);
-        
-        SceneObject nearest = null;
-        for(SceneObject obj : lastIntersectedObject){
-        	if (obj.IntersectP(ray)){ nearest = obj; }
-        }
-        
-        if(nearest != null) {
-        	//lastIntersectedObject.clear();
-        	return nearest.Intersect(ray, inter);
-        } else {
-        	return false;
-        }
+	        SceneObject nearest = null;
+	        for(SceneObject obj : lastIntersectedObject){
+	        	if (obj.IntersectP(ray)){ nearest = obj; }
+	        }
+	        
+	        if(nearest != null) {
+	        	intersected = nearest.Intersect(ray, inter);
+	        } 
+		}
+		
+		return intersected;
 	}
 	
 	/* (non-Javadoc)

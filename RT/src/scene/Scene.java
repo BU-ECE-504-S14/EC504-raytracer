@@ -217,9 +217,9 @@ public class Scene implements Serializable
 				intersectedFlag = nearest.Intersect(ray, inter);
 			}
 		} else{
-			if(accelerator.IntersectP(ray)){
-				intersectedFlag = accelerator.Intersect(ray, inter);
-			}
+			
+			intersectedFlag = accelerator.Intersect(ray, inter);
+			
 		}
 		return intersectedFlag;
 	}

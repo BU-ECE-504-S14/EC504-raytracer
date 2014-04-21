@@ -76,7 +76,7 @@ public class Octnode {
 		 * even knows the future. OOOOOooooooOOOOOooooo.
 		 * Like when I wanted to write the below function like this:
 		 * 
-		 * for(int ii = 0; ii <= 8; ii++) { //TODO figure out why reverse iteration is required.		
+		 * for(int ii = 0; ii <= 8; ii++) { //TODO figure out why Java is so much smarter than me.		
 	     *		inter = inter || children[ii].IntersectP(ray, lastIntersectedObject);
 	     *	}
 	     * 
@@ -100,7 +100,7 @@ public class Octnode {
 		
 	    if(occupied && bbox.IntersectP(ray, new float[2])){
 	    	//for(Octnode child: children){
-	    	for(int ii = 7; ii >= 0; ii--) { //TODO figure out why reverse iteration is required.
+	    	for(int ii = 7; ii >= 0; ii--) {
 	    		//intersected = child.IntersectP(ray, lastIntersectedObject);
 	    		intersected[ii] = children[ii].IntersectP(ray, lastIntersectedObject);
 	    	}
