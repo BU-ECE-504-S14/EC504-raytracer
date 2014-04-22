@@ -25,7 +25,7 @@ public class Sphere extends AbstractSceneObject
 												// else isn't?
 	private Vector3d scale = new Vector3d(1, 1, 1);
 	private Vector3d pos = new Vector3d(0, 0, 0);
-	private AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
+	private AxisAngle4d rot = new AxisAngle4d(0, 0, 0, 0);
 	private Transformation trans = new Transformation(scale, pos, rot);
 
 	public Sphere()

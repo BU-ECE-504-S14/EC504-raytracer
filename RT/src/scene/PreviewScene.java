@@ -44,13 +44,13 @@ public class PreviewScene extends Scene
 		lights.add(demoLight2);
 		Sphere demoSphere = new Sphere();
 		Sphere demoSphere2 = new Sphere();
-		demoSphere2.getMaterial().ambientIntensity = .3;
-		demoSphere2.getMaterial().diffuseIndex = .5;
-		demoSphere2.getMaterial().specularIndex = .5;
-		demoSphere2.getMaterial().shininess = 1;
-		demoSphere2.getMaterial().diffuseColor = new Vector3d(0,0,0);
+		demoSphere2.material.ambientIntensity = .3;
+		demoSphere2.material.diffuseIndex = .5;
+		demoSphere2.material.specularIndex = .5;
+		demoSphere2.material.shininess = 1;
+		demoSphere2.material.diffuseColor = new Vector3d(0,0,0);
 		demoSphere2.setTransform(new Vector3d(100, 100, 10), new Vector3d(0, 0, -20), new AxisAngle4d(0,0,0,0));
-		demoSphere2.getMaterial().reflectionIndex = 1;
+		demoSphere2.material.reflectionIndex = 1;
 
 		demoSphere.material = o.material;
 		demoSphere.setzMinMax(o.getzMin(), o.getzMax());

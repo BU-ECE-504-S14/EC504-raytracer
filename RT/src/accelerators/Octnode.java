@@ -22,7 +22,7 @@ public class Octnode {
 		
 	}
 	
-	private float octBoxEpsilon = 0; //can be used to expand octbox bbox search regions
+	private float octBoxEpsilon = 0;
 	private Octnode children[] = null;
 	protected BBox bbox;
 	protected boolean occupied = false;
@@ -99,7 +99,9 @@ public class Octnode {
 		}
 		
 	    if(occupied && bbox.IntersectP(ray, new float[2])){
-	    	for(int ii = 7; ii >= 0; ii--) { //Note: strange speedup coming from tranversing the tree backwards
+	    	//for(Octnode child: children){
+	    	for(int ii = 7; ii >= 0; ii--) {
+	    		//intersected = child.IntersectP(ray, lastIntersectedObject);
 	    		intersected[ii] = children[ii].IntersectP(ray, lastIntersectedObject);
 	    	}
 	    }
