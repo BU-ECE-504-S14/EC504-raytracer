@@ -14,7 +14,7 @@ public class Normal extends Vector3d{
 	public final double w = 0;
 	
 	public Normal(Normal n){
-		super((Vector3d)n);
+		super(n);
 	}
 	
 	public Normal() {

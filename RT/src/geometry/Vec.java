@@ -14,7 +14,7 @@ public class Vec extends Vector3d{
 	public final double w = 0;
 	
 	public Vec(Vec n){
-		super((Vector3d)n);
+		super(n);
 	}
 	
 	public Vec() {

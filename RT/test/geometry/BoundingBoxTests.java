@@ -114,7 +114,7 @@ public class BoundingBoxTests {
 	public void surfaceAreaAndVolumeTest() {
 		BBox SAVTest = new BBox(new Pt(-1,-1,-1), new Pt(1,1,1));
 		int surfaceArea = 6*(2*2);
-		int volume  = (int) 2*2*2;
+		int volume  = 2*2*2;
 		
 		assertEquals(surfaceArea, (int) SAVTest.surfaceArea());
 		assertEquals(volume, (int) SAVTest.volume());

@@ -2,12 +2,8 @@ package scene;
 
 import java.io.Serializable;
 
-import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
-
 import objects.Sphere;
-import raytracer.Util;
 
 /**
  * A light shaped like a sphere. Allows ray intersections.

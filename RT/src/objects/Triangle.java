@@ -1,14 +1,12 @@
 package objects;
 
+import java.util.UUID;
+
 import geometry.BBox;
 import geometry.Normal;
 import geometry.Pt;
 import geometry.Ray;
 import geometry.Vec;
-
-import javax.vecmath.Vector3d;
-
-import com.sun.org.apache.xml.internal.serializer.utils.Utils;
 
 import raytracer.Util;
 import scene.Intersection;
@@ -21,6 +19,7 @@ public class Triangle extends AbstractSceneObject
 
 	public Triangle(TriangleMesh m, int n)
 	{
+		//this.ID = UUID.randomUUID();
 		mesh = m;
 		v[0] = mesh.vertexIndex[3 * n];
 		v[1] = mesh.vertexIndex[3 * n + 1];
@@ -44,7 +43,7 @@ public class Triangle extends AbstractSceneObject
 		e2.sub(p1);
 		Vec s1 = new Vec();
 		s1.cross(ray.direction, e2);
-		float divisor = (float) Util.dotProduct(s1, e1);
+		float divisor = (float)Util.dotProduct(s1, e1);
 
 		// check if ray is parallel to triangle or all vertices are colinear
 		if (divisor == 0f)
@@ -54,19 +53,19 @@ public class Triangle extends AbstractSceneObject
 		// Compute first barycentric coordinate
 		Vec d = new Vec(ray.position);
 		d.sub(p1);
-		float b1 = (float) (Util.dotProduct(d, s1) * invDivisor);
+		float b1 = (float)(Util.dotProduct(d, s1) * invDivisor);
 		if (b1 < 0f || b1 > 1f)
 			return false; // the intersection is out of the triangle
 
 		// Compute second barycentric coordinate
 		Vec s2 = new Vec();
 		s2.cross(d, e1);
-		float b2 = (float) (Util.dotProduct(ray.direction, s2) * invDivisor);
+		float b2 = (float)(Util.dotProduct(ray.direction, s2) * invDivisor);
 		if (b2 < 0 || b2 + b1 > 1)
 			return false; // the intersection is out of the triangle
 
 		// Compute intersection point
-		float t = (float) (Util.dotProduct(e2, s2) * invDivisor);
+		float t = (float)(Util.dotProduct(e2, s2) * invDivisor);
 		if (t < ray.mint || t > ray.maxt)
 			return false; // there is some other object closer than this or mesh is behind
 							// the ray
@@ -95,7 +94,7 @@ public class Triangle extends AbstractSceneObject
 		e2.sub(p1);
 		Vec s1 = new Vec();
 		s1.cross(ray.direction, e2);
-		float divisor = (float) Util.dotProduct(s1, e1);
+		float divisor = (float)Util.dotProduct(s1, e1);
 
 		// check if ray is parallel to triangle or all vertices are colinear
 		if (divisor == 0f)
@@ -105,19 +104,19 @@ public class Triangle extends AbstractSceneObject
 		// Compute first barycentric coordinate
 		Vec d = new Vec(ray.position);
 		d.sub(p1);
-		float b1 = (float) (Util.dotProduct(d, s1) * invDivisor);
+		float b1 = (float)(Util.dotProduct(d, s1) * invDivisor);
 		if (b1 < 0f || b1 > 1f)
 			return false; // the intersection is out of the triangle
 
 		// Compute second barycentric coordinate
 		Vec s2 = new Vec();
 		s2.cross(d, e1);
-		float b2 = (float) (Util.dotProduct(ray.direction, s2) * invDivisor);
+		float b2 = (float)(Util.dotProduct(ray.direction, s2) * invDivisor);
 		if (b2 < 0 || b2 + b1 > 1)
 			return false; // the intersection is out of the triangle
 
 		// Compute intersection point
-		float t = (float) (Util.dotProduct(e2, s2) * invDivisor);
+		float t = (float)(Util.dotProduct(e2, s2) * invDivisor);
 		if (t < ray.mint || t > ray.maxt)
 			return false; // there is some other object closer than this or mesh is behind
 							// the ray
@@ -153,8 +152,8 @@ public class Triangle extends AbstractSceneObject
 		else
 		{
 			/*
-			 * use matrix multiplication with axis vectors and inverse uv axis matrix to
-			 * determine change in u and v
+			 * use matrix multiplication with axis vectors and inverse uv axis matrix to determine
+			 * change in u and v
 			 */
 
 			float invdet = 1f / determinant;
@@ -195,6 +194,7 @@ public class Triangle extends AbstractSceneObject
 
 	public void GetUVs(float uvs[][])
 	{
+
 		if (mesh.uvs != null)
 		{// if mesh.uvs is not null
 			uvs[0][0] = mesh.uvs[2 * v[0]];
@@ -216,15 +216,16 @@ public class Triangle extends AbstractSceneObject
 	}
 
 	@Override
-	public BBox getWorldBound() {
+	public BBox getWorldBound()
+	{
 		Pt p1 = new Pt(mesh.Points[v[0]]);
 		Pt p2 = new Pt(mesh.Points[v[1]]);
 		Pt p3 = new Pt(mesh.Points[v[2]]);
-		
+
 		BBox wBox = new BBox(p1);
 		wBox = BBox.union(wBox, p2);
 		wBox = BBox.union(wBox, p3);
-		
+
 		return wBox;
 	}
 

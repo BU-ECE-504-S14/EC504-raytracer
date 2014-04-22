@@ -18,7 +18,7 @@ public class Pt extends Vector3d
 
 	public Pt(Pt n)
 	{
-		super((Vector3d) n);
+		super(n);
 	}
 
 	public Pt()
@@ -51,6 +51,7 @@ public class Pt extends Vector3d
 		super(v1);
 	}
 
+	@Override
 	public String toString()
 	{
 		return this.x + ", " + this.y + ", " + this.z;

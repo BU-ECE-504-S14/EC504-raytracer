@@ -7,6 +7,7 @@ import geometry.Transformation;
 import geometry.Vec;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class TriangleMesh extends AbstractSceneObject
 {
@@ -20,9 +21,16 @@ public class TriangleMesh extends AbstractSceneObject
 
 	public TriangleMesh(TriangleMesh t)
 	{
+		this.material = new Material(t.material);
+		this.ID = UUID.randomUUID();
 		ntris = t.ntris;
 		nverts = t.nverts;
 		Points = new Pt[t.Points.length];
+		vertexIndex = new int[t.vertexIndex.length];
+		for (int i = 0; i < vertexIndex.length; i++)
+		{
+			vertexIndex[i] = t.vertexIndex[i];
+		}
 		for (int i = 0; i < t.Points.length; i++)
 		{
 			Points[i] = t.Points[i];
@@ -62,9 +70,10 @@ public class TriangleMesh extends AbstractSceneObject
 	}
 
 	// Points are expected to be in object space
-	public TriangleMesh(Transformation t, int nt, int nv, int[] vi, Pt[] P, Normal[] N, Vec[] S,
-			float[] uv)
+	public TriangleMesh(Transformation t, int nt, int nv, int[] vi, Pt[] P,
+			Normal[] N, Vec[] S, float[] uv)
 	{
+		this.ID = UUID.randomUUID();
 		this.trans = new Transformation(t);
 		ntris = nt;
 		nverts = nv;
@@ -73,7 +82,7 @@ public class TriangleMesh extends AbstractSceneObject
 
 		if (uv != null)
 		{
-			uvs = new float[nverts * 2];
+			uvs = new float[ntris * 3];
 			System.arraycopy(uv, 0, uvs, 0, uv.length);
 		}
 		else
@@ -97,7 +106,8 @@ public class TriangleMesh extends AbstractSceneObject
 
 		Points = new Pt[nverts];
 		for (int i = 0; i < nverts; i++)
-			Points[i] = t.object2World(P[i]); // for triangle mesh object points are
+			Points[i] = t.object2World(P[i]); // for triangle mesh object points
+												// are
 												// stored in world space
 		setName("New Triangle Mesh");
 	}
@@ -137,13 +147,36 @@ public class TriangleMesh extends AbstractSceneObject
 	}
 
 	@Override
-	public BBox getWorldBound() {
+	public String toString()
+	{
+		String out = "";
+		out += "Triangle Mesh (ID: " + ID + "\n";
+		out += "Name: " + name + "\n";
+		out += "Vertices: " + "\n";
+		for (int i = 0; i < Points.length; i++)
+		{
+			out += "Vertex " + i + ": " + Points[i] + "\n";
+		}
+		out += "\n";
+
+		out += "Faces: " + "\n";
+		for (int i = 0; i < vertexIndex.length; i += 3)
+		{
+			out += "Face " + i / 3 + ": " + vertexIndex[i] + ", " + vertexIndex[i + 1] + ", " + vertexIndex[i + 2] + "\n";
+		}
+		return out;
+	}
+
+	@Override
+	public BBox getWorldBound()
+	{
 		BBox wBox = new BBox();
-		
-		for(Pt p : Points) {
+
+		for (Pt p : Points)
+		{
 			wBox = BBox.union(wBox, p);
 		}
-		
+
 		return wBox;
 	}
 

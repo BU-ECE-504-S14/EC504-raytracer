@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -13,8 +14,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
 import raytracer.Renderer;
 import scene.Scene;
 
@@ -82,7 +81,7 @@ public class BasicGUI extends JFrame
 			// Set the size of the
 			paramFields[ii].setColumns(widths[ii]);
 
-			JLabel lab = new JLabel(labels[ii], JLabel.RIGHT);
+			JLabel lab = new JLabel(labels[ii], SwingConstants.RIGHT);
 			lab.setLabelFor(paramFields[ii]);
 			JPanel l = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			l.add(lab);
@@ -111,17 +110,17 @@ public class BasicGUI extends JFrame
 
 	public void updateRenderingParams()
 	{
-		render.setOptionWidth(Integer.parseInt(paramFields[0].getText()));
-		render.setOptionHeight(Integer.parseInt(paramFields[1].getText()));
-		render.setOptionAntialiasing(Integer.parseInt(paramFields[2].getText()));
-		render.setOptionShadow(Integer.parseInt(paramFields[3].getText()));
+		Renderer.setOptionWidth(Integer.parseInt(paramFields[0].getText()));
+		Renderer.setOptionHeight(Integer.parseInt(paramFields[1].getText()));
+		Renderer.setOptionAntialiasing(Integer.parseInt(paramFields[2].getText()));
+		Renderer.setOptionShadow(Integer.parseInt(paramFields[3].getText()));
 	}
 
 	public void renderScene()
 	{
 		try
 		{
-			renderOutput = render.renderScene(targetScene);
+			renderOutput = Renderer.renderScene(targetScene);
 		}
 		catch (Exception e)
 		{
@@ -130,7 +129,7 @@ public class BasicGUI extends JFrame
 		renderIcon = new ImageIcon(renderOutput);
 		if (renderHolder.getIcon() == null)
 		{
-			renderHolder = new JLabel(renderIcon, JLabel.CENTER);
+			renderHolder = new JLabel(renderIcon, SwingConstants.CENTER);
 			imagePanel.add(renderHolder);
 		}
 		else
@@ -141,6 +140,7 @@ public class BasicGUI extends JFrame
 	}
 
 	ActionListener act = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent e)
 		{
 			updateRenderingParams();

@@ -7,28 +7,45 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import GUI.PreviewPanel;
+
 /**
  * A simple frame renderer for BufferedImages as output from the raytracer.
+ * 
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
-
  */
-public class RenderViewer extends JFrame {
+public class RenderViewer extends JFrame
+{
 
 	private static final long serialVersionUID = 1L;
-	
-	public RenderViewer() {
+
+	static boolean looping = true;
+	static int SLEEP_TIME = 100;
+
+	public RenderViewer()
+	{
 		super("Basic Graphical Rendering");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	
-	public RenderViewer(BufferedImage bi) {
+
+	public RenderViewer(BufferedImage bi)
+	{
 		this();
-		Dimension d = new Dimension(bi.getWidth(), bi.getHeight()); 
-		setSize(d);
-		setResizable(false);
-		ImageIcon image = new ImageIcon(bi);
-		add(new JLabel(image));
+		add(new PreviewPanel(bi));
 		setVisible(true);
+
+		while (looping)
+		{
+			pack();
+			try
+			{
+				Thread.sleep(SLEEP_TIME);
+			}
+			catch (InterruptedException ex)
+			{
+				ex.printStackTrace();
+			}
+		}
 	}
 
 }

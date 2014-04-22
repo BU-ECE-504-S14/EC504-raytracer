@@ -6,31 +6,20 @@ package GUI;
 
 import geometry.Transformation;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Event;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
-import objects.Material;
 import objects.Sphere;
-import raytracer.Renderer;
 import util.SceneObjectException;
 
 /**
@@ -42,13 +31,11 @@ public class SphereInfoPanel extends JPanel
 	public SpherePanel mySpherePanel;
 
 	ParameterPanel namePanel;
-	ParameterPanel radiusPanel;
 	ParameterPanel zMinPanel;
 	ParameterPanel zMaxPanel;
 	ParameterPanel thetaMinPanel;
 	ParameterPanel thetaMaxPanel;
 	ParameterPanel phiMaxPanel;
-	PositionPanel posPanel;
 	PositionPanel transformScale;
 	PositionPanel transformPosition;
 	PositionPanel transformRotationAxis;
@@ -83,8 +70,6 @@ public class SphereInfoPanel extends JPanel
 	public void addFieldListeners(ActionListener go)
 	{
 		namePanel.addFieldListener(go);
-		radiusPanel.addFieldListener(go);
-		posPanel.addFieldListeners(go);
 		zMinPanel.addFieldListener(go);
 		zMaxPanel.addFieldListener(go);
 		thetaMinPanel.addFieldListener(go);
@@ -101,10 +86,6 @@ public class SphereInfoPanel extends JPanel
 
 		removeAll();
 		namePanel = new ParameterPanel("Name: ", mySphere.getName(), 20);
-
-		radiusPanel = new ParameterPanel("Radius: ", "" + mySphere.getRadius(), 5);
-
-		posPanel = new PositionPanel("Position: ", mySphere.getPosition());
 		
 		zMinPanel = new ParameterPanel("zMin: ", ""+ mySphere.getzMin(), 5);
 		zMaxPanel = new ParameterPanel("zMax: ", ""+ mySphere.getzMax(), 5);
@@ -122,8 +103,6 @@ public class SphereInfoPanel extends JPanel
 		transformRotationAngle = new ParameterPanel("Transform rotation angle: ", ""+Math.toDegrees(mySphere.getRotation().angle), 5);
 
 		add(namePanel);
-		add(posPanel);
-		add(radiusPanel);
 		add(zMinPanel);
 		add(zMaxPanel);
 		add(thetaMinPanel);
@@ -134,9 +113,10 @@ public class SphereInfoPanel extends JPanel
 		add(transformRotationAxis);
 		add(transformRotationAngle);
 		
-		JSlider rotationSlider = new JSlider(JSlider.HORIZONTAL, 0, 360, 0);
+		JSlider rotationSlider = new JSlider(SwingConstants.HORIZONTAL, 0, 360, 0);
 		
 		ChangeListener c = new ChangeListener(){
+			@Override
 			public void stateChanged(ChangeEvent e){
 				JSlider source = (JSlider)e.getSource();
 				transformRotationAngle.paramField.setText(""+source.getValue());
@@ -153,24 +133,15 @@ public class SphereInfoPanel extends JPanel
 	{
 		try
 		{
-			Vector3d newPos = posPanel.getPosition();
-			float newRad = Float.parseFloat(radiusPanel.getValue());
-
-			if (newRad <= 0)
-			{
-				throw new SceneObjectException("Cannot update sphere (" + mySphere.getName()
-						+ "): Radius is less than or equal to zero!");
-			}
 			String newName = namePanel.getValue();
 			
 			mySphere.setName(newName);
-			mySphere.setPosition(newPos);
 			mySphere.setScaleRad(transformScale.getPosition());
 			mySphere.setzMinMax( Float.parseFloat(zMinPanel.getValue()), 
 								 Float.parseFloat(zMaxPanel.getValue())  );
 			mySphere.phiMax = (float)Math.toRadians(Float.parseFloat(phiMaxPanel.getValue()));
 			mySphere.setRotation(new AxisAngle4d(transformRotationAxis.getPosition(), Math.toRadians(Double.parseDouble(transformRotationAngle.getValue()))));
-			
+			mySphere.setPosition(transformPosition.getPosition());
 			
 		}
 		catch (Exception e)

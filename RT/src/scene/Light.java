@@ -1,12 +1,6 @@
 package scene;
 
-import java.io.Serializable;
-
-import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
-
-import raytracer.Util;
 
 /**
  * An abstract light object, which is defined by a position, color, radiosity value, and

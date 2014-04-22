@@ -4,20 +4,18 @@
 
 package scene;
 
-import geometry.Pt;
 import geometry.Transformation;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
-import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
 import parser.ObjectParser;
 import raytracer.Camera;
+import util.SceneObjectException;
 
 /**
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
@@ -31,16 +29,16 @@ public class MeshPreviewScene extends Scene
 		List<TriangleMesh> meshes = null;
 		try
 		{
-			meshes = ObjectParser.findObjects("./res/box.obj");
+			meshes = ObjectParser.parseObjectsFromFile("box.obj");
 		}
-		catch (IOException e)
+		catch (SceneObjectException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
-				(float) (Math.PI / 4));
+				(float)(Math.PI / 4));
 		PointLight demoLight = new PointLight();
 		PointLight demoLight2 = new PointLight();
 		PointLight demoLight3 = new PointLight();
@@ -55,10 +53,9 @@ public class MeshPreviewScene extends Scene
 		demoLight.setRadio(1);
 		demoLight2.setRadio(1);
 		demoLight3.setRadio(1);
-		
 
 		lights.add(demoLight);
-		lights.add(demoLight2);
+		//lights.add(demoLight2);
 		lights.add(demoLight3);
 		Sphere demoSphere = new Sphere();
 		demoSphere.material.diffuseColor = new Vector3d(1, .3, .3);
@@ -66,11 +63,11 @@ public class MeshPreviewScene extends Scene
 		demoSphere2.material.ambientIntensity = .2;
 		demoSphere2.material.diffuseIndex = .5;
 		demoSphere2.material.specularIndex = 1;
-		
-		Vector3d scale = new Vector3d(100,100,100);
-		Vector3d position = new Vector3d(0,0,-200);
-		AxisAngle4d rotation = new AxisAngle4d(0,0,0,0);
-		
+
+		Vector3d scale = new Vector3d(100, 100, 100);
+		Vector3d position = new Vector3d(0, 0, -200);
+		AxisAngle4d rotation = new AxisAngle4d(0, 0, 0, 0);
+
 		demoSphere2.setTransform(scale, position, rotation);
 		demoSphere2.material.reflectionIndex = 1;
 
@@ -84,9 +81,9 @@ public class MeshPreviewScene extends Scene
 
 		// objects.add(plane);
 		objects.add(parse);
-		this.buildOctree(1);
+	//	this.buildOctree(1);
 		// objects.add(demoSphere);
-		//objects.add(demoSphere2);
+		// objects.add(demoSphere2);
 
 	}
 }
