@@ -40,57 +40,52 @@ public class MeshPreviewScene extends Scene
 			e.printStackTrace();
 		}
 
-		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
-				(float) (Math.PI / 4));
+		camera = new Camera(new Pt(0,0, 20), new Pt(0,0,0), new Vec(0,1,0), 1f);
+		
+		Vector3d SphereS = new Vector3d(100, 100, 100);
+		Vector3d SphereP = new Vector3d(0,0,-200);
+		AxisAngle4d SphereR = new AxisAngle4d(0,0,1,0);
+		Transformation t = new Transformation(SphereS, SphereP, SphereR);
+		Sphere demoSphere = new Sphere(1,1,360f,t);
+		
+		demoSphere.getMaterial().ambientIntensity = .1;
+		demoSphere.getMaterial().diffuseIndex = .5;
+		demoSphere.getMaterial().specularIndex = 1;
+		demoSphere.getMaterial().reflectionIndex = 0;
+		
+		Vector3d parseS = new Vector3d(3,3,3);
+		Vector3d parseP = new Vector3d(0,0,0);
+		AxisAngle4d parseR = new AxisAngle4d(0,0,1,0);
+		Transformation target = new Transformation(parseS, parseP, parseR);
+		TriangleMesh parse = meshes.get(0);
+		parse.material = demoSphere.getMaterial();
+		parse.material.reflectionIndex = 0;
+		parse.updateTransform(target);
+		
 		PointLight demoLight = new PointLight();
 		PointLight demoLight2 = new PointLight();
 		PointLight demoLight3 = new PointLight();
 
 		demoLight.setPosition(new Vector3d(100, 100, 50));
-		demoLight3.setPosition(new Vector3d(0, 0, -50));
-
 		demoLight2.setPosition(new Vector3d(.5, .5, 10));
+		demoLight3.setPosition(new Vector3d(0, 0, -50));
+		
+		demoLight.setColor(new Vector3d(.3, .8, .8));
 		demoLight2.setColor(new Vector3d(1, 1, 1));
 		demoLight3.setColor(new Vector3d(.8, .3, .8));
-		demoLight.setColor(new Vector3d(.3, .8, .8));
+
 		demoLight.setRadio(1);
 		demoLight2.setRadio(1);
 		demoLight3.setRadio(1);
 		
-
 		lights.add(demoLight);
 		lights.add(demoLight2);
 		lights.add(demoLight3);
-		Sphere demoSphere = new Sphere();
-		demoSphere.material.diffuseColor = new Vector3d(1, .3, .3);
-		Sphere demoSphere2 = new Sphere();
-		demoSphere2.material.ambientIntensity = .1;
-		demoSphere2.material.diffuseIndex = .5;
-		demoSphere2.material.specularIndex = 1;
-		
-		Vector3d scale = new Vector3d(100,100,100);
-		Vector3d position = new Vector3d(0,0,-200);
-		AxisAngle4d rotation = new AxisAngle4d(0,0,0,.5);
-		
-		demoSphere2.setTransform(scale, position, rotation);
-		demoSphere2.material.reflectionIndex = 0;
-		
-		camera.setPostion(new Pt(20f,0f,20f));
-		camera.lookAt(new Pt(0,0,0), new Vec(0,1,0));
-		
-		TriangleMesh parse = meshes.get(0);
-		parse.material = demoSphere2.material;
-		parse.material.reflectionIndex = 0;
-		Transformation target = new Transformation(demoSphere.getTransform());
-		target.setScale(new Vector3d(3, 3, 3));
-		// target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
-		parse.updateTransform(target);
 
 		// objects.add(plane);
 		objects.add(parse);
+		objects.add(demoSphere);
 		this.buildOctree(3);
-		// objects.add(demoSphere);
-		//objects.add(demoSphere2);
 
 	}
 }

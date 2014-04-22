@@ -22,7 +22,7 @@ public class Octnode {
 		
 	}
 	
-	private float octBoxEpsilon = 0;
+	private float octBoxEpsilon = 0; //can be used to expand octbox bbox search regions
 	private Octnode children[] = null;
 	protected BBox bbox;
 	protected boolean occupied = false;

@@ -8,17 +8,6 @@ import scene.Intersection;
 public interface AbstractAccelerator {
 
 	/**
-	 * Checks to see whether or not ray intersects an object in the Octree. this method should be called to initialize
-	 * Octree's intersect function
-	 * 
-	 * @param ray Intersection test ray
-	 * @return true if intersection occurs. False otherwise.
-	 * @throws NotIntersectableException 
-	 */
-	public abstract boolean IntersectP(Ray ray)
-			throws NotIntersectableException;
-
-	/**
 	 * Populates the Intersection for the intersected object. If not called after IntersectP, 
 	 * it will first call IntersectP to find the object.
 	 * 

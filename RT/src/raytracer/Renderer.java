@@ -57,8 +57,8 @@ public class Renderer
 
 		optionAntialiasing = 0;
 
-		optionWidth = 400;
-		optionHeight = 400;
+		optionWidth = 1000;
+		optionHeight = 1000;
 
 		optionShadow = 0;
 		showSampleScene();
