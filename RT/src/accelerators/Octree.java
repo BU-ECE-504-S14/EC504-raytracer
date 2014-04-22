@@ -46,25 +46,6 @@ public class Octree implements AbstractAccelerator {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see accelerators.AbstractAccelerator#Intersect(geometry.Ray,
-	 * scene.Intersection)
-	 * 
-	 * @Override public boolean Intersect(Ray ray, Intersection inter) throws
-	 * NotIntersectableException{
-	 * 
-	 * ArrayList<SceneObject> lastIntersectedObject = new
-	 * ArrayList<SceneObject>(); boolean intersected = false;
-	 * root.IntersectP(ray, lastIntersectedObject);
-	 * 
-	 * if(!lastIntersectedObject.isEmpty()) { intersected =
-	 * lastIntersectedObject.get(0).Intersect(ray, inter); }
-	 * 
-	 * return intersected; }
-	 */
-
 	@Override
 	public boolean Intersect(Ray ray, Intersection inter)
 			throws NotIntersectableException {
@@ -96,17 +77,6 @@ public class Octree implements AbstractAccelerator {
 			
 			
 			Octleaf currentLeaf = intersectedLeaves.get(ii);
-			/*
-			ArrayList<SceneObject> objs = currentLeaf.getObjects();
-			int children = objs.size();
-
-			for (int jj = 0; jj < children; jj++){
-				if (objs.get(jj).IntersectP(ray)){
-					nearest = objs.get(jj);
-				}
-			}
-			*/
-			
 			nearest = currentLeaf.nearestIntersect(ray);
 			if(nearest != null) {
 				nearest.Intersect(ray, inter);

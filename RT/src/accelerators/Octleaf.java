@@ -27,8 +27,8 @@ public class Octleaf extends Octnode {
 
 	@Override
 	public void split() throws SplitBeyondMaxDepthException {
-		throw new SplitBeyondMaxDepthException(); // You should not be splitting
-													// leaf nodes.
+		 // You should not be splitting leaf nodes!
+		throw new SplitBeyondMaxDepthException();
 	}
 
 	@Override
@@ -53,7 +53,6 @@ public class Octleaf extends Octnode {
 			throws NotIntersectableException {
 
 		boolean intersected = false;
-		SceneObject nearest = null;
 		float[] inOut = { 1, 1 };
 
 		 if(occupied && bbox.IntersectP(ray, inOut)){
@@ -61,16 +60,7 @@ public class Octleaf extends Octnode {
 			this.disToBBoxOut = inOut[1];
 			IntersectedLeaves.add(this);
 			intersected = true;
-			/*
-			 * for(SceneObject obj : containedObjects){ if
-			 * (obj.IntersectP(ray)){ nearest = obj; intersected = true; } }
-			 */
 		}
-
-		/*
-		 * if(intersected) { lastIntersectedObject.clear();
-		 * lastIntersectedObject.add(nearest); }
-		 */
 
 		return intersected;
 	}

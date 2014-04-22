@@ -112,7 +112,7 @@ public class MeshPreviewScene extends Scene
 					System.out.println(tmptmpobj.getID());
 			}
 		}*/
-		this.buildOctree(3);
+		this.buildOctree(5);
 
 	}
 }

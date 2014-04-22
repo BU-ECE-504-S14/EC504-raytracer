@@ -67,53 +67,6 @@ public class Octnode {
 
 	}
 	
-	
-	//public boolean IntersectP(Ray ray, ArrayList<SceneObject> lastIntersectedObject) throws NotIntersectableException{
-		
-		/* David's Java is smarter than your code note:
-		 * Guess what everyone; Java is sooooooo smart. Its much smarter than me, or my code. In fact, Its so smart that it 
-		 * even knows the future. OOOOOooooooOOOOOooooo.
-		 * Like when I wanted to write the below function like this:
-		 * 
-		 * for(int ii = 0; ii <= 8; ii++) { //TODO figure out why Java is so much smarter than me.		
-	     *		inter = inter || children[ii].IntersectP(ray, lastIntersectedObject);
-	     *	}
-	     * 
-	     *  Java was sooo smart and already knew the future anyway and it just knew I didn't want 
-	     *  to call IntersectP every. single. time. I ran the for loop. 
-	     *  
-	     *  Uggg... it makes me tired just thinking about doing all of those function calls yeash! So Java just never called
-	     *  IntersectP after inter was set to true. It just... never... called... it..........!!!!!!!!!!!!!!!!!!!
-	     *  
-	     *  Which was great! I didn't want my scenes to render correctly. No, I wanted confusing impossible to understand visual
-	     *  gibberish that was practically impossible to debug because nothing was actually wrong with my code.
-	     *  
-	     *  Thanks for the "compiler optimization" Java!
-	     *  
-	     *  Love, David
-		 */
-		/*
-		boolean intersected[] = new boolean[8];
-		
-		for(int i = 0; i < 8; i++) {
-			intersected[i] = false;
-		}
-		
-	    if(occupied && bbox.IntersectP(ray, new float[2])){
-	    	for(int ii = 0; ii < 8; ii++) {
-	    		intersected[ii] = children[ii].IntersectP(ray, lastIntersectedObject);
-	    	}
-	    }
-	    
-	    boolean inter = false;
-	    for(int i = 0; i < 8; i++) {
-	    	inter = inter || intersected[i];
-	    }
-	    
-	   	return inter; 
-	}
-		*/
-	
 	public boolean IntersectP(Ray ray, ArrayList<Octleaf> IntersectedLeaves) throws NotIntersectableException{
 		
 		boolean intersected[] = new boolean[8];
