@@ -68,8 +68,7 @@ public class Octnode {
 	}
 	
 	
-	public boolean IntersectP(Ray ray, ArrayList<SceneObject> lastIntersectedObject) throws NotIntersectableException{
-		boolean intersected[] = new boolean[8];
+	//public boolean IntersectP(Ray ray, ArrayList<SceneObject> lastIntersectedObject) throws NotIntersectableException{
 		
 		/* David's Java is smarter than your code note:
 		 * Guess what everyone; Java is sooooooo smart. Its much smarter than me, or my code. In fact, Its so smart that it 
@@ -93,13 +92,15 @@ public class Octnode {
 	     *  
 	     *  Love, David
 		 */
+		/*
+		boolean intersected[] = new boolean[8];
 		
 		for(int i = 0; i < 8; i++) {
 			intersected[i] = false;
 		}
 		
 	    if(occupied && bbox.IntersectP(ray, new float[2])){
-	    	for(int ii = 7; ii >= 0; ii--) {
+	    	for(int ii = 0; ii < 8; ii++) {
 	    		intersected[ii] = children[ii].IntersectP(ray, lastIntersectedObject);
 	    	}
 	    }
@@ -110,6 +111,31 @@ public class Octnode {
 	    }
 	    
 	   	return inter; 
+	}
+		*/
+	
+	public boolean IntersectP(Ray ray, ArrayList<Octleaf> IntersectedLeaves) throws NotIntersectableException{
+		
+		boolean intersected[] = new boolean[8];
+
+		for(int i = 0; i < 8; i++) {
+			intersected[i] = false;
+		}
+		
+		
+	    if(occupied && bbox.IntersectP(ray, new float[2])){
+	    	for(int ii = 0; ii < 8; ii++) {
+	    		intersected[ii] = children[ii].IntersectP(ray, IntersectedLeaves);
+	    	}
+	    }
+	    
+	    boolean inter = false;
+	    for(int i = 0; i < 8; i++) {
+	    	inter = inter || intersected[i];
+	    }
+	    
+	   	return inter; 
+
 	}
 	
 }
