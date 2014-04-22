@@ -23,7 +23,6 @@ public class Octree implements AbstractAccelerator {
 	private Octnode root;
 	private float scnBoxEpsilon = 0;
 	private float objectBoxEpsilon = 0;
-	private ArrayList<SceneObject> lastIntersectedObject = new ArrayList<SceneObject>();
 	
 	public Octree(Scene scn,int maxdepth) throws RefinementException, SplitBeyondMaxDepthException {
 		
@@ -44,13 +43,6 @@ public class Octree implements AbstractAccelerator {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see accelerators.AbstractAccelerator#IntersectP(geometry.Ray)
-	 */
-	@Override
-	public boolean IntersectP(Ray ray) throws NotIntersectableException{
-		return root.IntersectP(ray, lastIntersectedObject);
-	}
 	
 	/* (non-Javadoc)
 	 * @see accelerators.AbstractAccelerator#Intersect(geometry.Ray, scene.Intersection)
@@ -58,20 +50,12 @@ public class Octree implements AbstractAccelerator {
 	@Override
 	public boolean Intersect(Ray ray, Intersection inter) throws NotIntersectableException{
 		
-		lastIntersectedObject.clear();
+		ArrayList<SceneObject> lastIntersectedObject = new ArrayList<SceneObject>();
 		boolean intersected = false;
 		root.IntersectP(ray, lastIntersectedObject);
 		
 		if(!lastIntersectedObject.isEmpty()) {
-        
-	        SceneObject nearest = null;
-	        for(SceneObject obj : lastIntersectedObject){
-	        	if (obj.IntersectP(ray)){ nearest = obj; }
-	        }
-	        
-	        if(nearest != null) {
-	        	intersected = nearest.Intersect(ray, inter);
-	        } 
+	        intersected = lastIntersectedObject.get(0).Intersect(ray, inter);
 		}
 		
 		return intersected;

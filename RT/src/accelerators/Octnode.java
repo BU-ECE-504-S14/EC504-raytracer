@@ -40,7 +40,7 @@ public class Octnode {
 		Pt[] corners = bbox.getCorners();
 		boolean maxDepthReached = (depth == maxdepth - 1);
 		
-		//if depth is less than max depth initialize to ocnode, if on last level initialize to ocleaf
+		//if depth is less than max depth initialize to octnode, if on last level initialize to ocleaf
 		if(!maxDepthReached) {children = new Octnode[8];}
 		else if(maxDepthReached) {children = new Octleaf[8];}
 		else {throw new SplitBeyondMaxDepthException();}
@@ -56,7 +56,7 @@ public class Octnode {
 	public void insert(SceneObject scnobj, BBox objbb) throws SplitBeyondMaxDepthException{
 		
 		if(occupied == false){
-			occupied = true; //I have something in me!
+			occupied = true;
 			split();
 		}
 
@@ -99,9 +99,7 @@ public class Octnode {
 		}
 		
 	    if(occupied && bbox.IntersectP(ray, new float[2])){
-	    	//for(Octnode child: children){
 	    	for(int ii = 7; ii >= 0; ii--) {
-	    		//intersected = child.IntersectP(ray, lastIntersectedObject);
 	    		intersected[ii] = children[ii].IntersectP(ray, lastIntersectedObject);
 	    	}
 	    }

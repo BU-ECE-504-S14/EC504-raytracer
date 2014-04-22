@@ -7,6 +7,7 @@ import geometry.Transformation;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.vecmath.Vector3d;
 
@@ -17,10 +18,18 @@ import scene.Intersection;
  */
 public abstract class AbstractSceneObject implements SceneObject, Serializable
 {
-
+	protected final static AtomicInteger NEXT_ID = new AtomicInteger();
+	protected final Integer id;
 	private static final long serialVersionUID = 1L;
 
-
+	public AbstractSceneObject(){
+		id = NEXT_ID.getAndIncrement();
+	}
+	
+	public AbstractSceneObject(int parentId){
+		id = parentId;
+	}
+	
 	public class RefinementException extends Exception {
 		private static final long serialVersionUID = 1L;
 		
@@ -75,5 +84,8 @@ public abstract class AbstractSceneObject implements SceneObject, Serializable
 	{
 		return null;
 	}
-
+	
+	public int getID(){
+		return id.intValue();
+	}
 }

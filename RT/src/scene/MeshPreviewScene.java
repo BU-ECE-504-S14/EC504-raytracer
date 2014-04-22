@@ -9,11 +9,13 @@ import geometry.Transformation;
 import geometry.Vec;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
+import objects.AbstractSceneObject.RefinementException;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
@@ -88,9 +90,29 @@ public class MeshPreviewScene extends Scene
 
 		// objects.add(plane);
 		objects.add(parse);
-		this.buildOctree(3);
 		// objects.add(demoSphere);
-		//objects.add(demoSphere2);
+		objects.add(demoSphere2);
+		
+		//Prints out all object ids
+		/*
+		for(SceneObject tmpobj: objects){
+			if(tmpobj.isIntersectable()){
+				System.out.println(tmpobj.getID());
+			}
+			else{
+				System.out.println(tmpobj.getID());
+				ArrayList<SceneObject> soa = new ArrayList<SceneObject>();
+				try {
+					tmpobj.refine(soa);
+				} catch (RefinementException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				for(SceneObject tmptmpobj:soa)
+					System.out.println(tmptmpobj.getID());
+			}
+		}*/
+		this.buildOctree(3);
 
 	}
 }

@@ -30,7 +30,6 @@ public class Sphere extends AbstractSceneObject
 
 	public Sphere()
 	{
-		super();
 		setName("New Sphere");
 	}
 
@@ -40,6 +39,7 @@ public class Sphere extends AbstractSceneObject
 	 */
 	public Sphere(Sphere s)
 	{
+		super();
 		this.position = new Vector3d(s.position);
 		this.zmin = s.zmin;
 		this.zmax = s.zmax;
@@ -62,6 +62,7 @@ public class Sphere extends AbstractSceneObject
 	 */
 	public Sphere(float z0, float z1, float pm, Transformation t)
 	{
+		super();
 		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
 		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
 		thetaMin = (float) Math.acos(Util.clamp(zmin / radius, -1f, 1f));

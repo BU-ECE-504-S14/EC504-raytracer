@@ -21,6 +21,7 @@ public class Triangle extends AbstractSceneObject
 
 	public Triangle(TriangleMesh m, int n)
 	{
+		super(m.getID());
 		mesh = m;
 		v[0] = mesh.vertexIndex[3 * n];
 		v[1] = mesh.vertexIndex[3 * n + 1];
