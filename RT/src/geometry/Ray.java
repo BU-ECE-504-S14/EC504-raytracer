@@ -149,7 +149,7 @@ public class Ray
 
 	public static Ray reflectRay(Ray ray, Intersection i, double correction)
 	{
-		Vector3d reflection = reflectVector((Vector3d) ray.direction, i.nn);
+		Vector3d reflection = reflectVector(ray.direction, i.nn);
 		Vector3d direction = new Vector3d(reflection);
 		direction.scale(correction);
 		Pt offsetPoint = new Pt(i.p);

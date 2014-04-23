@@ -21,6 +21,7 @@ import objects.Sphere;
 import objects.TriangleMesh;
 import parser.ObjectParser;
 import raytracer.Camera;
+import util.SceneObjectException;
 
 /**
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
@@ -34,16 +35,16 @@ public class MeshPreviewScene extends Scene
 		List<TriangleMesh> meshes = null;
 		try
 		{
-			meshes = ObjectParser.findObjects("./res/box.obj");
+			meshes = ObjectParser.parseObjectsFromFile("box.obj");
 		}
-		catch (IOException e)
+		catch (SceneObjectException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
-				(float) (Math.PI / 4));
+				(float)(Math.PI / 4));
 		PointLight demoLight = new PointLight();
 		PointLight demoLight2 = new PointLight();
 		PointLight demoLight3 = new PointLight();
@@ -58,61 +59,50 @@ public class MeshPreviewScene extends Scene
 		demoLight.setRadio(1);
 		demoLight2.setRadio(1);
 		demoLight3.setRadio(1);
-		
 
-		lights.add(demoLight);
-		lights.add(demoLight2);
-		lights.add(demoLight3);
+		//lights.add(demoLight);
+		 lights.add(demoLight2);
+	//	lights.add(demoLight3);
 		Sphere demoSphere = new Sphere();
 		demoSphere.material.diffuseColor = new Vector3d(1, .3, .3);
 		Sphere demoSphere2 = new Sphere();
 		demoSphere2.material.ambientIntensity = .1;
 		demoSphere2.material.diffuseIndex = .5;
 		demoSphere2.material.specularIndex = 1;
-		
-		Vector3d scale = new Vector3d(100,100,100);
-		Vector3d position = new Vector3d(0,0,-200);
-		AxisAngle4d rotation = new AxisAngle4d(0,0,0,.5);
-		
+
+		Vector3d scale = new Vector3d(100, 100, 100);
+		Vector3d position = new Vector3d(0, 0, -200);
+		AxisAngle4d rotation = new AxisAngle4d(0, 0, 0, .5);
+
 		demoSphere2.setTransform(scale, position, rotation);
-		demoSphere2.material.reflectionIndex = 0;
-		
-		camera.setPostion(new Pt(20f,0f,20f));
-		camera.lookAt(new Pt(0,0,0), new Vec(0,1,0));
-		
+		demoSphere2.material.reflectionIndex = 1;
+
+		camera.setPostion(new Pt(10f, 0f, 10f));
+		camera.lookAt(new Pt(0, 0, 0), new Vec(0, 1, 0));
+
 		TriangleMesh parse = meshes.get(0);
 		parse.material = demoSphere2.material;
-		parse.material.reflectionIndex = 0;
+		parse.material.reflectionIndex = 1;
 		Transformation target = new Transformation(demoSphere.getTransform());
 		target.setScale(new Vector3d(3, 3, 3));
-		// target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
+		target.setRotation(new AxisAngle4d(1,1,0,Math.PI));
 		parse.updateTransform(target);
 
 		// objects.add(plane);
 		objects.add(parse);
 		// objects.add(demoSphere);
 		objects.add(demoSphere2);
-		
-		//Prints out all object ids
+		camera.lookAt(new Pt(parse.trans.getTranslation()), new Vec(0, 1, 0));
+
+		// Prints out all object ids
 		/*
-		for(SceneObject tmpobj: objects){
-			if(tmpobj.isIntersectable()){
-				System.out.println(tmpobj.getID());
-			}
-			else{
-				System.out.println(tmpobj.getID());
-				ArrayList<SceneObject> soa = new ArrayList<SceneObject>();
-				try {
-					tmpobj.refine(soa);
-				} catch (RefinementException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				for(SceneObject tmptmpobj:soa)
-					System.out.println(tmptmpobj.getID());
-			}
-		}*/
-		this.buildOctree(5);
+		 * for(SceneObject tmpobj: objects){ if(tmpobj.isIntersectable()){
+		 * System.out.println(tmpobj.getID()); } else{ System.out.println(tmpobj.getID());
+		 * ArrayList<SceneObject> soa = new ArrayList<SceneObject>(); try { tmpobj.refine(soa); }
+		 * catch (RefinementException e) { // TODO Auto-generated catch block e.printStackTrace(); }
+		 * for(SceneObject tmptmpobj:soa) System.out.println(tmptmpobj.getID()); } }
+		 */
+		this.buildOctree(3);
 
 	}
 }

@@ -5,32 +5,20 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
-import objects.Material;
 import objects.Sphere;
 import raytracer.Renderer;
 import scene.PreviewScene;
 import scene.Scene;
-import util.SceneObjectException;
 
 /**
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
@@ -51,20 +39,22 @@ public class SpherePanel extends JPanel
 
 	JPanel lowerLeftPanel;
 
-	BufferedImage preview;
+	BufferedImage preview = null;
+
+	static JFrame myFrame = null;
 
 	public static void main(String[] args)
 	{
 		Sphere demoSphere = new Sphere();
 		float radius = .5f;
 		Vector3d position = new Vector3d(0, 0, 2);
-		AxisAngle4d rotation = new AxisAngle4d(0,0,0,0);
-		demoSphere.setTransform(new Vector3d(radius,radius,radius), position, rotation);
-		
+		AxisAngle4d rotation = new AxisAngle4d(0, 0, 0, 0);
+		demoSphere.setTransform(new Vector3d(radius, radius, radius), position, rotation);
+
 		demoSphere.material.diffuseColor = new Vector3d(.8, .15, .15);
 		JFrame testFrame = new JFrame("Scene Object Information: Sphere");
-		//testFrame.setMinimumSize(new Dimension(650, 600));
-		//testFrame.setPreferredSize(new Dimension(650, 600));
+		// testFrame.setMinimumSize(new Dimension(650, 600));
+		// testFrame.setPreferredSize(new Dimension(650, 600));
 		testFrame.setResizable(true);
 		testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -72,6 +62,7 @@ public class SpherePanel extends JPanel
 		testFrame.add(testPanel);
 		testFrame.pack();
 		testFrame.setVisible(true);
+		myFrame = testFrame;
 	}
 
 	public SpherePanel(Sphere targetSphere)
@@ -87,10 +78,10 @@ public class SpherePanel extends JPanel
 
 	private void setPreviewDefaults()
 	{
-		previewRenderer.setOptionAntialiasing(1);
-		previewRenderer.setOptionShadow(1);
-		previewRenderer.setOptionWidth(300);
-		previewRenderer.setOptionHeight(300);
+		Renderer.setOptionAntialiasing(1);
+		Renderer.setOptionShadow(1);
+		Renderer.setOptionWidth(300);
+		Renderer.setOptionHeight(300);
 	}
 
 	public void updatePreviewImage()
@@ -102,7 +93,7 @@ public class SpherePanel extends JPanel
 			Scene preScene2 = Scene.readSceneFromFile("sceneTest.scn");
 			try
 			{
-				preview = previewRenderer.renderScene(preScene2);
+				preview = Renderer.renderScene(preScene2);
 			}
 			catch (Exception e)
 			{
@@ -115,8 +106,7 @@ public class SpherePanel extends JPanel
 			e.printStackTrace();
 		}
 
-		previewPanel.updatePreview(preview);
-		previewPanel.repaint();
+		previewPanel.setImage(preview);
 
 	}
 
@@ -124,6 +114,7 @@ public class SpherePanel extends JPanel
 	{
 		ActionListener up = new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				updateSphere();
@@ -133,7 +124,7 @@ public class SpherePanel extends JPanel
 		infoPanel = new SphereInfoPanel(mySphere);
 		infoPanel.mySpherePanel = this;
 		infoPanel.addFieldListeners(up);
-		//infoPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, 150));
+		// infoPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, 150));
 		matPanel = new MaterialPanel(mySphere.material);
 		matPanel.addFieldListeners(up);
 
@@ -141,8 +132,8 @@ public class SpherePanel extends JPanel
 		leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 		leftPanel.add(infoPanel);
-		
-		previewPanel = new PreviewPanel();
+
+		previewPanel = new PreviewPanel(preview);
 		updatePreviewImage();
 		lowerLeftPanel = new JPanel();
 		lowerLeftPanel.setLayout(new BorderLayout());
@@ -158,6 +149,10 @@ public class SpherePanel extends JPanel
 		infoPanel.updateSphereInfo();
 		matPanel.updateMaterialInfo();
 		updatePreviewImage();
+		if (myFrame != null)
+		{
+			myFrame.pack();
+		}
 
 		System.out.println(mySphere.toString());
 	}

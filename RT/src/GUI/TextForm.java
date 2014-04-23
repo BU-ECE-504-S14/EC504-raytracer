@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 /**
  * A generic TextForm generator, used
@@ -45,7 +46,7 @@ public class TextForm extends JPanel
 			if (i < widths.length)
 				fields[i].setColumns(widths[i]);
 
-			JLabel lab = new JLabel(labels[i], JLabel.RIGHT);
+			JLabel lab = new JLabel(labels[i], SwingConstants.RIGHT);
 			lab.setLabelFor(fields[i]);
 			if (i < mnemonics.length)
 				lab.setDisplayedMnemonic(mnemonics[i]);
@@ -77,6 +78,7 @@ public class TextForm extends JPanel
 		JButton submit = new JButton("Submit Form");
 
 		submit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				System.out.println(form.getText(0) + " " + form.getText(1) + ". " + form.getText(2)

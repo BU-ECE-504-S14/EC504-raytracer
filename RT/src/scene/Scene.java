@@ -12,10 +12,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+
+import java.util.List;
+
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
 import accelerators.AbstractAccelerator;
+import accelerators.Octnode;
 import accelerators.Octnode.SplitBeyondMaxDepthException;
 import accelerators.Octree;
 import objects.AbstractSceneObject.RefinementException;
@@ -25,8 +29,8 @@ import objects.TriangleMesh;
 import raytracer.Camera;
 
 /**
- * A representation of a scene, which contains various objects which can be intersected
- * and illuminated by rays.
+ * A representation of a scene, which contains various objects which can be intersected and
+ * illuminated by rays.
  * 
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
@@ -39,15 +43,16 @@ public class Scene implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	protected ArrayList<SceneObject> objects;
-	protected Collection<Light> lights = new HashSet<Light>(); //TODO possibly need to change data type 
+	protected Collection<Light> lights = new HashSet<Light>(); // TODO possibly need to change data
+																// type
 	protected Camera camera;
-	protected boolean accelFlag; //true when the accelerator is updated and usable
+	protected boolean accelFlag; // true when the accelerator is updated and usable
 	protected AbstractAccelerator accelerator;
 
 	public Scene()
 	{
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
-				(float) (Math.PI / 4));
+				(float)(Math.PI / 4));
 		objects = new ArrayList<SceneObject>();
 		lights = new HashSet<Light>();
 	}
@@ -60,11 +65,11 @@ public class Scene implements Serializable
 		{
 			if (so instanceof TriangleMesh)
 			{
-				objects.add(((TriangleMesh) so).getCopy());
+				objects.add(((TriangleMesh)so).getCopy());
 			}
 			else if (so instanceof Sphere)
 			{
-				objects.add(((Sphere) so).getCopy());
+				objects.add(((Sphere)so).getCopy());
 			}
 		}
 		lights = new HashSet<Light>();
@@ -72,11 +77,11 @@ public class Scene implements Serializable
 		{
 			if (l instanceof PointLight)
 			{
-				lights.add(((PointLight) l).getCopy());
+				lights.add(((PointLight)l).getCopy());
 			}
 			else if (l instanceof SphereLight)
 			{
-				lights.add(((SphereLight) l).getCopy());
+				lights.add(((SphereLight)l).getCopy());
 			}
 		}
 	}
@@ -105,7 +110,7 @@ public class Scene implements Serializable
 		{
 			FileInputStream fIn = new FileInputStream(filePath);
 			ObjectInputStream in = new ObjectInputStream(fIn);
-			s = (Scene) in.readObject();
+			s = (Scene)in.readObject();
 			in.close();
 			fIn.close();
 		}
@@ -165,8 +170,8 @@ public class Scene implements Serializable
 	}
 
 	/**
-	 * looks for the first object that a ray intersects, and the point at which the ray
-	 * intersects that object. If no intersection return null.
+	 * looks for the first object that a ray intersects, and the point at which the ray intersects
+	 * that object. If no intersection return null.
 	 * 
 	 * @param ray
 	 *            , ray that you want to analyze.
@@ -179,16 +184,34 @@ public class Scene implements Serializable
 		return getFirstIntersectedObject(ray, inter, objects);
 	}
 
+	public ArrayList<Octnode> getFirstOctnodes(Ray ray)
+	{
+		ArrayList<Octnode> octnodes = new ArrayList<Octnode>();
+		if (accelFlag == false)
+		{
+			return null;
+		}
+
+		if (accelerator != null && accelerator instanceof Octree)
+		{
+			octnodes = ((Octree)accelerator).getFirstOctnodes(ray);
+			
+		}
+		return octnodes;
+
+	}
+
 	/* ask aaron about this coding practice. Is this overloading. */
-	public boolean getFirstIntersectedObject(Ray ray, 
-				Intersection inter, Collection<SceneObject> objs) throws Exception
+	public boolean getFirstIntersectedObject(Ray ray,
+			Intersection inter, Collection<SceneObject> objs) throws Exception
 	{
 		boolean intersectedFlag = false;
-		
-		if(accelFlag == false){ //accelerator is not ready
+
+		if (accelFlag == false)
+		{ // accelerator is not ready
 			SceneObject nearest = null;
 			ArrayList<SceneObject> refinedObject = new ArrayList<SceneObject>();
-	       
+
 			for (SceneObject o : objs)
 			{
 				if (o.isIntersectable())
@@ -207,13 +230,16 @@ public class Scene implements Serializable
 					}
 				}
 			}
-			if (nearest != null){
+			if (nearest != null)
+			{
 				intersectedFlag = nearest.Intersect(ray, inter);
 			}
-		} else{
-			
+		}
+		else
+		{
+
 			intersectedFlag = accelerator.Intersect(ray, inter);
-			
+
 		}
 		return intersectedFlag;
 	}
@@ -233,15 +259,21 @@ public class Scene implements Serializable
 		}
 		System.out.println(camera.toString());
 	}
-	
-	public void buildOctree(int maxdepth){
-		try {
+
+	public void buildOctree(int maxdepth)
+	{
+		try
+		{
 			accelerator = new Octree(this, maxdepth);
-			accelFlag = true; 
-		} catch (RefinementException e) {
-			System.out.println("Octree build failed: Refinement Error"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			accelFlag = true;
+		}
+		catch (RefinementException e)
+		{
+			System.out.println("Octree build failed: Refinement Error"); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			e.printStackTrace();
-		} catch (SplitBeyondMaxDepthException e) {
+		}
+		catch (SplitBeyondMaxDepthException e)
+		{
 			System.out.println("Octree build failed: Split beyond maximum depth");
 			e.printStackTrace();
 		}

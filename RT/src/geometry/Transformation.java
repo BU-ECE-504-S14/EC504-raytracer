@@ -32,6 +32,12 @@ public class Transformation implements Serializable
 
 	public Matrix4d w2o;
 
+	public Transformation()
+	{
+		o2w = getTransformationMatrix();
+		w2o = getInverseTransformationMatrix();
+	}
+
 	/**
 	 * 
 	 * @param scale
@@ -178,14 +184,14 @@ public class Transformation implements Serializable
 
 	}
 
+	@Override
 	public String toString()
 	{
 		return "Position: " + translation + ", rotation: " + rotation + ", scale: " + scale;
 	}
 
 	/**
-	 * Implements object space to world space normal transformation based on page 88 Pharr
-	 * book.
+	 * Implements object space to world space normal transformation based on page 88 Pharr book.
 	 * 
 	 * @param n
 	 *            normal vector to be transformed
@@ -193,16 +199,15 @@ public class Transformation implements Serializable
 	 */
 	public Normal object2World(Normal n)
 	{
-		float x = (float) n.x;
-		float y = (float) n.y;
-		float z = (float) n.z;
+		float x = (float)n.x;
+		float y = (float)n.y;
+		float z = (float)n.z;
 		return new Normal(w2o.m00 * x + w2o.m10 * y + w2o.m20 * z, w2o.m01 * x + w2o.m11 * y
 				+ w2o.m21 * z, w2o.m02 * x + w2o.m12 * y + w2o.m22 * z);
 	}
 
 	/**
-	 * Implements world space to object space normal transformation based on page 88 Pharr
-	 * book.
+	 * Implements world space to object space normal transformation based on page 88 Pharr book.
 	 * 
 	 * @param n
 	 *            normal vector to be transformed
@@ -210,9 +215,9 @@ public class Transformation implements Serializable
 	 */
 	public Normal world2Object(Normal n)
 	{
-		float x = (float) n.x;
-		float y = (float) n.y;
-		float z = (float) n.z;
+		float x = (float)n.x;
+		float y = (float)n.y;
+		float z = (float)n.z;
 		return new Normal(o2w.m00 * x + o2w.m10 * y + o2w.m20 * z, o2w.m01 * x + o2w.m11 * y
 				+ o2w.m21 * z, o2w.m02 * x + o2w.m12 * y + o2w.m22 * z);
 	}
@@ -220,55 +225,56 @@ public class Transformation implements Serializable
 	/**
 	 * creates bounding box in world space based on the bounding box b stored in object space.
 	 * 
-	 * @param b BBox in object space. 
+	 * @param b
+	 *            BBox in object space.
 	 * @return world BBox based on b.
 	 */
-	public BBox object2World(BBox b) {
-	       
-		Pt[] P = b.getCorners(); 
-		
-		BBox wBox = new BBox( this.object2World( P[0] ) );
-		wBox = BBox.union(wBox, this.object2World( P[4] ) );
-		wBox = BBox.union(wBox, this.object2World( P[2] ) );
-		wBox = BBox.union(wBox, this.object2World( P[1] ) );
-		wBox = BBox.union(wBox, this.object2World( P[6] ) );
-		wBox = BBox.union(wBox, this.object2World( P[5] ) );
-		wBox = BBox.union(wBox, this.object2World( P[3] ) );
-		wBox = BBox.union(wBox, this.object2World( P[7] ) );
-		
+	public BBox object2World(BBox b)
+	{
+
+		Pt[] P = b.getCorners();
+
+		BBox wBox = new BBox(this.object2World(P[0]));
+		wBox = BBox.union(wBox, this.object2World(P[4]));
+		wBox = BBox.union(wBox, this.object2World(P[2]));
+		wBox = BBox.union(wBox, this.object2World(P[1]));
+		wBox = BBox.union(wBox, this.object2World(P[6]));
+		wBox = BBox.union(wBox, this.object2World(P[5]));
+		wBox = BBox.union(wBox, this.object2World(P[3]));
+		wBox = BBox.union(wBox, this.object2World(P[7]));
+
 		return wBox;
 	}
-	
-	
+
 	/**
 	 * creates bounding box in object space based on the bounding box b stored in world space.
 	 * 
-	 * @param b BBox in world space. 
+	 * @param b
+	 *            BBox in world space.
 	 * @return object BBox based on b.
 	 */
-	public BBox world2Object(BBox b) {
-	       
-	    Pt P000 = new Pt( b.getpMin().x, b.getpMin().y, b.getpMin().z );
-	    Pt P100 = new Pt( b.getpMax().x, b.getpMin().y, b.getpMin().z );
-	    Pt P010 = new Pt( b.getpMin().x, b.getpMax().y, b.getpMin().z );
-	    Pt P001 = new Pt( b.getpMin().x, b.getpMin().y, b.getpMax().z );
-	    Pt P110 = new Pt( b.getpMax().x, b.getpMax().y, b.getpMin().z );
-	    Pt P101 = new Pt( b.getpMax().x, b.getpMin().y, b.getpMax().z );
-	    Pt P011 = new Pt( b.getpMin().x, b.getpMax().y, b.getpMax().z );
-	    Pt P111 = new Pt( b.getpMax().x, b.getpMax().y, b.getpMax().z );
-		
-		BBox wBox = new BBox( this.world2Object( P000 ) );
-		wBox = BBox.union(wBox, this.world2Object( P100 ) );
-		wBox = BBox.union(wBox, this.world2Object( P010 ) );
-		wBox = BBox.union(wBox, this.world2Object( P001 ) );
-		wBox = BBox.union(wBox, this.world2Object( P110 ) );
-		wBox = BBox.union(wBox, this.world2Object( P101 ) );
-		wBox = BBox.union(wBox, this.world2Object( P011 ) );
-		wBox = BBox.union(wBox, this.world2Object( P111 ) );
-		
+	public BBox world2Object(BBox b)
+	{
+
+		Pt P000 = new Pt(b.getpMin().x, b.getpMin().y, b.getpMin().z);
+		Pt P100 = new Pt(b.getpMax().x, b.getpMin().y, b.getpMin().z);
+		Pt P010 = new Pt(b.getpMin().x, b.getpMax().y, b.getpMin().z);
+		Pt P001 = new Pt(b.getpMin().x, b.getpMin().y, b.getpMax().z);
+		Pt P110 = new Pt(b.getpMax().x, b.getpMax().y, b.getpMin().z);
+		Pt P101 = new Pt(b.getpMax().x, b.getpMin().y, b.getpMax().z);
+		Pt P011 = new Pt(b.getpMin().x, b.getpMax().y, b.getpMax().z);
+		Pt P111 = new Pt(b.getpMax().x, b.getpMax().y, b.getpMax().z);
+
+		BBox wBox = new BBox(this.world2Object(P000));
+		wBox = BBox.union(wBox, this.world2Object(P100));
+		wBox = BBox.union(wBox, this.world2Object(P010));
+		wBox = BBox.union(wBox, this.world2Object(P001));
+		wBox = BBox.union(wBox, this.world2Object(P110));
+		wBox = BBox.union(wBox, this.world2Object(P101));
+		wBox = BBox.union(wBox, this.world2Object(P011));
+		wBox = BBox.union(wBox, this.world2Object(P111));
+
 		return wBox;
 	}
-	
-	
-	
+
 }

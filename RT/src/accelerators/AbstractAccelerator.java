@@ -9,8 +9,7 @@ public interface AbstractAccelerator {
 
 
 	/**
-	 * Populates the Intersection for the intersected object. If not called after IntersectP, 
-	 * it will first call IntersectP to find the object.
+	 * Populates the Intersection for the intersected object.
 	 * 
 	 * @param ray Intersection test ray
 	 * @param inter Intersection to be filled with object intersection information

@@ -1,6 +1,5 @@
 package raytracer;
 
-import geometry.Normal;
 import geometry.Pt;
 import geometry.Ray;
 import geometry.Vec;
@@ -9,22 +8,30 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
+import accelerators.Octnode;
+import accelerators.Octree;
 import objects.Material;
 import objects.SceneObject;
-import objects.Sphere;
 import scene.Intersection;
 import scene.Light;
 import scene.Scene;
 
 /**
- * Simple ray tracer, for EC504 at Boston University based on the work of Rafael Martin
- * Bigio <rbigio@itba.edu.ar.
+ * Simple ray tracer, for EC504 at Boston University based on the work of Rafael Martin Bigio
+ * <rbigio@itba.edu.ar.
  * 
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
@@ -32,7 +39,7 @@ public class SimpleRayTracer
 {
 	private static int rayCount;
 	private static BufferedImage outputImage;
-	private static final int THREADS = 8;
+	private static final int THREADS = 1;
 	private static final int NOT_SHINY = -1;
 	private static final int NOT_REFLECTIVE = -1;
 	private static final int NOT_REFRACTIVE = -1;
@@ -40,16 +47,16 @@ public class SimpleRayTracer
 
 	// private static final int MAX_LEVELS = 3;
 
-	private static final int MAX_REFRACTIONS = 2;
+	private static final int MAX_REFRACTIONS = 3;
 
-	private static final int MAX_REFLECTIONS = 2;
+	private static final int MAX_REFLECTIONS = 3;
 
 	/** Margin of error when comparing doubles */
 	private static final double FLOAT_CORRECTION = 0.001;
 
 	private static int threadsFinished = 0;
 
-	private static Scene scene;
+	private static volatile Scene scene;
 	/** Desired scene to render */
 	private static Dimension imageSize;
 	/** Size of the image to generate */
@@ -62,8 +69,8 @@ public class SimpleRayTracer
 	public static int currentRay;
 
 	/**
-	 * Create the new ray tracer with the given parameters. The camera is set up to the
-	 * size of the image to generate so that we can construct the rays.
+	 * Create the new ray tracer with the given parameters. The camera is set up to the size of the
+	 * image to generate so that we can construct the rays.
 	 * 
 	 * @param scene
 	 *            Scene to render
@@ -79,10 +86,10 @@ public class SimpleRayTracer
 	public SimpleRayTracer(Scene scene, Dimension imageSize, int antialiasing, int shadow)
 	{
 		super();
-		this.scene = scene;
-		this.antialiasing = antialiasing;
-		this.shadow = shadow;
-		this.imageSize = imageSize;
+		SimpleRayTracer.scene = scene;
+		SimpleRayTracer.antialiasing = antialiasing;
+		SimpleRayTracer.shadow = shadow;
+		SimpleRayTracer.imageSize = imageSize;
 		counter = 0;
 	}
 
@@ -97,7 +104,6 @@ public class SimpleRayTracer
 	{
 		double startTime = System.currentTimeMillis();
 		totalRays = imageSize.height * imageSize.width;
-		currentRay = 1;
 
 		BufferedImage image = new BufferedImage(imageSize.width, imageSize.height,
 				BufferedImage.TYPE_INT_RGB);
@@ -107,7 +113,6 @@ public class SimpleRayTracer
 		{
 			for (int j = 0; j < imageSize.width; j++)
 			{
-				currentRay++;
 				if (showProgress
 						&& (i * imageSize.width + j) % (imageSize.width * imageSize.height / 80) == 0)
 					System.out.print('*');
@@ -116,11 +121,10 @@ public class SimpleRayTracer
 				if (antialiasing <= 1)
 				{
 					Ray ray = constructRayThroughPixel(i, j);/*
-															 * create this ray through
-															 * pixel (i,j)
+															 * create this ray through pixel (i,j)
 															 */
 					/* do ray trace */
-					color.set(getColor(ray, 0, 0, null));
+					color.set(getColor(ray, 0, 0, null, scene));
 				}
 				else
 				{
@@ -128,7 +132,7 @@ public class SimpleRayTracer
 					Vector3d newColor = new Vector3d(0, 0, 0);
 					for (int ii = 0; ii < rays.size(); ii++)
 					{
-						newColor.add(getColor(rays.get(ii), 0, 0, null));
+						newColor.add(getColor(rays.get(ii), 0, 0, null, scene));
 					}
 					newColor.scale(1.0 / rays.size());
 					color.set(newColor);
@@ -136,7 +140,7 @@ public class SimpleRayTracer
 
 				/* set color into image at screen position (i,j) */
 				image.setRGB(j, i,
-						new Color((float) color.x, (float) color.y, (float) color.z).getRGB());
+						new Color((float)color.x, (float)color.y, (float)color.z).getRGB());
 
 			}
 		}
@@ -154,50 +158,105 @@ public class SimpleRayTracer
 	 */
 	public BufferedImage renderThreads(boolean showProgress) throws Exception
 	{
+		double start = System.currentTimeMillis();
 		rayCount = 0;
 		double startTime = System.currentTimeMillis();
 		totalRays = imageSize.height * imageSize.width;
 		currentRay = 0;
+		threadsFinished = 0;
+
+		final int NUM_THREADS = Runtime.getRuntime().availableProcessors() + 1;
+		// final int NUM_THREADS = 1;
+		final ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
+		Set<Future<ColorPoint>> futureSet = new HashSet<Future<ColorPoint>>();
+		Set<ColorPixel> queue = new HashSet<ColorPixel>();
 
 		outputImage = new BufferedImage(imageSize.width, imageSize.height,
 				BufferedImage.TYPE_INT_RGB);
-		int threadWidth = (imageSize.width / THREADS) + 1;
 
-		for (int i = 0; i < THREADS; i++)
+		double raysPerPixel = Math.pow(antialiasing, 2);
+
+		// Make all of the ColorPixel callables
+
+		for (int i = 0; i < imageSize.width; i++)
 		{
-			int endWidth = (i + 1) * threadWidth;
-			if (endWidth > imageSize.width)
+			for (int j = 0; j < imageSize.height; j++)
 			{
-				endWidth = imageSize.width;
-			}
-			final int threadIStart = i * threadWidth;
-			final int threadIStop = endWidth;
-			final int threadJStart = 0;
-			final int threadJStop = imageSize.height;
-
-			new Thread(new Runnable() {
-				public void run()
+				if (antialiasing > 1)
 				{
-					try
+					List<Ray> rays = constructRaysThroughPixel(i, j);
+					for (Ray r : rays)
 					{
-						renderPartial(true, threadIStart, threadIStop, threadJStart, threadJStop);
-					}
-					catch (Exception e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						queue.add(new ColorPixel(i, j, r, raysPerPixel));
+
+						/*
+						 * List<Octnode> nodes = scene.getFirstOctnodes(r); if (nodes != null) { for
+						 * (Octnode n : nodes) { queue.add(new ColorPixel(i, j, r, n,
+						 * raysPerPixel)); } }
+						 */
+
 					}
 				}
-			}).start();
-			// renderPartial(true, i * threadWidth, endWidth, 0, imageSize.height, image);
+
+				else
+				{
+					Ray r = constructRayThroughPixel(i, j);
+					queue.add(new ColorPixel(i, j, r));
+
+					/*
+					 * List<Octnode> nodes = scene.getFirstOctnodes(r); if (nodes != null) { for
+					 * (Octnode n : nodes) { queue.add(new ColorPixel(i, j, r, n)); } }
+					 */
+
+				}
+			}
 		}
 
-		while (threadsFinished < THREADS)
+		for (ColorPixel cp : queue)
 		{
-			Thread.sleep(1000);
-			System.out.println("threadsFinished: " + threadsFinished);
-			System.out.println("Raycount: " + rayCount + " of " + totalRays);
+			Future<ColorPoint> future = executor.submit(cp);
+			futureSet.add(future);
 		}
+
+		Vector3d[][] colors = new Vector3d[imageSize.width][imageSize.height ];
+
+		for (Future<ColorPoint> future : futureSet)
+		{
+			ColorPoint c = future.get();
+			Vector3d newColor = colors[c.x][c.y];
+			if (newColor == null)
+			{
+				colors[c.x][c.y] = (Vector3d)c;
+			}
+			else
+			{
+				newColor.add(c);
+				newColor.clamp(0.0, 1.0);
+			}
+		}
+
+		for (int xx = 0; xx < colors.length; xx++)
+		{
+			for (int yy = 0; yy < colors[0].length; yy++)
+			{
+				Vector3d c = colors[xx][yy];
+				if (c == null)
+				{
+					outputImage.setRGB(xx, yy, new Color(0, 0, 0).getRGB());
+				}
+				else
+				{
+					outputImage.setRGB(xx, yy, new Color((float)c.getX(), (float)c.getY(),
+							(float)c.getZ()).getRGB());
+				}
+			}
+		}
+
+		// executor.awaitTermination(100000, TimeUnit.SECONDS);
+		double end = System.currentTimeMillis();
+		System.out.println(start - end + "milliseconds");
+		System.gc();
+
 		System.out.println("Total time: " + (System.currentTimeMillis() - startTime));
 		return outputImage;
 	}
@@ -209,7 +268,7 @@ public class SimpleRayTracer
 	 *            Flag indicating whether or not to show progress on the screen
 	 * @return The generated image
 	 */
-	public static void renderPartial(boolean showProgress, int i, int iStop, int j, int jStop)
+	public static void renderPartial(boolean showProgress, int i, int iStop, int j, int jStop, Scene s)
 			throws Exception
 	{
 
@@ -224,11 +283,11 @@ public class SimpleRayTracer
 				if (antialiasing <= 1)
 				{
 					Ray ray = constructRayThroughPixel(ii, jj);/*
-																 * create this ray through
-																 * pixel (i,j)
+																 * create this ray through pixel
+																 * (i,j)
 																 */
 					/* do ray trace */
-					color.set(getColor(ray, 0, 0, null));
+					color.set(getColor(ray, 0, 0, null, s));
 				}
 				else
 				{
@@ -236,15 +295,15 @@ public class SimpleRayTracer
 					Vector3d newColor = new Vector3d(0, 0, 0);
 					for (int kk = 0; kk < rays.size(); kk++)
 					{
-						newColor.add(getColor(rays.get(kk), 0, 0, null));
+						newColor.add(getColor(rays.get(kk), 0, 0, null, s));
 					}
 					newColor.scale(1.0 / rays.size());
 					color.set(newColor);
 				}
 
 				/* set color into image at screen position (i,j) */
-				outputImage.setRGB(jj, ii, new Color((float) color.x, (float) color.y,
-						(float) color.z).getRGB());
+				outputImage.setRGB(jj, ii, new Color((float)color.x, (float)color.y,
+						(float)color.z).getRGB());
 				rayCount++;
 			}
 		}
@@ -252,8 +311,8 @@ public class SimpleRayTracer
 	}
 
 	/**
-	 * Calculates the diffuse component of the Phong shading model for the given
-	 * intersection, light, and eye position.
+	 * Calculates the diffuse component of the Phong shading model for the given intersection,
+	 * light, and eye position.
 	 */
 	private static Vector3d getDiffuseComponent(Intersection inter, Light light)
 	{
@@ -291,8 +350,8 @@ public class SimpleRayTracer
 	}
 
 	/**
-	 * Calculates the ambient component of the Phong shading model for the given
-	 * intersection, light, and eye position.
+	 * Calculates the ambient component of the Phong shading model for the given intersection,
+	 * light, and eye position.
 	 * 
 	 * @param inter
 	 *            is an Intersection describing the point where the ray hit an object.
@@ -309,8 +368,8 @@ public class SimpleRayTracer
 	}
 
 	/**
-	 * Calculates the specular component of the Phong shading model for the given
-	 * intersection, light, and eye position.
+	 * Calculates the specular component of the Phong shading model for the given intersection,
+	 * light, and eye position.
 	 */
 	private static Vector3d getSpecularComponent(Intersection inter, Light light, Vector3d eye)
 	{
@@ -358,8 +417,7 @@ public class SimpleRayTracer
 	}
 
 	/**
-	 * Calculates the color for the given intersection and light based on the Phong
-	 * shading model.
+	 * Calculates the color for the given intersection and light based on the Phong shading model.
 	 * 
 	 * @throws Exception
 	 */
@@ -411,17 +469,15 @@ public class SimpleRayTracer
 	}
 
 	/**
-	 * Simple RayTracer. Calculates the color from intersected point of ray to lights in
-	 * scene.
+	 * Simple RayTracer. Calculates the color from intersected point of ray to lights in scene.
 	 * 
 	 * @param ray
 	 *            Ray being shot
 	 * @param currentReflection
-	 *            , int currentRefraction Current level of recursion (0 at invocation)
-	 *            (not used yet)
+	 *            , int currentRefraction Current level of recursion (0 at invocation) (not used
+	 *            yet)
 	 * @param viewerPosition
-	 *            Position of the observer. In the first invocation, it is the origin (not
-	 *            used yet)
+	 *            Position of the observer. In the first invocation, it is the origin (not used yet)
 	 * @param color
 	 *            Output parameter with the color found in the pixel
 	 * @param currentRefraction
@@ -430,13 +486,13 @@ public class SimpleRayTracer
 	 * @throws Exception
 	 */
 	private static Vector3d getColor(Ray ray, int currentReflection, int currentRefraction,
-			SceneObject lastObject) throws Exception
+			SceneObject lastObject, Octnode node) throws Exception
 	{
 
 		Vector3d color = new Vector3d(0, 0, 0);
 		Intersection inter = new Intersection();
 
-		if (!scene.getFirstIntersectedObject(ray, inter))
+		if (!Octree.Intersect(ray, inter, node))
 		{
 			return color;
 
@@ -449,27 +505,6 @@ public class SimpleRayTracer
 		{
 			color.add(getPhongColor(ray, inter, light));
 		}
-		// Reflect and refract!!
-		// if( material.reflectionIndex > 0 || material.refractionIndex > 0)
-		// getReflectiveRefractiveLighting(ray, intersectedObject, intersection,
-		// illumination, currentLevel, currentRefraction);
-
-		// illumination.add(ReflectRefract);
-		/* Reflection */
-
-		// if (inter.shape.getMaterial().reflectionIndex > 0)
-		// computeReflection(ray, intersectedObject, intersection, illumination,
-		// currentLevel,
-		// currentRefraction);
-
-		/* Refraction */
-
-		// if (inter.shape.getMaterial().transparency > 0)
-		// computeRefraction(ray, intersectedObject, intersection, illumination,
-		// currentLevel,
-		// currentRefraction);
-
-		// ******** Restrict the color of this pixel to the range [0,1]
 
 		Material mat = inter.shape.getMaterial();
 		double reflectionIndex = mat.reflectionIndex;
@@ -479,8 +514,126 @@ public class SimpleRayTracer
 		SceneObject nextObject;
 
 		/**
-		 * If the reflectivity of the object is greater than 0, generate a reflection ray
-		 * and get the color of the object it hits, recursively.
+		 * If the reflectivity of the object is greater than 0, generate a reflection ray and get
+		 * the color of the object it hits, recursively.
+		 */
+		if (lastObject != null && lastObject.equals(inter.shape))
+		{
+			// don't reflect, you're inside yourself!
+		}
+		else
+		{
+			{
+				if (currentReflection < MAX_REFLECTIONS)
+				{
+					if (reflectionIndex > 0)
+					{
+						Ray reflection = Ray.reflectRay(ray, inter, FLOAT_CORRECTION);
+
+						ArrayList<Octnode> reflectNodes = scene.getFirstOctnodes(reflection);
+						Vector3d reflectColor = new Vector3d(0, 0, 0);
+
+						for (Octnode n : reflectNodes)
+						{
+							reflectColor = getColor(reflection, currentReflection + 1,
+									currentRefraction, inter.shape, n);
+
+						}
+						reflectColor.scale(reflectionIndex);
+						reflectColor.clamp(0.0, 1.0);
+						color.add(reflectColor);
+
+					}
+				}
+			}
+		}
+
+		if (alpha < 1)
+		{
+			if (currentRefraction < MAX_REFRACTIONS)
+			{
+				Ray refraction;
+				if (refractionIndex == -1 || (lastObject != null && lastObject.getMaterial().refractionIndex == -1))
+				{
+					refraction = new Ray(Pt.fixPointIn(inter, FLOAT_CORRECTION), ray.direction);
+				}
+				else
+				{
+					double lastRefIndex = 1.0;
+					if (lastObject != null)
+					{
+						lastRefIndex = lastObject.getMaterial().refractionIndex;
+					}
+					refraction = Ray.refractRay(ray, inter, lastRefIndex, FLOAT_CORRECTION);
+				}
+				ArrayList<Octnode> refractNodes = scene.getFirstOctnodes(refraction);
+				Vector3d refractColor = new Vector3d(0, 0, 0);
+				nextObject = inter.shape;
+				for (Octnode n : refractNodes)
+				{
+					refractColor = getColor(refraction, currentReflection,
+							currentRefraction + 1, nextObject, n);
+				}
+
+				refractColor.scale(1 - alpha);
+				refractColor.clamp(0.0, 1.0);
+				color.add(refractColor);
+			}
+		}
+
+		color.clamp(0.0, 1.0);
+
+		return color;
+	}
+
+	/**
+	 * Simple RayTracer. Calculates the color from intersected point of ray to lights in scene.
+	 * 
+	 * @param ray
+	 *            Ray being shot
+	 * @param currentReflection
+	 *            , int currentRefraction Current level of recursion (0 at invocation) (not used
+	 *            yet)
+	 * @param viewerPosition
+	 *            Position of the observer. In the first invocation, it is the origin (not used yet)
+	 * @param color
+	 *            Output parameter with the color found in the pixel
+	 * @param currentRefraction
+	 *            Refractive index of the current environment (not used yet)
+	 * @return The first intersected object (may be null)
+	 * @throws Exception
+	 */
+	private static Vector3d getColor(Ray ray, int currentReflection, int currentRefraction,
+			SceneObject lastObject, Scene s) throws Exception
+	{
+
+		Vector3d color = new Vector3d(0, 0, 0);
+		Intersection inter = new Intersection();
+
+		if (!s.getFirstIntersectedObject(ray, inter))
+		{
+			return color;
+
+		}
+
+		// ******** Cycle through all of the lights, adding the sum of the diffuse,
+		// ambient, and
+		// ******** specular components to the color at this pixel
+		for (Light light : s.getLights())
+		{
+			color.add(getPhongColor(ray, inter, light));
+		}
+
+		Material mat = inter.shape.getMaterial();
+		double reflectionIndex = mat.reflectionIndex;
+		double refractionIndex = mat.refractionIndex;
+		double alpha = mat.alpha;
+
+		SceneObject nextObject;
+
+		/**
+		 * If the reflectivity of the object is greater than 0, generate a reflection ray and get
+		 * the color of the object it hits, recursively.
 		 */
 		if (lastObject != null && lastObject.equals(inter.shape))
 		{
@@ -495,7 +648,7 @@ public class SimpleRayTracer
 					{
 						Ray reflection = Ray.reflectRay(ray, inter, FLOAT_CORRECTION);
 						Vector3d refColor = getColor(reflection, currentReflection + 1,
-								currentRefraction, lastObject);
+								currentRefraction, inter.shape, s);
 						refColor.scale(reflectionIndex);
 						refColor.clamp(0.0, 1.0);
 						color.add(refColor);
@@ -524,8 +677,8 @@ public class SimpleRayTracer
 				}
 				nextObject = inter.shape;
 				Vector3d refractColor = getColor(refraction, currentReflection,
-						currentRefraction + 1, nextObject);
-				// refractColor.scale(1 - alpha);
+						currentRefraction + 1, nextObject, s);
+				refractColor.scale(1 - alpha);
 				refractColor.clamp(0.0, 1.0);
 				color.add(refractColor);
 			}
@@ -537,8 +690,8 @@ public class SimpleRayTracer
 	}
 
 	/**
-	 * Check to see if the provided shadow Ray intersects an object in the scene before
-	 * reaching the light.
+	 * Check to see if the provided shadow Ray intersects an object in the scene before reaching the
+	 * light.
 	 * 
 	 * @param shadowRay
 	 * @param lightDist
@@ -569,8 +722,7 @@ public class SimpleRayTracer
 	}
 
 	/**
-	 * Calculates the specular color based on one light. NEED TO ADJUST FOR OTHER SCENE
-	 * OBJECTS.
+	 * Calculates the specular color based on one light. NEED TO ADJUST FOR OTHER SCENE OBJECTS.
 	 * 
 	 * @param SceneObject
 	 *            o
@@ -613,8 +765,7 @@ public class SimpleRayTracer
 
 	/**
 	 * 
-	 * Construct a ray that exits that camera and passes through the pixel (i,j) of the
-	 * image plane.
+	 * Construct a ray that exits that camera and passes through the pixel (i,j) of the image plane.
 	 * 
 	 * 
 	 * @param i
@@ -626,14 +777,10 @@ public class SimpleRayTracer
 
 	public static Ray constructRayThroughPixel(double i, double j)
 	{
-		if (antialiasing > 1)
-		{
-
-		}
 		double xDir = (j - imageSize.width / 2f);
 		double yDir = (i - imageSize.height / 2f);
-		double zDir = (double) (Math.min(imageSize.width, imageSize.height) / (2 * Math.tan(scene
-				.getCamera().fieldOfView / 2)));
+		double zDir = Math.min(imageSize.width, imageSize.height) / (2 * Math.tan(scene
+				.getCamera().fieldOfView / 2));
 		Vector4d dir = new Vector4d(xDir, -yDir, -zDir, 1); // ******** why is image
 															// ******** inverted?
 
@@ -672,5 +819,101 @@ public class SimpleRayTracer
 			}
 		}
 		return rays;
+	}
+
+	private class ColorPoint extends Vector3d
+	{
+		public int x;
+		public int y;
+
+		public ColorPoint(Vector3d vec, int xPos, int yPos)
+		{
+			super(vec);
+			x = xPos;
+			y = yPos;
+		}
+	}
+
+	private class ColorPixel implements Callable
+	{
+		int x;
+		int y;
+		Scene pixelScene;
+		Octnode node = null;
+		Ray ray = null;
+		List<Ray> rays = null;
+		Vector3d color = new Vector3d(0, 0, 0);
+		double divisor = 1;
+
+		public ColorPixel(int i, int j, Ray r)
+		{
+			pixelScene = scene;
+			x = i;
+			y = j;
+			ray = r;
+		}
+
+		public void setScene(Scene s)
+		{
+			pixelScene = s;
+		}
+
+		public ColorPixel(int i, int j, Ray r, double totalRays)
+		{
+			pixelScene = scene;
+			x = i;
+			y = j;
+			ray = r;
+			divisor = 1.0 / totalRays;
+		}
+
+		public ColorPixel(int i, int j, Ray r, Octnode n)
+		{
+			node = n;
+			x = i;
+			y = j;
+			ray = r;
+		}
+
+		public ColorPixel(int i, int j, Ray r, Octnode n, double totalRays)
+		{
+			node = n;
+			x = i;
+			y = j;
+			ray = r;
+			divisor = 1.0 / totalRays;
+		}
+
+		@Override
+		public Vector3d call()
+		{
+			if (node != null)
+			{
+				try
+				{
+					color = getColor(ray, 0, 0, null, node);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+				color.scale(divisor);
+				return new ColorPoint(color, x, y);
+			}
+			else
+			{
+				try
+				{
+					color = getColor(ray, 0, 0, null, this.pixelScene);
+				}
+				catch (Exception e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			color.scale(divisor);
+			return new ColorPoint(color, x, y);
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package geometry;
 
+import java.io.Serializable;
+
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3d;
@@ -8,13 +10,13 @@ import javax.vecmath.Vector3f;
 /*
  * simple wrapper for Vector3d class. Reduces potential for performing an incorrect tranformation.
  */
-public class Vec extends Vector3d{
+public class Vec extends Vector3d implements Serializable{
 
 	private static final long serialVersionUID = 2L;
 	public final double w = 0;
 	
 	public Vec(Vec n){
-		super((Vector3d)n);
+		super(n);
 	}
 	
 	public Vec() {
