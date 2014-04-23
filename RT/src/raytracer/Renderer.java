@@ -56,10 +56,10 @@ public class Renderer
 	{
 		optionProgress = true;
 
-		optionAntialiasing = 0;
+		optionAntialiasing = 1;
 
-		optionWidth = 400;
-		optionHeight = 400;
+		optionWidth = 1000;
+		optionHeight = 1000;
 
 		optionShadow = 0;
 		showSampleScene();

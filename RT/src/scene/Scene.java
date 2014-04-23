@@ -2,8 +2,6 @@ package scene;
 
 import geometry.Ray;
 
-import java.awt.List;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -13,10 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
-
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
@@ -28,7 +23,6 @@ import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
 import raytracer.Camera;
-import raytracer.Util;
 
 /**
  * A representation of a scene, which contains various objects which can be intersected
