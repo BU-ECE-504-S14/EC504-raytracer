@@ -45,7 +45,12 @@ public class Octree implements AbstractAccelerator {
 			root.insert(objs.get(i), scnBoxes.get(i));
 		}
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see accelerators.AbstractAccelerator#insert(objects.SceneObject)
+	 */
 	@Override
 	public boolean Intersect(Ray ray, Intersection inter)
 			throws NotIntersectableException {
