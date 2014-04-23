@@ -22,7 +22,6 @@ public class TriangleMesh extends AbstractSceneObject
 	public TriangleMesh(TriangleMesh t)
 	{
 		this.material = new Material(t.material);
-		this.ID = UUID.randomUUID();
 		ntris = t.ntris;
 		nverts = t.nverts;
 		Points = new Pt[t.Points.length];
@@ -73,7 +72,6 @@ public class TriangleMesh extends AbstractSceneObject
 	public TriangleMesh(Transformation t, int nt, int nv, int[] vi, Pt[] P,
 			Normal[] N, Vec[] S, float[] uv)
 	{
-		this.ID = UUID.randomUUID();
 		this.trans = new Transformation(t);
 		ntris = nt;
 		nverts = nv;
@@ -150,7 +148,7 @@ public class TriangleMesh extends AbstractSceneObject
 	public String toString()
 	{
 		String out = "";
-		out += "Triangle Mesh (ID: " + ID + "\n";
+		out += "Triangle Mesh (ID: " + id + "\n";
 		out += "Name: " + name + "\n";
 		out += "Vertices: " + "\n";
 		for (int i = 0; i < Points.length; i++)

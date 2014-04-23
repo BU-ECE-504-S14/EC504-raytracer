@@ -46,9 +46,9 @@ public class Renderer
 	{
 		optionProgress = true;
 
-		optionAntialiasing = 2;
+		optionAntialiasing = 1;
 
-		optionWidth =400;
+		optionWidth = 400;
 		optionHeight = 400;
 
 		optionShadow = 0;
@@ -124,9 +124,7 @@ public class Renderer
 
 		/* shape1 */
 		Vector3d scale = new Vector3d(10, 10, 10);
-
-		Vector3d pos = new Vector3d(-27, 45, 20);
-
+		Vector3d pos = new Vector3d(0, 0, 100);
 		AxisAngle4d rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t1 = new Transformation(scale, pos, rot);
 		shape1 = new Sphere(-1f, 1f, 360f, t1);
@@ -148,8 +146,8 @@ public class Renderer
 		shape2.getMaterial().set(m2);
 
 		/* shape3 */
-		scale = new Vector3d(10, 10, 10);
-		pos = new Vector3d(0, 30, -10);
+		scale = new Vector3d(5, 5, 5);
+		pos = new Vector3d(0, 10, 0);
 		rot = new AxisAngle4d(0, 0, 1, 0);
 		Transformation t3 = new Transformation(scale, pos, rot);
 		shape3 = new Sphere(-1f, 1f, 360f, t3);
@@ -160,18 +158,34 @@ public class Renderer
 		shape3.getMaterial().set(m3);
 
 		/* shape4 */
-		scale = new Vector3d(100, 100, 100);
-		pos = new Vector3d(0, 30, -10);
-		rot = new AxisAngle4d(0, 0, 0, 0);
-		Pt[] P = new Pt[3];
-		P[0] = new Pt(1, 0, 0);
-		P[1] = new Pt(0, 1, 0);
-		P[2] = new Pt(-1, 0, 0);
+		scale = new Vector3d(10, 10, 10);
+		pos = new Vector3d(0, 0, 50);
+		rot = new AxisAngle4d(0, 0, 0, .5);
+		Pt[] P = new Pt[11];
+		P[0] = new Pt(2, 0, 2);
+		P[1] = new Pt(3, 1, 2);
+		P[2] = new Pt(4, 0, 2);
+		
+		P[3] = new Pt(-4, 0, 2);
+		P[4] = new Pt(-3, 1, 2);
+		P[5] = new Pt(-2, 0, 2);
+		
+		//P[0] = new Pt(2, 0, 2);
+		P[6] = new Pt(3, -1, 2);
+		//P[2] = new Pt(4, 0, 2);
+		
+		//P[3] = new Pt(-4, 0, 2);
+		P[7] = new Pt(-3, -1, 2);
+		//P[5] = new Pt(-2, 0, 2);
+		
+		P[8] = new Pt(-1, 0, 2);
+		P[9] = new Pt(0, 1, 2);
+		P[10] = new Pt(1, 0, 2);
 
-		int[] vi = { 0, 1, 2 };
+		int[] vi = { 0, 1, 2, 3, 4, 5, 0, 6, 2, 3, 7, 5, 10, 9, 8};
 		Transformation t4 = new Transformation(scale, pos, rot);
-		shape4 = new TriangleMesh(t4, 1, 3, vi, P, null, null, null);
-		m4.diffuseColor = new Vector3d(1, 1, 1);
+		shape4 = new TriangleMesh(t4, 5, 11, vi, P, null, null, null);
+		m4.diffuseColor = new Vector3d(1, 0, 0);
 		m4.reflectionIndex = 0;
 		m4.diffuseIndex = 1;
 		m4.specularIndex = 1;
@@ -179,9 +193,9 @@ public class Renderer
 
 		/* set up camera */
 		double fieldofView = 1;
-		Pt position = new Pt(100, -50, 0);
-		Pt lookAt = new Pt(-27, 45, 20);
-		Vec up = new Vec(0, 0, 1);
+		Pt position = new Pt(0, 0, 0);
+		Pt lookAt = new Pt(0, 0, 1);
+		Vec up = new Vec(0, 1, 0);
 
 		/*
 		 * uses axisangle to create camera (I hate axisangle) you will need to modify the
@@ -223,16 +237,16 @@ public class Renderer
 		scene.addSceneObject(shape3);
 	    scene.addSceneObject(shape4);
 	    
-	    scene.buildOctree(3);
-		//scene.addLight(l1);
-		//scene.addLight(l2);
+		scene.addLight(l1);
+		scene.addLight(l2);
 		scene.addLight(l4);
 
-		// scene.addLight(l3);
-		//scene.addLight(l4);
-		// scene.addLight(l5);
-		// scene.addLight(l6);
+		scene.addLight(l3);
+		scene.addLight(l4);
+		scene.addLight(l5);
+		scene.addLight(l6);
 		scene.setCamera(cam);
+		scene.buildOctree(3);
 
 		return scene;
 

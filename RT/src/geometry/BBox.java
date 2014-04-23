@@ -98,13 +98,28 @@ public class BBox {
 	 * check whether this bounding box overlaps with bounding box b
 	 * 
 	 * @param b bounding box to check overlap against
+	 * @param epsilon allows for epsilon difference between bounding boxes.
 	 * @return boolean true == overlap. false == no overlap.
 	 */
-	public boolean overlaps(BBox b) {
-		boolean x = (pMax.x >= b.getpMin().x) && (pMin.x <= b.getpMax().x);
-	    boolean y = (pMax.y >= b.getpMin().y) && (pMin.y <= b.getpMax().y);
-	    boolean z = (pMax.z >= b.getpMin().z) && (pMin.z <= b.getpMax().z);
-	    return (x&y&z);
+	public boolean overlaps(BBox b, float epsilon) {
+		boolean x = (pMax.x >= b.getpMin().x - epsilon) && (pMin.x <= b.getpMax().x + epsilon);
+	    boolean y = (pMax.y >= b.getpMin().y - epsilon) && (pMin.y <= b.getpMax().y + epsilon);
+	    boolean z = (pMax.z >= b.getpMin().z - epsilon) && (pMin.z <= b.getpMax().z + epsilon);
+	    return (x&&y&&z);
+	}
+	
+	/**
+	 * less narrow comparison range. Checks whether this BBox is has a common min max in any axis x, y, z
+	 * 
+	 * @param b bounding box with inclusive relationship
+	 * @param epsilon allows for epsilon difference between bounding boxes in x, y, or z axis.
+	 * @return boolean true == inclusive. false == not inclusive.
+	 */
+	public boolean inclusive(BBox b, float epsilon) {
+		boolean x = (pMax.x >= b.getpMin().x - epsilon) && (pMin.x <= b.getpMax().x + epsilon);
+	    boolean y = (pMax.y >= b.getpMin().y - epsilon) && (pMin.y <= b.getpMax().y + epsilon);
+	    boolean z = (pMax.z >= b.getpMin().z - epsilon) && (pMin.z <= b.getpMax().z + epsilon);
+	    return (x||y||z);
 	}
 	
 	/**
@@ -192,8 +207,8 @@ public class BBox {
 	 * @return boolean true == box intersected. false == box not intersected.
 	 */
 	public boolean IntersectP(Ray Ray, float[] hitT) {
-		float t0 = Ray.mint;
-		float t1 = Ray.maxt;
+		float t0 = new Float (Ray.mint);
+		float t1 = new Float (Ray.maxt);
 		
 		float[] o = setFloatArrayFromTuple(Ray.position);
 		float[] d = setFloatArrayFromTuple(Ray.direction);
@@ -203,7 +218,7 @@ public class BBox {
 		for(int i = 0; i < 3; i++){
 			
 			//compute near and far for x, y, and z bbox planes based on simplified para/intr solution pharr 195
-			float invRayDir = 1/d[i];
+			float invRayDir = 1f/d[i];
 			float tNear = (mins[i] - o[i])*invRayDir;
 			float tFar = (maxs[i] - o[i])*invRayDir;
 			
@@ -234,9 +249,9 @@ public class BBox {
 	 */
 	private float[] setFloatArrayFromTuple(Tuple3d t ) {
 		float[] f = new float[3];
-		f[0] = (float) t.x;
-		f[1] = (float) t.y;
-		f[2] = (float) t.z;
+		f[0] = new Float(t.x);
+		f[1] = new Float(t.y);
+		f[2] = new Float(t.z);
 		return f;
 	}
 	
@@ -257,7 +272,7 @@ public class BBox {
 	 * @param pMin the new minimal point of this bounding box
 	 */
 	public void setpMin(Pt pMin) {
-		this.pMin = pMin;
+		this.pMin = new Pt(pMin);
 	}
 
 	/**
@@ -275,7 +290,7 @@ public class BBox {
 	 * @param pMax	the new maximal point of this bounding box
 	 */
 	public void setpMax(Pt pMax) {
-		this.pMax = pMax;
+		this.pMax = new Pt(pMax);
 	}
 	/**
 	 * Returns the corner points of the bounding box

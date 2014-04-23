@@ -19,7 +19,7 @@ public class Triangle extends AbstractSceneObject
 
 	public Triangle(TriangleMesh m, int n)
 	{
-		//this.ID = UUID.randomUUID();
+		super(m.getID());
 		mesh = m;
 		v[0] = mesh.vertexIndex[3 * n];
 		v[1] = mesh.vertexIndex[3 * n + 1];
@@ -47,17 +47,17 @@ public class Triangle extends AbstractSceneObject
 
 		// check if ray is parallel to triangle or all vertices are colinear
 		if (divisor == 0f)
-			return false; // bad practice should use epsilon (modify if time allows)
+			return false; // TODO bad practice should use epsilon (modify if time allows)
 		float invDivisor = 1f / divisor;
 
-		// Compute first barycentric coordinate
+		// Compute first barycentric coordinate axis
 		Vec d = new Vec(ray.position);
 		d.sub(p1);
 		float b1 = (float)(Util.dotProduct(d, s1) * invDivisor);
 		if (b1 < 0f || b1 > 1f)
 			return false; // the intersection is out of the triangle
 
-		// Compute second barycentric coordinate
+		// Compute second barycentric coordinate axis
 		Vec s2 = new Vec();
 		s2.cross(d, e1);
 		float b2 = (float)(Util.dotProduct(ray.direction, s2) * invDivisor);
@@ -68,7 +68,7 @@ public class Triangle extends AbstractSceneObject
 		float t = (float)(Util.dotProduct(e2, s2) * invDivisor);
 		if (t < ray.mint || t > ray.maxt)
 			return false; // there is some other object closer than this or mesh is behind
-							// the ray
+						  // the ray
 
 		// triangle has definitely been intersected
 		ray.maxt = t; // update nearest
@@ -149,6 +149,7 @@ public class Triangle extends AbstractSceneObject
 			n.normalize();
 			Util.makeCoordinateSystem(n, dpdu, dpdv);
 		}
+		
 		else
 		{
 			/*
@@ -183,7 +184,7 @@ public class Triangle extends AbstractSceneObject
 		float tu = b0 * uvs[0][0] + b1 * uvs[1][0] + b2 * uvs[2][0];
 		float tv = b0 * uvs[0][1] + b1 * uvs[1][1] + b2 * uvs[2][1];
 
-		/* --create alpha mask test here if time permits-- */
+		/* TODO --create alpha mask test here if time permits-- */
 
 		Pt phit = ray.getPointAt(t);
 		Inter.update(phit, dpdu, dpdv, new Normal(0, 0, 0), new Normal(0, 0, 0), tu, tv, this);

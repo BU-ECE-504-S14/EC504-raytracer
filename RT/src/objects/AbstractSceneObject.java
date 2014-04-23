@@ -5,7 +5,10 @@ import geometry.Ray;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.vecmath.Vector3d;
 
 import scene.Intersection;
 
@@ -13,12 +16,21 @@ import scene.Intersection;
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and
  *         Bryant Moquist
  */
-public abstract class AbstractSceneObject implements SceneObject, Serializable {
 
-	UUID ID;
-
+public abstract class AbstractSceneObject implements SceneObject, Serializable
+{
+	protected final static AtomicInteger NEXT_ID = new AtomicInteger();
+	protected final Integer id;
 	private static final long serialVersionUID = 1L;
 
+	public AbstractSceneObject(){
+		id = NEXT_ID.getAndIncrement();
+	}
+	
+	public AbstractSceneObject(int parentId){
+		id = parentId;
+	}
+	
 	public class RefinementException extends Exception {
 		private static final long serialVersionUID = 1L;
 
@@ -36,11 +48,6 @@ public abstract class AbstractSceneObject implements SceneObject, Serializable {
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public UUID getUUID() {
-		return ID;
 	}
 
 	/** Sets the name of this SceneObject, for identification in the GUI. */
@@ -81,5 +88,8 @@ public abstract class AbstractSceneObject implements SceneObject, Serializable {
 	public Collection<? extends SceneObject> getChildren() {
 		return null;
 	}
-
+	
+	public int getID(){
+		return id.intValue();
+	}
 }

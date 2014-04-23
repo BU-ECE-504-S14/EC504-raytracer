@@ -336,7 +336,7 @@ public class ObjectParser
 		int vertexOffset = 1;
 
 		// A map of UUIDs to Strings, pairing objects with their material names
-		HashMap<UUID, String> materialMap = new HashMap<UUID, String>();
+		HashMap<Integer, String> materialMap = new HashMap<Integer, String>();
 
 		boolean parsing = false;
 
@@ -375,7 +375,7 @@ public class ObjectParser
 					if (parsing)
 					{
 						TriangleMesh newMesh = createMesh(objName, faceMeshIndices, faceTextureIndices, meshVertices, textureVertices);
-						materialMap.put(newMesh.getUUID(), matName);
+						materialMap.put(newMesh.getID(), matName);
 						objects.add(newMesh);
 						vertexOffset = newMesh.Points.length;
 					}
@@ -498,7 +498,7 @@ public class ObjectParser
 			if (parsing)
 			{
 				TriangleMesh newMesh = createMesh(objName, faceMeshIndices, faceTextureIndices, meshVertices, textureVertices);
-				materialMap.put(newMesh.getUUID(), matName);
+				materialMap.put(newMesh.getID(), matName);
 				objects.add(newMesh);
 			}
 			in.close();
@@ -513,7 +513,7 @@ public class ObjectParser
 		for (int i = 0; i < objects.size(); i++)
 		{
 			TriangleMesh current = objects.get(i);
-			current.material = materials.get(materialMap.get(current.getUUID()));
+			current.material = materials.get(materialMap.get(current.getID()));
 		}
 
 		return objects;
