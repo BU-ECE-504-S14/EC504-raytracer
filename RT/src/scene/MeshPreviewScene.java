@@ -4,9 +4,9 @@
 
 package scene;
 
+import geometry.Pt;
 import geometry.Transformation;
 import geometry.Vec;
-import geometry.Pt;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class MeshPreviewScene extends Scene
 		demoLight3.setRadio(1);
 
 		lights.add(demoLight);
-		 lights.add(demoLight2);
+		lights.add(demoLight2);
 		lights.add(demoLight3);
 		Sphere demoSphere = new Sphere();
 		demoSphere.material.diffuseColor = new Vector3d(1, .3, .3);
@@ -75,17 +75,16 @@ public class MeshPreviewScene extends Scene
 		AxisAngle4d rotation = new AxisAngle4d(0, 0, 0, .5);
 
 		demoSphere2.setTransform(scale, position, rotation);
-		//demoSphere2.material.reflectionIndex = 1;
+		demoSphere2.material.reflectionIndex = 1;
 
-		camera.setPostion(new Pt(0, 0f, 10f));
+		camera.setPostion(new Pt(10f, 0f, 10f));
 		camera.lookAt(new Pt(0, 0, 0), new Vec(0, 1, 0));
 
 		TriangleMesh parse = meshes.get(0);
 		parse.material = demoSphere2.material;
-		parse.material.reflectionIndex = .5; 
+		parse.material.reflectionIndex = 0;
 		Transformation target = new Transformation(demoSphere.getTransform());
-		target.setTranslation(new Vector3d(0,0,0f));
-		target.setScale(new Vector3d(1, 1, 1));
+		target.setScale(new Vector3d(3, 3, 3));
 		// target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
 		parse.updateTransform(target);
 
@@ -102,7 +101,7 @@ public class MeshPreviewScene extends Scene
 		 * catch (RefinementException e) { // TODO Auto-generated catch block e.printStackTrace(); }
 		 * for(SceneObject tmptmpobj:soa) System.out.println(tmptmpobj.getID()); } }
 		 */
-		this.buildOctree(3);
+		this.buildOctree(5);
 
 	}
 }

@@ -47,9 +47,9 @@ public class SimpleRayTracer
 
 	// private static final int MAX_LEVELS = 3;
 
-	private static final int MAX_REFRACTIONS = 0;
+	private static final int MAX_REFRACTIONS = 3;
 
-	private static final int MAX_REFLECTIONS = 0;
+	private static final int MAX_REFLECTIONS = 3;
 
 	/** Margin of error when comparing doubles */
 	private static final double FLOAT_CORRECTION = 0.001;
@@ -104,7 +104,6 @@ public class SimpleRayTracer
 	{
 		double startTime = System.currentTimeMillis();
 		totalRays = imageSize.height * imageSize.width;
-		currentRay = 1;
 
 		BufferedImage image = new BufferedImage(imageSize.width, imageSize.height,
 				BufferedImage.TYPE_INT_RGB);
@@ -114,7 +113,6 @@ public class SimpleRayTracer
 		{
 			for (int j = 0; j < imageSize.width; j++)
 			{
-				currentRay++;
 				if (showProgress
 						&& (i * imageSize.width + j) % (imageSize.width * imageSize.height / 80) == 0)
 					System.out.print('*');
@@ -220,7 +218,7 @@ public class SimpleRayTracer
 			futureSet.add(future);
 		}
 
-		Vector3d[][] colors = new Vector3d[imageSize.width * (int)raysPerPixel][imageSize.height * (int)raysPerPixel];
+		Vector3d[][] colors = new Vector3d[imageSize.width][imageSize.height ];
 
 		for (Future<ColorPoint> future : futureSet)
 		{

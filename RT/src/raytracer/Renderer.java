@@ -46,7 +46,7 @@ public class Renderer
 	{
 		optionProgress = true;
 
-		optionAntialiasing = 1;
+		optionAntialiasing = 2;
 
 		optionWidth = 400;
 		optionHeight = 400;
@@ -272,7 +272,6 @@ public class Renderer
         long time = System.currentTimeMillis();
 		//BufferedImage result = rayTracer.render(optionProgress);
 		BufferedImage result = rayTracer.renderThreads(optionProgress);
-        System.out.println(System.currentTimeMillis() - time);
 		return result;
 	}
 }
