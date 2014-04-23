@@ -75,6 +75,10 @@ public interface SceneObject {
 	 * @return Set of child objects (e.g. triangles in TriangleSets)
 	 */
 	public Collection<? extends SceneObject> getChildren();
-
-
+	
+	/**
+	 * Returns the id of this object
+	 * @return
+	 */
+	public int getID();
 }

@@ -186,9 +186,8 @@ public class Scene implements Serializable
 	}
 
 	/* ask aaron about this coding practice. Is this overloading. */
-	public boolean getFirstIntersectedObject(Ray ray,
-
-	Intersection inter, Collection<SceneObject> objs) throws Exception
+	public boolean getFirstIntersectedObject(Ray ray, 
+				Intersection inter, Collection<SceneObject> objs) throws Exception
 	{
 		boolean intersectedFlag = false;
 		
@@ -218,9 +217,9 @@ public class Scene implements Serializable
 				intersectedFlag = nearest.Intersect(ray, inter);
 			}
 		} else{
-			if(accelerator.IntersectP(ray)){
-				intersectedFlag = accelerator.Intersect(ray, inter);
-			}
+			
+			intersectedFlag = accelerator.Intersect(ray, inter);
+			
 		}
 		return intersectedFlag;
 	}
@@ -243,13 +242,13 @@ public class Scene implements Serializable
 	
 	public void buildOctree(int maxdepth){
 		try {
-			accelerator = new Octree(this,maxdepth);
+			accelerator = new Octree(this, maxdepth);
 			accelFlag = true; 
 		} catch (RefinementException e) {
-			System.out.println("Octree build failed."); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			System.out.println("Octree build failed: Refinement Error"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			e.printStackTrace();
 		} catch (SplitBeyondMaxDepthException e) {
-			System.out.println("Octree build failed.");
+			System.out.println("Octree build failed: Split beyond maximum depth");
 			e.printStackTrace();
 		}
 	}

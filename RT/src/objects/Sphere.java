@@ -15,28 +15,31 @@ import scene.Intersection;
 
 public class Sphere extends AbstractSceneObject
 {
-	public float radius = 1;
-	public Vector3d position = new Vector3d(0, 0, 0);
-	public float zmin = -1f;
-	public float zmax = 1f;
-	public float thetaMin = 0;
-	public float thetaMax = (float) 360;
+	private float radius = 1;
+	private Vector3d position = new Vector3d(0, 0, 0);
+	private float zmin = -1f;
+	private float zmax = 1f;
+	private float thetaMin = 0;
+	private float thetaMax = (float) 360;
 	public float phiMax = (float) Math.PI * 2; // Why is this in Radians when everything
 												// else isn't?
-	public Vector3d scale = new Vector3d(1, 1, 1);
-	public Vector3d pos = new Vector3d(0, 0, 0);
-	public AxisAngle4d rot = new AxisAngle4d(0, 0, 0, 0);
-	public Transformation trans = new Transformation(scale, pos, rot);
+	private Vector3d scale = new Vector3d(1, 1, 1);
+	private Vector3d pos = new Vector3d(0, 0, 0);
+	private AxisAngle4d rot = new AxisAngle4d(0, 0, 0, 0);
+	private Transformation trans = new Transformation(scale, pos, rot);
 
 	public Sphere()
 	{
-		super();
 		setName("New Sphere");
 	}
 
+	/**
+	 * copy constructor for sphere.
+	 * @param s sphere to be copied.
+	 */
 	public Sphere(Sphere s)
 	{
-		this.radius = s.radius;
+		super();
 		this.position = new Vector3d(s.position);
 		this.zmin = s.zmin;
 		this.zmax = s.zmax;
@@ -52,23 +55,124 @@ public class Sphere extends AbstractSceneObject
 	/**
 	 * 
 	 * @param radius
-	 * @param z0
-	 * @param z1
-	 * @param pm
+	 * @param z0 represents either the min or max height of sphere in object space
+	 * @param z1 represents either the min or max hieght of sphere in object space
+	 * @param pm represents max "circle" of the sphere that will be traced along the xz plane in object space
 	 * @param trans
 	 */
-	public Sphere(float radius, float z0, float z1, float pm, Transformation trans)
+	public Sphere(float z0, float z1, float pm, Transformation t)
 	{
-		this.radius = radius;
+		super();
 		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
 		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
 		thetaMin = (float) Math.acos(Util.clamp(zmin / radius, -1f, 1f));
 		thetaMax = (float) Math.acos(Util.clamp(zmax / radius, -1f, 1f));
 		phiMax = (float) Math.toRadians(Util.clamp(pm, 0.0f, 360.0f));
-		this.trans = new Transformation(trans);
+		this.trans = new Transformation(t);
 
 		setName("New Sphere");
 
+	}
+	
+	public float getzMin() {
+		return zmin;
+	}
+	
+	public float getzMax() {
+		return zmax;
+	}
+	
+	public float getRadius() {
+		if( (scale.x == scale.y) && (scale.y == scale.z) ) {
+			return (float) scale.x;
+		} else { //find maximum scale to represent radius
+			double approxRad =  ((scale.x >= scale.y) && (scale.x >= scale.z)) ? scale.x : scale.y;
+			approxRad = (approxRad > scale.z) ? approxRad : scale.z;
+			return (float) approxRad;
+		}
+	}
+	
+	public Vector3d getPosition() {
+		return new Vector3d(pos); 
+	}
+	
+	public void setPosition(Vector3d newPos) {
+		pos = new Vector3d(newPos);
+		trans.setTranslation(pos);
+	}
+	
+	public Vector3d getScale() {
+		return new Vector3d(scale);
+	}
+	
+	/**
+	 * Use this method to set radius/scale of world sphere. Because world space representation of sphere is based
+	 * on transformation that includes scale. Radius of sphere is in essence set by setting the scale of the sphere.
+	 * Note: set all scale values equal if you want to set the radius of the sphere.
+	 * 
+	 * @param newScaleAndRadius 
+	 */
+	public void setScaleRad(Vector3d newScaleAndRadius) {
+		scale = new Vector3d(newScaleAndRadius);
+		trans.setTranslation(scale);
+	}
+	
+	public AxisAngle4d getRotation() {
+		return new AxisAngle4d(rot);
+	}
+	
+	public void setRotation(AxisAngle4d newRot) {
+		rot = new AxisAngle4d(newRot);
+		trans.setRotation(rot);
+	}
+	
+	/**
+	 * Set the upper and lower bounds for sphere
+	 * @param z0 represents either the min or max height of sphere in object space.
+	 * @param z1 represents either the min or max hieght of sphere in object space.
+	 */
+	public void setzMinMax(float z0, float z1) {
+		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
+		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
+		thetaMin = (float) Math.acos(Util.clamp(zmin / radius, -1f, 1f));
+		thetaMax = (float) Math.acos(Util.clamp(zmax / radius, -1f, 1f));
+	}
+	
+	public float getThetaMin() {
+		return thetaMin;
+	}
+	
+	public float getThetaMax() {
+		return thetaMax;
+	}
+	
+	/**
+	 * Because Sphere's exist only in object space, updating the transformation
+	 * of a sphere is the equivalent of scaling a radius 1 sphere, then translating and rotating that sphere in world space.
+	 * 
+	 * @param t updated transformation for this sphere. 
+	 */
+	public void setTransform(Transformation t) {
+		trans = new Transformation(t);
+	}
+	
+	public Transformation getTransform() {
+		return new Transformation(trans);
+	}
+	
+	/**
+	 * Because Sphere's exist only in object space, updating the transformation
+	 * of a sphere is the equivalent of scaling a radius 1 sphere, then translating and rotating that sphere in world space.
+	 * 
+	 * @param newScale updated scale of transformation
+	 * @param newPos updated position of transformation
+	 * @param newRot updated rotation of transformation
+	 */
+	public void setTransform(Vector3d newScale, Vector3d newPos, AxisAngle4d newRot) {
+		scale.set(newScale);
+		pos.set(newPos);
+		rot.set(newRot);
+		trans = new Transformation(scale, pos, rot);
 	}
 
 	public Sphere getCopy()
@@ -79,7 +183,6 @@ public class Sphere extends AbstractSceneObject
 	@Override
 	public boolean IntersectP(Ray ray)
 	{
-
 		float phi;
 		Pt pHit;
 

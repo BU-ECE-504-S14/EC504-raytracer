@@ -50,8 +50,8 @@ public class MaterialPanel extends JPanel
 	public static void main(String[] args)
 	{
 		Sphere demoSphere = new Sphere();
-		demoSphere.radius = 20;
-		demoSphere.position = new Vector3d(15, 10, 5);
+		demoSphere.setScaleRad(new Vector3d(20f,20f,20f));
+		demoSphere.setPosition(new Vector3d(15, 10, 5));
 		JFrame testFrame = new JFrame();
 		MaterialPanel testPanel = new MaterialPanel(demoSphere.material);
 		testFrame.add(testPanel);
