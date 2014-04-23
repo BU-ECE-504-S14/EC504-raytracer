@@ -112,6 +112,7 @@ public class Octnode implements Serializable
 				octnodes.add(children[i]);
 			}
 		}
+		
 		if (octnodes.size() > 0)
 		{
 			return octnodes;

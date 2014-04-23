@@ -49,8 +49,8 @@ public class Renderer
 
 		optionAntialiasing = 1;
 
-		optionWidth = 1000;
-		optionHeight = 1000;
+		optionWidth = 400;
+		optionHeight = 400;
 
 		optionShadow = 0;
 		showSampleScene();
@@ -63,7 +63,7 @@ public class Renderer
 
 
 			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new MeshPreviewScene()));
+			new RenderViewer(renderScene(new BoxTestScene()));
 		}
 		catch (Exception e)
 		{
@@ -271,8 +271,8 @@ public class Renderer
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
 				optionShadow);
         long time = System.currentTimeMillis();
-		BufferedImage result = rayTracer.render(optionProgress);
-	//	BufferedImage result = rayTracer.renderThreads(optionProgress);
+		//BufferedImage result = rayTracer.render(optionProgress);
+		BufferedImage result = rayTracer.renderThreads(optionProgress);
 		return result;
 	}
 }

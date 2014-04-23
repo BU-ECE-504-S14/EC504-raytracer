@@ -19,8 +19,10 @@ public class Util
 		Vector4d result = new Vector4d();
 		double[] newValues = new double[4];
 		double[] oldValues = new double[4];
-		vector.get(oldValues);
-		
+		oldValues[0] = vector.getX();
+		oldValues[1] = vector.getY();
+		oldValues[2] = vector.getZ();
+		oldValues[3] = vector.getW();
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
@@ -28,8 +30,10 @@ public class Util
 				newValues[i] += matrix.getElement(i, j) * oldValues[j];
 			}
 		}
-		result.set(newValues);
-
+		result.setX(newValues[0]);
+		result.setY(newValues[1]);
+		result.setZ(newValues[2]);
+		result.setW(newValues[3]);
 		return result;
 	}
 
