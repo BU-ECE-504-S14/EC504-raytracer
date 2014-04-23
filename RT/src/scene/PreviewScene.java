@@ -22,7 +22,7 @@ public class PreviewScene extends Scene
 	{
 		super();
 
-		camera = new Camera(new Pt(0, 0, -5), new Pt(0, 0, 300), new Vec(0, 1, 0),
+		camera = new Camera(new Pt(0, 0, 5), new Pt(0, 0, 0), new Vec(0, 1, 0),
 				Math.PI / 4);
 		PointLight demoLight = new PointLight();
 		PointLight demoLight2 = new PointLight();

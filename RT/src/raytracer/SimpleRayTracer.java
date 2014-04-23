@@ -184,7 +184,7 @@ public class SimpleRayTracer
 			{
 				if (antialiasing > 1)
 				{
-					List<Ray> rays = constructRaysThroughPixel(i, j);
+					List<Ray> rays = constructRaysThroughPixel(j, i);
 					for (Ray r : rays)
 					{
 						queue.add(new ColorPixel(i, j, r, raysPerPixel));
@@ -200,7 +200,7 @@ public class SimpleRayTracer
 
 				else
 				{
-					Ray r = constructRayThroughPixel(i, j);
+					Ray r = constructRayThroughPixel(j, i);
 					queue.add(new ColorPixel(i, j, r));
 
 					/*

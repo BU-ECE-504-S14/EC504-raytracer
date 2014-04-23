@@ -50,7 +50,7 @@ public class Renderer
 		optionAntialiasing = 1;
 
 		optionWidth = 400;
-		optionHeight = 400;
+		optionHeight = 600;
 
 		optionShadow = 0;
 		showSampleScene();
@@ -63,7 +63,7 @@ public class Renderer
 
 
 			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new BoxTestScene()));
+			new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
 		{
