@@ -102,8 +102,8 @@ public class Octree implements AbstractAccelerator, Serializable
 	public boolean Intersect(Ray ray, Intersection inter)
 			throws NotIntersectableException
 	{
-		//return Intersect(ray, inter, root);
-		return intersectTraverse(ray, inter, root);
+		return Intersect(ray, inter, root);
+		//return intersectTraverse(ray, inter, root);
 	}
 
 	/*
