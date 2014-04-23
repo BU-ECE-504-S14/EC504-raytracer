@@ -162,6 +162,6 @@ public class Util
 	 * @return
 	 */
 	public static float lerp(float t, float a, float b) {
-		return (float) ((1f - t)*a + t*b);
+		return (1f - t)*a + t*b;
 	}
 }

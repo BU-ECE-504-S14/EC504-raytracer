@@ -2,12 +2,9 @@ package objects;
 
 import geometry.BBox;
 import geometry.Ray;
-import geometry.Transformation;
-
 import java.util.ArrayList;
 import java.util.Collection;
-
-import javax.vecmath.Vector3d;
+import java.util.UUID;
 
 import objects.AbstractSceneObject.NotIntersectableException;
 import objects.AbstractSceneObject.RefinementException;
@@ -24,6 +21,7 @@ public interface SceneObject {
 	 * @return a String representing the name of this SceneObject.
 	 */
 	public String getName();
+	
 
 	/** @return Material properties of the object */
 	public Material getMaterial();

@@ -1,34 +1,25 @@
 package raytracer;
 
-import geometry.Normal;
 import geometry.Pt;
 import geometry.Transformation;
 import geometry.Vec;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import scene.Scene;
 
 import javax.vecmath.AxisAngle4d;
-import javax.vecmath.AxisAngle4f;
-import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Matrix4d;
 
 import objects.Material;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
-
+import scene.BoxTestScene;
 import scene.MeshPreviewScene;
 import scene.PointLight;
-import scene.Scene;
 
 /**
  * Ray tracing renderer, for EC504 at Boston University based on the work of Rafael Martin
@@ -56,7 +47,7 @@ public class Renderer
 	{
 		optionProgress = true;
 
-		optionAntialiasing = 0;
+		optionAntialiasing = 1;
 
 		optionWidth = 400;
 		optionHeight = 400;
@@ -72,7 +63,7 @@ public class Renderer
 
 
 			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new MeshPreviewScene()));
+			new RenderViewer(renderScene(new BoxTestScene()));
 		}
 		catch (Exception e)
 		{
@@ -280,9 +271,8 @@ public class Renderer
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
 				optionShadow);
         long time = System.currentTimeMillis();
-		BufferedImage result = rayTracer.render(optionProgress);
-		//BufferedImage result = rayTracer.renderThreads(optionProgress);
-        System.out.println(System.currentTimeMillis() - time);
+		//BufferedImage result = rayTracer.render(optionProgress);
+		BufferedImage result = rayTracer.renderThreads(optionProgress);
 		return result;
 	}
 }
