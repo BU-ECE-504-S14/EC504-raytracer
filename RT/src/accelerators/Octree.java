@@ -56,10 +56,12 @@ public class Octree implements AbstractAccelerator, Serializable
 		}
 	}
 
+
 	public ArrayList<Octnode> getFirstOctnodes(Ray ray)
 	{
 		return root.getIntersectedChildren(ray);
 	}
+
 
 	public boolean intersectTraverse(Ray ray, Intersection inter) throws NotIntersectableException
 	{
