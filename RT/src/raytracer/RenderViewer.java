@@ -20,7 +20,6 @@ public class RenderViewer extends JFrame
 	private static final long serialVersionUID = 1L;
 
 	static boolean looping = true;
-	static int SLEEP_TIME = 100;
 
 	public RenderViewer()
 	{
@@ -33,19 +32,7 @@ public class RenderViewer extends JFrame
 		this();
 		add(new PreviewPanel(bi));
 		setVisible(true);
-
-		while (looping)
-		{
-			pack();
-			try
-			{
-				Thread.sleep(SLEEP_TIME);
-			}
-			catch (InterruptedException ex)
-			{
-				ex.printStackTrace();
-			}
-		}
+		pack();
 	}
 
 }

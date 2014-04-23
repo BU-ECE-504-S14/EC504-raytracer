@@ -56,7 +56,7 @@ public class SimpleRayTracer
 
 	private static int threadsFinished = 0;
 
-	private static Scene scene;
+	private static volatile Scene scene;
 	/** Desired scene to render */
 	private static Dimension imageSize;
 	/** Size of the image to generate */
@@ -167,8 +167,8 @@ public class SimpleRayTracer
 		currentRay = 0;
 		threadsFinished = 0;
 
-		// final int NUM_THREADS = Runtime.getRuntime().availableProcessors() + 1;
-		final int NUM_THREADS = 1;
+		final int NUM_THREADS = Runtime.getRuntime().availableProcessors() + 1;
+		// final int NUM_THREADS = 1;
 		final ExecutorService executor = Executors.newFixedThreadPool(NUM_THREADS);
 		Set<Future<ColorPoint>> futureSet = new HashSet<Future<ColorPoint>>();
 		Set<ColorPixel> queue = new HashSet<ColorPixel>();
@@ -199,7 +199,7 @@ public class SimpleRayTracer
 
 					}
 				}
-				
+
 				else
 				{
 					Ray r = constructRayThroughPixel(i, j);
@@ -257,6 +257,7 @@ public class SimpleRayTracer
 		// executor.awaitTermination(100000, TimeUnit.SECONDS);
 		double end = System.currentTimeMillis();
 		System.out.println(start - end + "milliseconds");
+		System.gc();
 
 		System.out.println("Total time: " + (System.currentTimeMillis() - startTime));
 		return outputImage;
@@ -839,6 +840,7 @@ public class SimpleRayTracer
 	{
 		int x;
 		int y;
+		Scene pixelScene;
 		Octnode node = null;
 		Ray ray = null;
 		List<Ray> rays = null;
@@ -847,13 +849,20 @@ public class SimpleRayTracer
 
 		public ColorPixel(int i, int j, Ray r)
 		{
+			pixelScene = scene;
 			x = i;
 			y = j;
 			ray = r;
 		}
 
+		public void setScene(Scene s)
+		{
+			pixelScene = s;
+		}
+
 		public ColorPixel(int i, int j, Ray r, double totalRays)
 		{
+			pixelScene = scene;
 			x = i;
 			y = j;
 			ray = r;
@@ -897,7 +906,7 @@ public class SimpleRayTracer
 			{
 				try
 				{
-					color = getColor(ray, 0, 0, null, scene);
+					color = getColor(ray, 0, 0, null, this.pixelScene);
 				}
 				catch (Exception e)
 				{

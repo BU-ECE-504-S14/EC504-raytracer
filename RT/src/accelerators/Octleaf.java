@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import objects.AbstractSceneObject.NotIntersectableException;
 import objects.SceneObject;
+import objects.Triangle;
 import geometry.BBox;
 import geometry.Ray;
 
@@ -21,10 +22,18 @@ public class Octleaf extends Octnode {
 
 	private ArrayList<SceneObject> containedObjects = null;
 
+	public Octleaf(Octleaf o){
+		super(o.bbox, o.depth, o.maxdepth);
+		disToBBoxIn = o.distanceToBBoxOut();
+		disToBBoxOut = o.distanceToBBoxOut();
+		containedObjects = o.containedObjects;
+	}
+	
 	public Octleaf(BBox bBox, int i, int maxdepth) {
 		super(bBox, i, maxdepth);
 	}
-
+	
+	
 	@Override
 	public void split() throws SplitBeyondMaxDepthException {
 		 // You should not be splitting leaf nodes!
@@ -47,9 +56,13 @@ public class Octleaf extends Octnode {
 	public float distanceToBBoxOut() {
 		return this.disToBBoxOut;
 	}
+	
+	public ArrayList<SceneObject> getContents(){
+		return containedObjects;
+	}
 
 	@Override
-	public boolean IntersectP(Ray ray, ArrayList<Octleaf> IntersectedLeaves)
+	synchronized public boolean IntersectP(Ray ray, ArrayList<Octleaf> IntersectedLeaves)
 			throws NotIntersectableException {
 
 		boolean intersected = false;
@@ -58,7 +71,7 @@ public class Octleaf extends Octnode {
 		 if(occupied && bbox.IntersectP(ray, inOut)){
 			this.disToBBoxIn = inOut[0];
 			this.disToBBoxOut = inOut[1];
-			IntersectedLeaves.add(this);
+			IntersectedLeaves.add(new Octleaf(this));
 			intersected = true;
 		}
 

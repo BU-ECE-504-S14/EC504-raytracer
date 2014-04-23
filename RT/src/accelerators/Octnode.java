@@ -25,11 +25,11 @@ public class Octnode
 
 	}
 
-	private float octBoxEpsilon = 0;
+	private final float octBoxEpsilon = .001f;
 	private Octnode children[] = null;
-	protected BBox bbox;
+	protected final BBox bbox;
 	protected boolean occupied = false;
-	protected int depth;
+	protected final int depth;
 	public final int maxdepth;
 
 	public Octnode(BBox bb, int dep, int mdep)

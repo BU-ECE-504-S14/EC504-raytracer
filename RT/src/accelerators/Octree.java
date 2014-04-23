@@ -24,9 +24,9 @@ import scene.Scene;
 public class Octree implements AbstractAccelerator
 {
 
-	private Octnode root;
-	private float scnBoxEpsilon = 0;
-	private float objectBoxEpsilon = 0;
+	private final Octnode root;
+	private final float scnBoxEpsilon = .001f;
+	private final float objectBoxEpsilon = .001f;
 
 	public Octree(Scene scn, int maxdepth) throws RefinementException,
 			SplitBeyondMaxDepthException
