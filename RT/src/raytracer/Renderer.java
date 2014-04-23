@@ -271,8 +271,8 @@ public class Renderer
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
 				optionShadow);
         long time = System.currentTimeMillis();
-		//BufferedImage result = rayTracer.render(optionProgress);
-		BufferedImage result = rayTracer.renderThreads(optionProgress);
+		BufferedImage result = rayTracer.render(optionProgress);
+		//BufferedImage result = rayTracer.renderThreads(optionProgress);
 		return result;
 	}
 }

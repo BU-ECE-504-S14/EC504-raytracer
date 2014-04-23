@@ -55,28 +55,13 @@ public class Octree implements AbstractAccelerator, Serializable
 			root.insert(objs.get(i), scnBoxes.get(i));
 		}
 	}
-<<<<<<< HEAD
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see accelerators.AbstractAccelerator#insert(objects.SceneObject)
-	 */
-	@Override
-	public boolean Intersect(Ray ray, Intersection inter)
-			throws NotIntersectableException {
 
-		ArrayList<Octleaf> intersectedLeaves = new ArrayList<Octleaf>();
-		root.IntersectP(ray, intersectedLeaves);
-
-		Comparator<Octleaf>comp = new Comparator<Octleaf>() {
-=======
 
 	public ArrayList<Octnode> getFirstOctnodes(Ray ray)
 	{
 		return root.getIntersectedChildren(ray);
 	}
->>>>>>> origin/Aaron
+
 
 	public boolean intersectTraverse(Ray ray, Intersection inter) throws NotIntersectableException
 	{
