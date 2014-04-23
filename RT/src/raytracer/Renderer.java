@@ -12,11 +12,12 @@ import scene.Scene;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
+
 import objects.Material;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
-
+import scene.BoxTestScene;
 import scene.MeshPreviewScene;
 import scene.PointLight;
 
@@ -46,7 +47,7 @@ public class Renderer
 	{
 		optionProgress = true;
 
-		optionAntialiasing = 2;
+		optionAntialiasing = 1;
 
 		optionWidth = 400;
 		optionHeight = 400;
@@ -62,7 +63,7 @@ public class Renderer
 
 
 			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new MeshPreviewScene()));
+			new RenderViewer(renderScene(new BoxTestScene()));
 		}
 		catch (Exception e)
 		{

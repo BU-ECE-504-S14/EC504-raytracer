@@ -1,5 +1,7 @@
 package geometry;
 
+import java.io.Serializable;
+
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3d;
@@ -10,7 +12,7 @@ import scene.Intersection;
 /*
  * simple wrapper for Vector3d class. Reduces potential for performing an incorrect tranformation.
  */
-public class Pt extends Vector3d
+public class Pt extends Vector3d implements Serializable
 {
 
 	private static final long serialVersionUID = 3L;

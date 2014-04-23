@@ -1,12 +1,18 @@
 package geometry;
 
+import java.io.Serializable;
+
 import javax.vecmath.Tuple3d;
 
 import raytracer.Util;
 
-public class BBox {
+public class BBox implements Serializable{
 	
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Pt pMin, pMax;
 	
 	/**

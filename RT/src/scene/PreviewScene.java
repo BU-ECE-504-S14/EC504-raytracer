@@ -52,5 +52,7 @@ public class PreviewScene extends Scene
 
 		objects.add(demoSphere);
 		objects.add(demoSphere2);
+		
+		//this.buildOctree(3);
 	}
 }

@@ -60,9 +60,9 @@ public class MeshPreviewScene extends Scene
 		demoLight2.setRadio(1);
 		demoLight3.setRadio(1);
 
-		lights.add(demoLight);
-		lights.add(demoLight2);
-		lights.add(demoLight3);
+		//lights.add(demoLight);
+		 lights.add(demoLight2);
+	//	lights.add(demoLight3);
 		Sphere demoSphere = new Sphere();
 		demoSphere.material.diffuseColor = new Vector3d(1, .3, .3);
 		Sphere demoSphere2 = new Sphere();
@@ -82,16 +82,17 @@ public class MeshPreviewScene extends Scene
 
 		TriangleMesh parse = meshes.get(0);
 		parse.material = demoSphere2.material;
-		parse.material.reflectionIndex = 0;
+		parse.material.reflectionIndex = 1;
 		Transformation target = new Transformation(demoSphere.getTransform());
 		target.setScale(new Vector3d(3, 3, 3));
-		// target.setRotation(new AxisAngle4d(0,0,1,Math.PI));
+		target.setRotation(new AxisAngle4d(1,1,0,Math.PI));
 		parse.updateTransform(target);
 
 		// objects.add(plane);
 		objects.add(parse);
 		// objects.add(demoSphere);
-		//objects.add(demoSphere2);
+		objects.add(demoSphere2);
+		camera.lookAt(new Pt(parse.trans.getTranslation()), new Vec(0, 1, 0));
 
 		// Prints out all object ids
 		/*
@@ -101,7 +102,7 @@ public class MeshPreviewScene extends Scene
 		 * catch (RefinementException e) { // TODO Auto-generated catch block e.printStackTrace(); }
 		 * for(SceneObject tmptmpobj:soa) System.out.println(tmptmpobj.getID()); } }
 		 */
-		this.buildOctree(5);
+		this.buildOctree(3);
 
 	}
 }

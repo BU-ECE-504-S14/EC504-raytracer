@@ -6,6 +6,7 @@ package accelerators;
 import geometry.BBox;
 import geometry.Ray;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -21,12 +22,16 @@ import scene.Scene;
 /**
  * Octree contains the scene
  */
-public class Octree implements AbstractAccelerator
+public class Octree implements AbstractAccelerator, Serializable
 {
-
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final Octnode root;
-	private final float scnBoxEpsilon = .001f;
-	private final float objectBoxEpsilon = .001f;
+	private final float scnBoxEpsilon = 0f;
+	private final float objectBoxEpsilon = 0f;
 
 	public Octree(Scene scn, int maxdepth) throws RefinementException,
 			SplitBeyondMaxDepthException
@@ -56,35 +61,24 @@ public class Octree implements AbstractAccelerator
 		return root.getIntersectedChildren(ray);
 	}
 
+	public boolean intersectTraverse(Ray ray, Intersection inter) throws NotIntersectableException
+	{
+		return root.intersectTraverse(ray, inter);
+	}
+
+	public static boolean intersectTraverse(Ray ray, Intersection inter, Octnode node)
+			throws NotIntersectableException
+	{
+		return node.intersectTraverse(ray, inter);
+	}
+
 	public static boolean Intersect(Ray ray, Intersection inter, Octnode node)
 			throws NotIntersectableException
 	{
 		ArrayList<Octleaf> intersectedLeaves = new ArrayList<Octleaf>();
 		node.IntersectP(ray, intersectedLeaves);
 
-		Comparator<Octleaf> comp = new Comparator<Octleaf>() {
-
-			@Override
-			public int compare(Octleaf o1, Octleaf o2)
-			{
-				float in1 = o1.distanceToBBoxIn();
-				float in2 = o2.distanceToBBoxIn();
-
-				if (in1 < in2)
-				{
-					return -1;
-				}
-				else if (in2 >= in1)
-				{
-					return 1;
-				}
-				else
-					return 0;
-			}
-
-		};
-
-		Collections.sort(intersectedLeaves, comp);
+		Collections.sort(intersectedLeaves, new OctnodeComparator());
 		int leaves = intersectedLeaves.size();
 		SceneObject nearest = null;
 		for (int ii = 0; ii < leaves; ii++)
@@ -106,7 +100,8 @@ public class Octree implements AbstractAccelerator
 	public boolean Intersect(Ray ray, Intersection inter)
 			throws NotIntersectableException
 	{
-		return Intersect(ray, inter, root);
+		//return Intersect(ray, inter, root);
+		return intersectTraverse(ray, inter, root);
 	}
 
 	/*
