@@ -62,12 +62,14 @@ public class MeshPanel extends JPanel
 
 	private void setMaterialViewDefaults()
 	{
+		/*
 		materialRenderer.setOptionAntialiasing(1);
 		materialRenderer.setOptionReflection(3);
 		materialRenderer.setOptionRefraction(5);
 		materialRenderer.setOptionShadow(0);
 		materialRenderer.setOptionWidth(300);
 		materialRenderer.setOptionHeight(300);
+		*/
 	}
 
 	public void updatePreviewImage()

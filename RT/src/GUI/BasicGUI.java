@@ -109,10 +109,12 @@ public class BasicGUI extends JFrame
 
 	public void updateRenderingParams()
 	{
+		/*
 		render.setOptionWidth(Integer.parseInt(paramFields[0].getText()));
 		render.setOptionHeight(Integer.parseInt(paramFields[1].getText()));
 		render.setOptionAntialiasing(Integer.parseInt(paramFields[2].getText()));
 		render.setOptionShadow(Integer.parseInt(paramFields[3].getText()));
+		*/
 	}
 
 	public void renderScene()

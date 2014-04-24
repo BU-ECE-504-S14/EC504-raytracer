@@ -26,6 +26,7 @@ import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
 import raytracer.Camera;
+import raytracer.RenderSettings;
 
 /**
  * A representation of a scene, which contains various objects which can be intersected and
@@ -47,6 +48,8 @@ public class Scene implements Serializable
 	protected Camera camera;
 	protected boolean accelFlag; // true when the accelerator is updated and usable
 	protected AbstractAccelerator accelerator;
+	
+	public RenderSettings settings;
 
 	public Scene()
 	{
@@ -54,6 +57,7 @@ public class Scene implements Serializable
 				(float)(Math.PI / 4));
 		objects = new ArrayList<SceneObject>();
 		lights = new HashSet<Light>();
+		settings = new RenderSettings();
 	}
 
 	public Scene(Scene s)

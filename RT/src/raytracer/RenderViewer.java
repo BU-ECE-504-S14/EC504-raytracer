@@ -22,6 +22,12 @@ public class RenderViewer extends JFrame
 
 	static boolean looping = true;
 
+	public static void main(String[] args)
+	{
+		RenderViewer r = new RenderViewer();
+
+	}
+
 	public RenderViewer()
 	{
 		super("Basic Graphical Rendering");

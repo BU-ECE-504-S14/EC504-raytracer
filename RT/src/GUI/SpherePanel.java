@@ -83,6 +83,7 @@ public class SpherePanel extends JPanel
 
 	private void setMaterialViewDefaults()
 	{
+		/*
 		materialRenderer.setOptionAntialiasing(1);
 		materialRenderer.setOptionReflection(3);
 		materialRenderer.setOptionRefraction(5);
@@ -90,6 +91,7 @@ public class SpherePanel extends JPanel
 		materialRenderer.setOptionWidth(300);
 		materialRenderer.setOptionHeight(300);
 		materialRenderer.setOptionMultithreading(false);
+		*/
 	}
 
 	public void updatePreviewImage()

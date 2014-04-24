@@ -21,6 +21,7 @@ import objects.Sphere;
 import objects.TriangleMesh;
 import parser.ObjectParser;
 import raytracer.Camera;
+import raytracer.MatSettings;
 import util.SceneObjectException;
 
 /**
@@ -42,6 +43,8 @@ public class MaterialScene extends Scene
 	public MaterialScene(SceneObject o)
 	{
 		super();
+		
+		settings = new MatSettings(300, 300);
 
 		camera = new Camera(new Pt(3, 3, 3), new Pt(-5, -5, -5), new Vec(0, 1, 0), Math.PI / 4);
 		PointLight demoLight = new PointLight();

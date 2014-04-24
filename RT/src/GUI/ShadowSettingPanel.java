@@ -4,8 +4,11 @@
 
 package GUI;
 
+import java.awt.FlowLayout;
+
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import util.RenderSettingException;
@@ -21,10 +24,23 @@ public class ShadowSettingPanel extends JPanel
 	private RadioButtonPanel recursive;
 	private ButtonGroup group;
 
+	public static void main(String[] args)
+	{
+		ShadowSettingPanel p = new ShadowSettingPanel(0);
+		JFrame f = new JFrame();
+		f.add(p);
+		f.pack();
+		f.setVisible(true);
+	}
+
+	public ShadowSettingPanel()
+	{
+		this(0);
+	}
+
 	public ShadowSettingPanel(int shadowSetting)
 	{
-		super();
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		super(new FlowLayout(FlowLayout.LEFT));
 		setupPanels(shadowSetting);
 	}
 
@@ -50,6 +66,10 @@ public class ShadowSettingPanel extends JPanel
 		group.add(soft.getButton());
 		recursive = new RadioButtonPanel("Recursive (pretty): ", false);
 		group.add(recursive.getButton());
+
+		add(simple);
+		add(soft);
+		add(recursive);
 
 		try
 		{
@@ -82,18 +102,23 @@ public class ShadowSettingPanel extends JPanel
 		soft.setSelected(false);
 		recursive.setSelected(true);
 	}
-	
-	public int getSetting() throws RenderSettingException{
-		if (simple.getValue()){
+
+	public int getSetting() throws RenderSettingException
+	{
+		if (simple.getValue())
+		{
 			return 0;
 		}
-		else if (soft.getValue()){
+		else if (soft.getValue())
+		{
 			return 1;
 		}
-		else if (recursive.getValue()){
+		else if (recursive.getValue())
+		{
 			return 2;
 		}
-		else {
+		else
+		{
 			throw new RenderSettingException("Cannot return valid shadow setting!");
 		}
 	}

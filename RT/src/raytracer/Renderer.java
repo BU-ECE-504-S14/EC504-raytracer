@@ -32,43 +32,29 @@ import scene.MaterialScene;
 public class Renderer
 {
 
-	private boolean optionProgress = false;
-	private boolean optionMultithreading = false;
-	private int optionAntialiasing = 1;
-	private String optionOutputFile;
-	private String optionInputFile;
-	private int optionWidth = 100;
-	private int optionHeight = 100;
-	private int optionShadow = 0;
-	private int optionRefraction = 1;
-	private int optionReflection = 1;
-	private boolean optionPhong = true;
-
 	public static double progress = 0.0;
 	public static boolean done = false;
+	public String outputFile;
+	public String inputFile;
 
 	/* basic setup for rendering simple scene */
 	public static void main(String[] args)
 	{
 		Renderer r = new Renderer();
-		r.optionProgress = true;
-
-		r.optionAntialiasing = 0;
-
-		r.optionWidth = 600;
-		r.optionHeight = 400;
-
-		r.optionShadow = 0;
-		r.showSampleScene();
 	}
 
 	public void showSampleScene()
 	{
+		Scene s = new MaterialScene(new Sphere());
+		s.settings.ANTIALIASING = 1;
+		s.settings.MULTITHREADING = true;
+		s.settings.WIDTH = 400;
+		s.settings.HEIGHT = 600;
 		try
 		{
 
 			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new MaterialScene(new Sphere())));
+			new RenderViewer(renderScene(s));
 			//new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
@@ -76,61 +62,6 @@ public class Renderer
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	public void setOptionProgress(boolean b)
-	{
-		optionProgress = b;
-	}
-
-	public void setOptionAntialiasing(int i)
-	{
-		optionAntialiasing = i;
-	}
-
-	public void setOptionOutputFile(String s)
-	{
-		optionOutputFile = s;
-	}
-
-	public void setOptionInputFile(String s)
-	{
-		optionInputFile = s;
-	}
-
-	public void setOptionWidth(int w)
-	{
-		optionWidth = w;
-	}
-
-	public void setOptionHeight(int h)
-	{
-		optionHeight = h;
-	}
-
-	public void setOptionShadow(int s)
-	{
-		optionShadow = s;
-	}
-
-	public void setOptionMultithreading(boolean b)
-	{
-		optionMultithreading = b;
-	}
-
-	public void setOptionRefraction(int s)
-	{
-		optionRefraction = s;
-	}
-
-	public void setOptionPhong(boolean b)
-	{
-		optionPhong = b;
-	}
-
-	public void setOptionReflection(int s)
-	{
-		optionReflection = s;
 	}
 
 	/**
@@ -145,13 +76,12 @@ public class Renderer
 
 		progress = 0.0;
 		done = false;
-		Dimension imageSize = new Dimension(optionWidth, optionHeight);
 
 		/* Ultra simple raytracer */
-		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing);
+		SimpleRayTracer rayTracer = new SimpleRayTracer();
 		long time = System.currentTimeMillis();
 		//BufferedImage result = rayTracer.render(optionProgress);
-		 BufferedImage result = rayTracer.renderThreads(optionProgress);
+		 BufferedImage result = rayTracer.renderThreads(scene);
 		return result;
 	}
 }
