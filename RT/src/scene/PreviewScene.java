@@ -41,7 +41,7 @@ public class PreviewScene extends Scene
 		demoSphere.setzMinMax(o.getzMin(), o.getzMax());
 		demoSphere.phiMax = o.phiMax;
 		demoSphere.setTransform(new Transformation());		
-		
+				
 		TriangleMesh previewBox = null;
 
 		try
