@@ -16,14 +16,14 @@ public class OctnodeComparator implements Comparator<Octnode>
 	@Override
 	public int compare(Octnode o1, Octnode o2)
 	{
-		float in1 = o1.distanceToBBoxIn();
-		float in2 = o2.distanceToBBoxIn();
+		float in1 = o1.distanceToBBoxOut();
+		float in2 = o2.distanceToBBoxOut();
 
 		if (in1 < in2)
 		{
 			return -1;
 		}
-		else if (in2 >= in1)
+		else if (in2 > in1)
 		{
 			return 1;
 		}

@@ -38,7 +38,7 @@ public class ObjectParser
 		List<TriangleMesh> objects = null;
 		try
 		{
-			objects = ObjectParser.parseObjectsFromFile("box.obj");
+			objects = ObjectParser.parseObjectsFromFile("buddha.obj");
 		}
 		catch (SceneObjectException ex)
 		{
@@ -434,8 +434,7 @@ public class ObjectParser
 							newMesh[1] = mesh[1];
 							newMesh[2] = mesh[2];
 							newMesh[3] = mesh[0];
-							newMesh[4] =
-									mesh[2];
+							newMesh[4] = mesh[2];	
 							newMesh[5] = mesh[3];
 
 							for (int i = 0; i < newMesh.length; i++)
@@ -443,6 +442,10 @@ public class ObjectParser
 
 								faceMeshIndices.add(newMesh[i] - vertexOffset);
 							}
+						} else {
+								for (int i = 0; i < mesh.length; i++){
+									faceMeshIndices.add(mesh[i] - vertexOffset);
+								}	
 						}
 					}
 

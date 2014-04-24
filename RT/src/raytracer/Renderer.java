@@ -47,10 +47,10 @@ public class Renderer
 	{
 		optionProgress = true;
 
-		optionAntialiasing = 1;
+		optionAntialiasing = 2;
 
-		optionWidth = 1000;
-		optionHeight = 1000;
+		optionWidth = 5*128;
+		optionHeight = 5*72;
 
 		optionShadow = 0;
 		showSampleScene();
@@ -271,8 +271,8 @@ public class Renderer
 		SimpleRayTracer rayTracer = new SimpleRayTracer(scene, imageSize, optionAntialiasing,
 				optionShadow);
         long time = System.currentTimeMillis();
-		BufferedImage result = rayTracer.render(optionProgress);
-	//	BufferedImage result = rayTracer.renderThreads(optionProgress);
+		//BufferedImage result = rayTracer.render(optionProgress);
+		BufferedImage result = rayTracer.renderThreads(optionProgress);
 		return result;
 	}
 }
