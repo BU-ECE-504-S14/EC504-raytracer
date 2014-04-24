@@ -76,7 +76,7 @@ public class MeshPreviewScene extends Scene
 		
 		
 		Vector3d scale = new Vector3d(10, 10, 10);
-		Vector3d position = new Vector3d(0, 0, 20);
+		Vector3d position = new Vector3d(0, 0, 100);
 		AxisAngle4d rotation = new AxisAngle4d(0, 0, 1, 0);
 
 		demoSphere2.setTransform(scale, position, rotation);
@@ -88,7 +88,7 @@ public class MeshPreviewScene extends Scene
 		BBo.material.diffuseIndex = .5;
 		BBo.material.specularIndex = 1;
 
-		camera.setPostion(new Pt(0f, 0f, 70f));
+		camera.setPostion(new Pt(0f, 0f, 4f));
 		camera.lookAt(new Pt(demoSphere2.getPosition()), new Vec(0, 1, 0));
 
 		TriangleMesh parse = meshes.get(0);
@@ -102,10 +102,10 @@ public class MeshPreviewScene extends Scene
 		parse.updateTransform(target);
 
 		// objects.add(plane);
-		objects.add(parse);
+		//objects.add(parse);
 		objects.add(demoSphere);
 		//objects.add(demoSphere2);
-		//objects.add(BBo);
+		objects.add(BBo);
 
 		// Prints out all object ids
 		/*
@@ -116,7 +116,7 @@ public class MeshPreviewScene extends Scene
 		 * for(SceneObject tmptmpobj:soa) System.out.println(tmptmpobj.getID()); } }
 		 */
 		
-		this.buildOctree(3);
+		this.buildOctree(1);
 
 	}
 }

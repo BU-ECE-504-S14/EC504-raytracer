@@ -9,7 +9,7 @@ import geometry.Ray;
 import geometry.Vec;
 /**
  * bounding box objects are simple objects based on the bounding boxes of shapes. They are meant for preview scenes
- * only are not currently set up to work with textures.
+ * only are not currently set up to work with textures. Currently not in the best shape due to floating point impercision.
  * @author DavidsMac
  *
  */
@@ -26,6 +26,7 @@ public class BBoxObject extends AbstractSceneObject {
 		float[] bounds = {1f,1f};
 		boolean intersected = bb.IntersectP(ray, bounds);
 		float hitT = bounds[0] < bounds[1] ? bounds[0] : bounds[1];
+		hitT = (hitT < 0) ? bounds[1] : hitT; 
 		
 		if(intersected) {
 			ray.maxt = hitT;
@@ -38,7 +39,8 @@ public class BBoxObject extends AbstractSceneObject {
 	public boolean Intersect(Ray ray, Intersection inter) {
 		float[] bounds = {1f,1f};
 		boolean intersected = bb.IntersectP(ray, bounds);
-		float hitT = bounds[0] < bounds[1] ? bounds[0] : bounds[1];
+		float hitT = (bounds[0] < bounds[1]) ? bounds[0] : bounds[1];
+		hitT = (hitT < 0) ? bounds[1] : hitT; 
 		
 		if(intersected) {
 			ray.maxt = hitT;
