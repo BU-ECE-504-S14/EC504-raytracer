@@ -377,7 +377,7 @@ public class ObjectParser
 						TriangleMesh newMesh = createMesh(objName, faceMeshIndices, faceTextureIndices, meshVertices, textureVertices);
 						materialMap.put(newMesh.getID(), matName);
 						objects.add(newMesh);
-						vertexOffset = newMesh.Points.length;
+						vertexOffset = newMesh.getVertices().length;
 					}
 					parsing = true;
 					objName = currentLine.split(" ")[1];

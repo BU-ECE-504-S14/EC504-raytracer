@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import GUI.PreviewPanel;
 
@@ -30,7 +31,12 @@ public class RenderViewer extends JFrame
 	public RenderViewer(BufferedImage bi)
 	{
 		this();
-		add(new PreviewPanel(bi));
+		JPanel j = new JPanel();
+		ImageIcon i = new ImageIcon();
+		i.setImage(bi);
+		JLabel l = new JLabel(i);
+		j.add(l);
+		add(j);
 		setVisible(true);
 		pack();
 	}

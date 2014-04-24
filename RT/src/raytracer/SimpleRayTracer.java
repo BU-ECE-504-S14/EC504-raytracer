@@ -39,33 +39,25 @@ public class SimpleRayTracer
 {
 	private static int rayCount;
 	private static BufferedImage outputImage;
-	private static final int THREADS = 1;
-	private static final int NOT_SHINY = -1;
-	private static final int NOT_REFLECTIVE = -1;
-	private static final int NOT_REFRACTIVE = -1;
-	private static final int AIR_REFRACTIVE_INDEX = 1;
-	public static final boolean SOFT_SHADOWS = true;
+	public static final boolean SOFT_SHADOWS = false;
+	
+	public static int MAX_REFRACTIONS = 5;
+	public static int MAX_REFLECTIONS = 3;
+	public static boolean RECURSIVE_SHADOWS = true;
+	public static boolean MULTITHREAD = true;
+	private static int ANTIALIASING = 1;
+	private static Scene scene;
 
-	// private static final int MAX_LEVELS = 3;
-
-	private static final int MAX_REFRACTIONS = 5;
-
-	private static final int MAX_REFLECTIONS = 3;
-
+	
+	
 	/** Margin of error when comparing doubles */
 	private static final double FLOAT_CORRECTION = 0.001;
-	private static final float SHADOW_OFFSET = .5f;
 
-	public static boolean RECURSIVE_SHADOWS = false;
-	private static int threadsFinished = 0;
 
-	private static volatile Scene scene;
 	/** Desired scene to render */
 	private static Dimension imageSize;
 	/** Size of the image to generate */
-	private static int antialiasing = 1;
-	/** Antialiasing parameter */
-	private static int shadow;
+
 	/** Shadow parameter */
 	private static int counter;
 	public static int totalRays;
@@ -86,12 +78,11 @@ public class SimpleRayTracer
 	 * @param outputImage
 	 *            TODO
 	 */
-	public SimpleRayTracer(Scene scene, Dimension imageSize, int antialiasing, int shadow)
+	public SimpleRayTracer(Scene scene, Dimension imageSize, int antialiasing)
 	{
 		super();
 		SimpleRayTracer.scene = scene;
-		SimpleRayTracer.antialiasing = antialiasing;
-		SimpleRayTracer.shadow = shadow;
+		SimpleRayTracer.ANTIALIASING = antialiasing;
 		SimpleRayTracer.imageSize = imageSize;
 		counter = 0;
 	}
@@ -121,9 +112,9 @@ public class SimpleRayTracer
 					System.out.print('*');
 				color.set(0, 0, 0);
 
-				if (antialiasing <= 1)
+				if (ANTIALIASING <= 1)
 				{
-					Ray ray = constructRayThroughPixel(j, i);/*
+					Ray ray = constructRayThroughPixel(i, j);/*
 															 * create this ray through
 															 * pixel (i,j)
 															 */
@@ -167,7 +158,6 @@ public class SimpleRayTracer
 		double startTime = System.currentTimeMillis();
 		totalRays = imageSize.height * imageSize.width;
 		currentRay = 0;
-		threadsFinished = 0;
 
 		final int NUM_THREADS = Runtime.getRuntime().availableProcessors() + 1;
 		// final int NUM_THREADS = 1;
@@ -178,7 +168,7 @@ public class SimpleRayTracer
 		outputImage = new BufferedImage(imageSize.width, imageSize.height,
 				BufferedImage.TYPE_INT_RGB);
 
-		double raysPerPixel = Math.pow(antialiasing, 2);
+		double raysPerPixel = Math.pow(ANTIALIASING, 2);
 
 		// Make all of the ColorPixel callables
 
@@ -186,7 +176,7 @@ public class SimpleRayTracer
 		{
 			for (int j = 0; j < imageSize.height; j++)
 			{
-				if (antialiasing > 1)
+				if (ANTIALIASING > 1)
 				{
 					List<Ray> rays = constructRaysThroughPixel(j, i);
 					for (Ray r : rays)
@@ -272,7 +262,7 @@ public class SimpleRayTracer
 			{
 				color.set(0, 0, 0);
 
-				if (antialiasing <= 1)
+				if (ANTIALIASING <= 1)
 				{
 					Ray ray = constructRayThroughPixel(ii, jj);/*
 																 * create this ray through
@@ -299,7 +289,6 @@ public class SimpleRayTracer
 				rayCount++;
 			}
 		}
-		threadsFinished++;
 	}
 
 	/**
@@ -563,6 +552,7 @@ public class SimpleRayTracer
 		ambient.scale(alpha);
 		diffuse.scale(1 - inter.shape.getMaterial().reflectionIndex);
 		diffuse.scale(alpha);
+		specular.scale(1 - inter.shape.getMaterial().reflectionIndex);
 		Vector3d endColor = addColorComponents(ambient, diffuse, specular);
 		return endColor;
 
@@ -711,8 +701,7 @@ public class SimpleRayTracer
 
 		if (shadowVec.length() < lightPosition.length())
 		{
-			if (inter.shape.getMaterial().alpha == 1
-					&& inter.shape.getMaterial().reflectionIndex == 0)
+			if (inter.shape.getMaterial().alpha == 1)
 			{
 				return true;
 			}
@@ -840,10 +829,10 @@ public class SimpleRayTracer
 		rand.nextDouble();
 		ArrayList<Ray> rays = new ArrayList<Ray>();
 		// 1 pixel divided by the number of aa samples in i and j directions
-		double offsetAmount = 1.0 / antialiasing;
+		double offsetAmount = 1.0 / ANTIALIASING;
 
-		double[] js = new double[antialiasing];
-		double[] is = new double[antialiasing];
+		double[] js = new double[ANTIALIASING];
+		double[] is = new double[ANTIALIASING];
 
 		for (int ii = 0; ii < is.length; ii++)
 		{

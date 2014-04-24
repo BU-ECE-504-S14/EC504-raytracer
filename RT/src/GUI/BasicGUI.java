@@ -52,7 +52,6 @@ public class BasicGUI extends JFrame
 	ImageIcon renderIcon = null;
 	BufferedImage renderOutput = null;
 	Renderer render = new Renderer();
-	Scene targetScene = render.constructSampleScene();
 	JPanel p = new JPanel();
 	JButton go = new JButton("Make it go!");
 	JLabel renderHolder = new JLabel();
@@ -110,17 +109,17 @@ public class BasicGUI extends JFrame
 
 	public void updateRenderingParams()
 	{
-		Renderer.setOptionWidth(Integer.parseInt(paramFields[0].getText()));
-		Renderer.setOptionHeight(Integer.parseInt(paramFields[1].getText()));
-		Renderer.setOptionAntialiasing(Integer.parseInt(paramFields[2].getText()));
-		Renderer.setOptionShadow(Integer.parseInt(paramFields[3].getText()));
+		render.setOptionWidth(Integer.parseInt(paramFields[0].getText()));
+		render.setOptionHeight(Integer.parseInt(paramFields[1].getText()));
+		render.setOptionAntialiasing(Integer.parseInt(paramFields[2].getText()));
+		render.setOptionShadow(Integer.parseInt(paramFields[3].getText()));
 	}
 
 	public void renderScene()
 	{
 		try
 		{
-			renderOutput = Renderer.renderScene(targetScene);
+		//	renderOutput = render.renderSampleScene();
 		}
 		catch (Exception e)
 		{

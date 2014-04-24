@@ -6,11 +6,14 @@ JPanel redrawing implementation adapted from: http://stackoverflow.com/questions
 package GUI;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
@@ -28,6 +31,8 @@ public class PreviewPanel extends JPanel
 	JPanel prevImage = new JPanel();
 	Thread loopThread;
 	JLabel prevImageLabel = new JLabel();
+	JButton boxButton;
+	JButton sphereButton;
 	int SLEEP_TIME = 100;
 	LoopThread l;
 
@@ -36,13 +41,29 @@ public class PreviewPanel extends JPanel
 		myImage = img;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		prevImage.add(prevImageLabel);
-		textLabel = new JLabel("Preview: ");
+		textLabel = new JLabel("Preview Geometry: ");
 		text.add(textLabel);
 		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-		add(text);
+
+		boxButton = new JButton("Box");
+		sphereButton = new JButton("Sphere");
+
+		JPanel topPanel = new JPanel(new FlowLayout());
+		topPanel.add(text);
+		topPanel.add(boxButton);
+		topPanel.add(sphereButton);
+
+		add(topPanel);
 		add(prevImage);
-		l = new LoopThread(SLEEP_TIME);
-		l.start();
+
+		// l = new LoopThread(SLEEP_TIME);
+		// l.start();
+	}
+
+	public void setButtonListeners(ActionListener box, ActionListener sphere)
+	{
+		boxButton.addActionListener(box);
+		sphereButton.addActionListener(sphere);
 	}
 
 	public void stopLoop()
@@ -57,18 +78,40 @@ public class PreviewPanel extends JPanel
 
 	public void updatePreview()
 	{
-		if (myImage != null){
-				
-		Dimension textSize = new Dimension(myImage.getWidth(), 20);
-		Dimension labelSize = new Dimension(myImage.getWidth(), myImage.getHeight());
-		ImageIcon i = new ImageIcon(myImage);
+		if (myImage != null)
+		{
 
-		text.setPreferredSize(textSize);
-		text.setMaximumSize(textSize);
+			Dimension textSize = new Dimension(myImage.getWidth(), 20);
+			Dimension labelSize = new Dimension(myImage.getWidth(), myImage.getHeight());
 
-		prevImage.setPreferredSize(labelSize);
-		prevImageLabel.setIcon(i);
-		prevImageLabel.repaint();
+			// text.setPreferredSize(textSize);
+			text.setMaximumSize(textSize);
+
+			prevImage.setPreferredSize(labelSize);
+			ImageIcon i = new ImageIcon(myImage);
+			prevImageLabel.setIcon(i);
+			prevImageLabel.repaint();
+		}
+	}
+
+	public void updatePreview(boolean resize)
+	{
+		if (myImage != null)
+		{
+
+			if (resize)
+			{
+				Dimension textSize = new Dimension(myImage.getWidth(), 20);
+				Dimension labelSize = new Dimension(myImage.getWidth(), myImage.getHeight());
+
+				// text.setPreferredSize(textSize);
+				text.setMaximumSize(textSize);
+
+				prevImage.setPreferredSize(labelSize);
+			}
+			ImageIcon i = new ImageIcon(myImage);
+			prevImageLabel.setIcon(i);
+			prevImageLabel.repaint();
 		}
 	}
 

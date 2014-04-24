@@ -104,8 +104,8 @@ public class MeshPreviewScene extends Scene
 		// objects.add(plane);
 		//objects.add(parse);
 		objects.add(demoSphere);
-		//objects.add(demoSphere2);
-		objects.add(BBo);
+		objects.add(demoSphere2);
+		//objects.add(BBo);
 
 		// Prints out all object ids
 		/*
@@ -116,7 +116,7 @@ public class MeshPreviewScene extends Scene
 		 * for(SceneObject tmptmpobj:soa) System.out.println(tmptmpobj.getID()); } }
 		 */
 		
-		this.buildOctree(1);
+		this.buildOctree(3);
 
 	}
 }

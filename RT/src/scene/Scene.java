@@ -138,6 +138,12 @@ public class Scene implements Serializable
 		this.objects.add(obj);
 		accelFlag = false;
 	}
+	
+	public void removeSceneObject(SceneObject obj)
+	{
+		this.objects.remove(obj);
+		accelFlag = false;
+	}
 
 	public void addLight(Light light)
 	{
