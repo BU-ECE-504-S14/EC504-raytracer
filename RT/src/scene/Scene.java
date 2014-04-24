@@ -78,10 +78,6 @@ public class Scene implements Serializable
 			{
 				lights.add(((PointLight)l).getCopy());
 			}
-			else if (l instanceof SphereLight)
-			{
-				lights.add(((SphereLight)l).getCopy());
-			}
 		}
 	}
 
@@ -181,23 +177,6 @@ public class Scene implements Serializable
 	public boolean getFirstIntersectedObject(Ray ray, Intersection inter) throws Exception
 	{
 		return getFirstIntersectedObject(ray, inter, objects);
-	}
-
-	public ArrayList<Octnode> getFirstOctnodes(Ray ray)
-	{
-		ArrayList<Octnode> octnodes = new ArrayList<Octnode>();
-		if (accelFlag == false)
-		{
-			return null;
-		}
-
-		if (accelerator != null && accelerator instanceof Octree)
-		{
-			octnodes = ((Octree)accelerator).getFirstOctnodes(ray);
-			
-		}
-		return octnodes;
-
 	}
 
 	/* ask aaron about this coding practice. Is this overloading. */

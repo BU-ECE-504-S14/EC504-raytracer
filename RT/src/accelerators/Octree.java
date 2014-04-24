@@ -56,10 +56,6 @@ public class Octree implements AbstractAccelerator, Serializable
 		}
 	}
 
-	public ArrayList<Octnode> getFirstOctnodes(Ray ray)
-	{
-		return root.getIntersectedChildren(ray);
-	}
 
 	public boolean intersectTraverse(Ray ray, Intersection inter) throws NotIntersectableException
 	{
@@ -88,8 +84,7 @@ public class Octree implements AbstractAccelerator, Serializable
 			nearest = currentLeaf.nearestIntersect(ray);
 			if (nearest != null)
 			{
-				nearest.Intersect(ray, inter);
-				return true;
+				return nearest.Intersect(ray, inter);
 			}
 		}
 
@@ -100,8 +95,8 @@ public class Octree implements AbstractAccelerator, Serializable
 	public boolean Intersect(Ray ray, Intersection inter)
 			throws NotIntersectableException
 	{
-		//return Intersect(ray, inter, root);
-		return intersectTraverse(ray, inter, root);
+		return Intersect(ray, inter, root);
+		//return intersectTraverse(ray, inter, root);
 	}
 
 	/*

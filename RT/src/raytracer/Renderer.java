@@ -20,6 +20,7 @@ import objects.TriangleMesh;
 import scene.BoxTestScene;
 import scene.MeshPreviewScene;
 import scene.PointLight;
+import scene.PreviewScene;
 
 /**
  * Ray tracing renderer, for EC504 at Boston University based on the work of Rafael Martin
@@ -49,8 +50,8 @@ public class Renderer
 
 		optionAntialiasing = 1;
 
-		optionWidth = 400;
-		optionHeight = 600;
+		optionWidth = 600;
+		optionHeight = 400;
 
 		optionShadow = 0;
 		showSampleScene();
@@ -63,7 +64,7 @@ public class Renderer
 
 
 			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new MeshPreviewScene()));
+			new RenderViewer(renderScene(new PreviewScene(new Sphere())));
 		}
 		catch (Exception e)
 		{

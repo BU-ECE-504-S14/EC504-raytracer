@@ -1,6 +1,8 @@
 package geometry;
 
 
+import java.util.ArrayList;
+
 import javax.vecmath.Vector3d;
 
 import scene.Intersection;
@@ -27,6 +29,7 @@ public class Ray
 						// behind ray)
 	public int depth; // numbers of times ray has been reflected/refracted
 
+	
 	public Ray(Pt origin, Vec dir)
 	{
 		this.position = new Pt(origin);
@@ -136,15 +139,57 @@ public class Ray
 	 */
 	public static Ray makeShadowRay(Intersection inter, Light light, double correction)
 	{
+		return makeShadowRay(inter.p, light, correction);
+	}
+	
+	/**
+	 * Create a shadow ray from the given intersection point towards the provided light
+	 * source.
+	 * 
+	 * @param shadowRay
+	 * @param distance
+	 * @return ray
+	 */
+	public static Ray makeShadowRay(Vector3d p, Light light, double correction)
+	{
 		// ******** Construct the shadow ray
 		Vec lightDir = new Vec(new Vector3d(light.getPosition()));
-		lightDir.sub(inter.p);
+		lightDir.sub(p);
 		Vector3d direction = new Vector3d(lightDir);
 		direction.scale(correction);
-		Pt offsetPoint = new Pt(inter.p);
+		Pt offsetPoint = new Pt(p);
 		offsetPoint.add(direction);
 
 		return new Ray(offsetPoint, lightDir, 0);
+	}
+	
+	public static ArrayList<Ray> makeShadowRays(Intersection inter, Light light, double correction, double offset){
+		ArrayList<Ray> shadows = new ArrayList<Ray>();
+		ArrayList<Pt> points= new ArrayList<Pt>();
+		Vector3d dU = new Vector3d(inter.dpdu); 	dU.normalize();
+		Vector3d dV = new Vector3d(inter.dpdu); 	dV.normalize();
+		Vector3d dUNeg = new Vector3d(dU); 			dUNeg.normalize();
+		Vector3d dVNeg = new Vector3d(dV); 			dVNeg.normalize();
+		dUNeg.negate(); 							dVNeg.negate();
+		
+		double randdv = Math.random()*offset;		double randdu = Math.random()*offset;
+		double randdvNeg = Math.random()*offset;	double randduNeg = Math.random()*offset;
+		dU.scale(randdu); 							dV.scale(randdv);
+		dUNeg.scale(randdvNeg); 					dVNeg.scale(randduNeg);
+		
+		for (int i =0 ; i < 5; i++){
+			points.add(new Pt(inter.p));
+		}
+		points.get(1).add(dU);
+		points.get(2).add(dV);
+		points.get(3).add(dUNeg);
+		points.get(4).add(dVNeg);
+		
+		for (int i =0 ; i < points.size(); i++){
+			shadows.add(makeShadowRay(points.get(i), light, correction));
+		}
+		
+		return shadows;
 	}
 
 	public static Ray reflectRay(Ray ray, Intersection i, double correction)

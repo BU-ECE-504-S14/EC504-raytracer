@@ -1,11 +1,17 @@
 package scene;
 
+import geometry.Ray;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
+import objects.SceneObject;
+import raytracer.SimpleRayTracer;
 import raytracer.Util;
 
 /**
@@ -103,6 +109,25 @@ public class PointLight implements Light, Serializable
 		result.scale(factor);
 		// return result;
 		return new Vector3d(color);
+	}
+
+	@Override
+	public Vector3d getShadowColor(Vector3d currentPosition, HashSet<Intersection> hits)
+	{
+		Vector3d baseColor = getColor(currentPosition);
+		HashMap<SceneObject, Intersection> objs = new HashMap<SceneObject, Intersection>();
+
+		for (Intersection i : hits)
+		{
+			SceneObject o = i.shape;
+			Vector3d transColor = SimpleRayTracer.calculateDiffuseColor(i, this);
+			transColor.negate();
+			baseColor.sub(transColor);
+			double aSq = 1 - o.getMaterial().alpha;
+			baseColor.scale(aSq);
+		}
+		baseColor.clamp(0.0, 1.0);
+		return baseColor;
 	}
 
 	/**
