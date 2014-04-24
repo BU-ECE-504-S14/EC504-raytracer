@@ -47,7 +47,7 @@ public class Renderer
 	{
 		optionProgress = true;
 
-		optionAntialiasing = 4;
+		optionAntialiasing = 0;
 
 		optionWidth = 400;
 		optionHeight = 400;

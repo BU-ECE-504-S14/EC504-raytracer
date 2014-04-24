@@ -13,12 +13,12 @@ import objects.SceneObject;
  */
 public class Intersection {
 	
-	public Vector3d p;
-	public Vector3d nn; //normalized normal
-	public float u,v;
-	public SceneObject shape;
-    public Vector3d dpdu, dpdv;
-    public Vector3d dndu, dndv;
+	public Vector3d p;	//point of intersection
+	public Vector3d nn; //normalized normal of object at intersection
+	public float u,v;	//texture points
+	public SceneObject shape;	//object that was intersected
+    public Vector3d dpdu, dpdv;	//parameterizations tangent to normalized normal
+    public Vector3d dndu, dndv;	//change in normals at point of intersection
 	
 	/**
 	 * 

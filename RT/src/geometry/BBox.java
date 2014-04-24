@@ -248,6 +248,7 @@ public class BBox implements Serializable{
 		
 		return true;
 	}
+	
 	/**
 	 * 
 	 * @param t tuple used to set float array
