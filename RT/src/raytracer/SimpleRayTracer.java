@@ -404,11 +404,11 @@ public class SimpleRayTracer {
 		// Soft shadows:
 		
 		Ray chkRay = Ray.makeShadowRay(inter, light, FLOAT_CORRECTION);
-		if (SOFT_SHADOWS && inShadow(chkRay, light)) {
+		if (SOFT_SHADOWS && inShadow(chkRay, light) && light.getSoftShadowOffset() > 0d) {
 			Vector3d newDiffuse = new Vector3d(0,0,0);
 			Vector3d newSpecular = new Vector3d(0,0,0);
 			List<Ray> shadowRays = Ray.makeShadowRays(inter, light,
-					FLOAT_CORRECTION, SHADOW_OFFSET);
+					FLOAT_CORRECTION, light.getSoftShadowOffset());
 
 			for (Ray r : shadowRays) {
 				if (!inShadow(r, light)) {

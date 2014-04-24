@@ -55,6 +55,7 @@ public class MeshPreviewScene extends Scene
 
 		demoLight2.setPosition(new Vector3d(0, 0, 20));
 		demoLight2.setColor(new Vector3d(1, 1, 1));
+		demoLight2.setSoftShadowOffset(.6);
 		demoLight3.setColor(new Vector3d(.8, .3, .8));
 		demoLight.setColor(new Vector3d(.3, .8, .8));
 		demoLight.setRadio(1);

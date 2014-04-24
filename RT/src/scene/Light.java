@@ -44,5 +44,9 @@ public interface Light
 	 * @return a Vector3d representing the color of the light at the given position.
 	 */
 	public Vector3d getColor(Vector3d point);
+	
+	public void setSoftShadowOffset(double SS);
+	
+	public double getSoftShadowOffset();
 
 }
