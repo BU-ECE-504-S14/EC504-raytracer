@@ -42,6 +42,8 @@ public class BBoxObject extends AbstractSceneObject {
 		
 		if(intersected) {
 			ray.maxt = hitT;
+		} else {
+			return false;
 		}
 		
 		Pt[] corners = bb.getCorners();

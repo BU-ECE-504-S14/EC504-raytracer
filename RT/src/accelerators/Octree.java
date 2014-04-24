@@ -90,8 +90,8 @@ public class Octree implements AbstractAccelerator, Serializable
 			nearest = currentLeaf.nearestIntersect(ray);
 			if (nearest != null)
 			{
-				nearest.Intersect(ray, inter);
-				return true;
+				
+				return nearest.Intersect(ray, inter);
 			}
 		}
 
