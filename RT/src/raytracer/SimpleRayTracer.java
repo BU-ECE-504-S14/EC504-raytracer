@@ -44,7 +44,7 @@ public class SimpleRayTracer
 	private static final int NOT_REFLECTIVE = -1;
 	private static final int NOT_REFRACTIVE = -1;
 	private static final int AIR_REFRACTIVE_INDEX = 1;
-	public static final boolean SOFT_SHADOWS = false;
+	public static final boolean SOFT_SHADOWS = true;
 
 	// private static final int MAX_LEVELS = 3;
 
@@ -56,6 +56,7 @@ public class SimpleRayTracer
 	private static final double FLOAT_CORRECTION = 0.001;
 	private static final float SHADOW_OFFSET = .5f;
 
+	public static boolean RECURSIVE_SHADOWS = false;
 	private static int threadsFinished = 0;
 
 	private static volatile Scene scene;
@@ -301,33 +302,6 @@ public class SimpleRayTracer
 		threadsFinished++;
 	}
 
-	private static Vector3d getDiffuseShadowComponent(Intersection inter, Light light,
-			HashSet<Intersection> hits)
-	{
-		Vector3d diffuse = calculateDiffuseShadowColor(inter, light, hits);
-		Vector3d lightVect = new Vector3d(light.getPosition());
-
-		lightVect.sub(inter.p);
-		lightVect.normalize();
-		lightVect.negate();
-
-		double dotProd = inter.nn.dot(lightVect);
-
-		if (dotProd < 0)
-		{
-			lightVect.negate();
-		}
-
-		dotProd = inter.nn.dot(lightVect);
-
-		diffuse.scale(dotProd);
-		diffuse.scale(inter.shape.getMaterial().diffuseIndex);
-		diffuse.scale(light.getRadio());
-		diffuse.clamp(0.0, 1.0);
-
-		return diffuse;
-	}
-
 	/**
 	 * Calculates the diffuse component of the Phong shading model for the given
 	 * intersection, light, and eye position.
@@ -386,53 +360,6 @@ public class SimpleRayTracer
 		ambient.clamp(0.0, 1.0);
 
 		return ambient;
-	}
-
-	private static Vector3d calcSpecular(Intersection inter, Light light, Vector3d eye,
-			HashSet<Intersection> hits)
-	{
-		// ******** Calculate specular light. View direction affects the intensity of
-		// ******** light contribution.
-		// ******** Equation: L_s = k_s * I * max(0, r dot v)^(k_e)
-		// ******** k_s: specular parameter (specular index)
-		// ******** I: illumination intensity of the light (radiosity)
-		// ******** n: normal vector to the object at the point of intersection
-		// ******** r: mirror reflection of the light ray hitting the intersection
-		// ******** point (reflection)
-		// ******** v: view ray (eyedirection; ray emanating from the camera and
-		// ******** hitting the object)
-		// ******** k_e: shininess parameter that controls the size of the specular
-		// ******** highlight (shininess*256)
-
-		Vector3d lightVect = new Vector3d(light.getPosition());
-
-		lightVect.sub(inter.p);
-		lightVect.normalize();
-		lightVect.negate();
-
-		Vector3d specular = new Vector3d(0, 0, 0);
-		Material material = inter.shape.getMaterial();
-		Vector3d reflection = new Vector3d();
-		eye.sub(inter.p);
-		eye.normalize();
-		reflection = Ray.reflectVector(lightVect, inter.nn);
-		double dotProd = eye.dot(reflection);
-
-		if (dotProd > 0)
-		{
-			double specAmt = material.specularIndex
-					* Math.pow(dotProd, (material.shininess * 128.0));
-
-			// ******** Use the attenuated light intensity at intersection point
-			// and
-			// ******** multiply by the calculated specular amount
-
-			specular = calculateSpecularShadowColor(inter, light, hits);
-
-			specular.scale(specAmt);
-		}
-		specular.clamp(0.0, 1.0);
-		return specular;
 	}
 
 	/**
@@ -509,94 +436,136 @@ public class SimpleRayTracer
 		List<Intersection> shadowHits = new ArrayList<Intersection>();
 
 		Ray chkRay = Ray.makeShadowRay(inter, light, FLOAT_CORRECTION);
-		/*
-		 * if (SOFT_SHADOWS && inShadow(chkRay, light, new HashSet<Intersection>())) {
-		 * Vector3d newDiffuse = new Vector3d(0, 0, 0); Vector3d newSpecular = new
-		 * Vector3d(0, 0, 0); List<Ray> shadowRays = Ray .makeShadowRays(inter, light,
-		 * FLOAT_CORRECTION, SHADOW_OFFSET); for (Ray r : shadowRays) { if (!inShadow(r,
-		 * light, shadowHits)) { counter++; // ******** Calculate the diffuse component
-		 * Vector3d sDiffuse = getDiffuseComponent(inter, light); Vector3d eyeDirection =
-		 * new Vector3d(r.position); Vector3d sSpecular = getSpecularComponent(inter,
-		 * light, eyeDirection); newDiffuse.clamp(0d, 1d); newSpecular.clamp(0d, 1d);
-		 * newDiffuse.add(sDiffuse); newSpecular.add(sSpecular); } } double divisor = 1d /
-		 * 5d; newDiffuse.scale(divisor); newSpecular.scale(divisor); diffuse =
-		 * newDiffuse; specular = newSpecular; double alpha =
-		 * inter.shape.getMaterial().alpha; ambient.scale(alpha); diffuse.scale(alpha);
-		 * return addColorComponents(ambient, diffuse, specular); } else {
-		 */
-
-		Ray shadowRay = Ray.makeShadowRay(inter, light, FLOAT_CORRECTION);
 		double alpha = inter.shape.getMaterial().alpha;
 
-		// ******** if object is in shadow for this light, only add ambient
-		// color
-		// ******** if (scene.getFirstIntersectedObject(shadowRay, new
-		// Intersection()))
-		ArrayList<SceneObject> shadowObjects = new ArrayList<SceneObject>();
-		if (!inShadow(shadowRay, light, shadowHits))
+		if (SOFT_SHADOWS)
 		{
-			if (shadowHits.size() > 0)
+			if (inShadow(chkRay, light)
+
+			&& light.getSoftShadowOffset() > 0d)
 			{
-				/*
-				 * // ******** Calculate the diffuse component diffuse =
-				 * getDiffuseShadowComponent(inter, light, shadowHits); Vector3d
-				 * eyeDirection = new Vector3d(ray.position); specular =
-				 * getSpecularShadowComponent(inter, light, eyeDirection, shadowHits);
-				 */
+				Vector3d newDiffuse = new Vector3d(0, 0, 0);
+				Vector3d newSpecular = new Vector3d(0, 0, 0);
+				List<Ray> shadowRays = Ray.makeShadowRays(inter, light, FLOAT_CORRECTION,
+						light.getSoftShadowOffset());
 
-				// Color of the object at the end of this shadow ray
-				Vector3d shadowColor = getColor(shadowRay, currentReflection + 1,
-						currentRefraction + 1, inter.shape, scene);				
-				double shadowAlpha = shadowHits.get(0).shape.getMaterial().alpha;
-				
-				Vector3d alphaMask = new Vector3d(shadowAlpha, shadowAlpha, shadowAlpha);
-				shadowColor.scale(shadowAlpha/2);
-				alphaMask.sub(shadowColor);
-				
-				diffuse = getDiffuseComponent(inter, light);
-				Vector3d eyeDirection = new Vector3d(shadowRay.position);
-				specular = getSpecularComponent(inter, light, eyeDirection);
+				for (Ray r : shadowRays)
+				{
+					if (!inShadow(r, light))
+					{
+						counter++;
+						// ******** Calculate the diffuse component
+						Vector3d sDiffuse = getDiffuseComponent(inter, light);
 
-				diffuse.clamp(0d, 1d);
-				specular.clamp(0d, 1d);
+						Vector3d eyeDirection = new Vector3d(r.position);
+						Vector3d sSpecular = getSpecularComponent(inter, light, eyeDirection);
 
-				ambient.scale(1 - inter.shape.getMaterial().reflectionIndex);
-				ambient.scale(alpha);
-				diffuse.scale(1 - inter.shape.getMaterial().reflectionIndex);
-				diffuse.scale(alpha);
-				specular.scale(1 - inter.shape.getMaterial().reflectionIndex);
+						newDiffuse.clamp(0d, 1d);
+						newSpecular.clamp(0d, 1d);
 
-				
-				Vector3d endColor = addColorComponents(ambient, diffuse, specular);
-				endColor.sub(alphaMask);
+						newDiffuse.add(sDiffuse);
+						newSpecular.add(sSpecular);
+					}
+				}
+				double divisor = 1d / 5d;
 
-				endColor.scale(alpha);
-				return endColor;
-				
+				newDiffuse.scale(divisor);
+				newSpecular.scale(divisor);
+				diffuse = newDiffuse;
+				specular = newSpecular;
 			}
 			else
 			{
+				Ray shadowRay = Ray.makeShadowRay(inter, light, FLOAT_CORRECTION);
+				if (!inShadow(shadowRay, light))
+				{
+					diffuse = getDiffuseComponent(inter, light);
+					Vector3d eyeDirection = new Vector3d(shadowRay.position);
+					specular = getSpecularComponent(inter, light, eyeDirection);
+				}
+			}
+		}
+
+		else if (RECURSIVE_SHADOWS)
+		{
+
+			Ray shadowRay = Ray.makeShadowRay(inter, light, FLOAT_CORRECTION);
+
+			// ******** if object is in shadow for this light, only add ambient
+			// color
+			// ******** if (scene.getFirstIntersectedObject(shadowRay, new
+			// Intersection()))
+			ArrayList<SceneObject> shadowObjects = new ArrayList<SceneObject>();
+			if (!inShadow(shadowRay, light, shadowHits))
+			{
+				if (shadowHits.size() > 0)
+				{
+					/*
+					 * // ******** Calculate the diffuse component diffuse =
+					 * getDiffuseShadowComponent(inter, light, shadowHits); Vector3d
+					 * eyeDirection = new Vector3d(ray.position); specular =
+					 * getSpecularShadowComponent(inter, light, eyeDirection, shadowHits);
+					 */
+
+					// Color of the object at the end of this shadow ray
+					Vector3d shadowColor = getColor(shadowRay, currentReflection + 1,
+							currentRefraction + 1, inter.shape, scene);
+					double shadowAlpha = shadowHits.get(0).shape.getMaterial().alpha;
+
+					Vector3d alphaMask = new Vector3d(shadowAlpha, shadowAlpha, shadowAlpha);
+					shadowColor.scale(shadowAlpha / 2);
+					alphaMask.sub(shadowColor);
+
+					diffuse = getDiffuseComponent(inter, light);
+					Vector3d eyeDirection = new Vector3d(shadowRay.position);
+					specular = getSpecularComponent(inter, light, eyeDirection);
+
+					diffuse.clamp(0d, 1d);
+					specular.clamp(0d, 1d);
+
+					ambient.scale(1 - inter.shape.getMaterial().reflectionIndex);
+					ambient.scale(alpha);
+					diffuse.scale(1 - inter.shape.getMaterial().reflectionIndex);
+					diffuse.scale(alpha);
+					specular.scale(1 - inter.shape.getMaterial().reflectionIndex);
+
+					Vector3d endColor = addColorComponents(ambient, diffuse, specular);
+					endColor.sub(alphaMask);
+
+					endColor.scale(alpha);
+					return endColor;
+
+				}
+				else
+				{
+					diffuse = getDiffuseComponent(inter, light);
+					Vector3d eyeDirection = new Vector3d(shadowRay.position);
+					specular = getSpecularComponent(inter, light, eyeDirection);
+
+					diffuse.clamp(0d, 1d);
+					specular.clamp(0d, 1d);
+
+					// specular.scale(1 - inter.shape.getMaterial().reflectionIndex);
+				}
+			}
+		}
+		else
+		{
+			Ray shadowRay = Ray.makeShadowRay(inter, light, FLOAT_CORRECTION);
+			if (!inShadow(shadowRay, light))
+			{
 				diffuse = getDiffuseComponent(inter, light);
 				Vector3d eyeDirection = new Vector3d(shadowRay.position);
 				specular = getSpecularComponent(inter, light, eyeDirection);
-
-				diffuse.clamp(0d, 1d);
-				specular.clamp(0d, 1d);
-
-				ambient.scale(1 - inter.shape.getMaterial().reflectionIndex);
-				ambient.scale(alpha);
-				diffuse.scale(1 - inter.shape.getMaterial().reflectionIndex);
-				diffuse.scale(alpha);
-				specular.scale(1 - inter.shape.getMaterial().reflectionIndex);
-
-				Vector3d endColor = addColorComponents(ambient, diffuse, specular);
-				return endColor;
 			}
 		}
-		// }
-
+		ambient.scale(1 - inter.shape.getMaterial().reflectionIndex);
+		ambient.scale(alpha);
+		diffuse.scale(1 - inter.shape.getMaterial().reflectionIndex);
+		diffuse.scale(alpha);
 		Vector3d endColor = addColorComponents(ambient, diffuse, specular);
 		return endColor;
+
 	}
 
 	/**
@@ -759,6 +728,38 @@ public class SimpleRayTracer
 	}
 
 	/**
+	 * Check to see if the provided shadow Ray intersects an object in the scene before
+	 * reaching the light.
+	 * 
+	 * @param shadowRay
+	 * @param lightDist
+	 * @return true if in shadow, false otherwise
+	 * @throws Exception
+	 */
+
+	private static boolean inShadow(Ray shadowRay, Light l) throws Exception
+	{
+		Intersection inter = new Intersection();
+		Vector3d lightPosition = new Vector3d(l.getPosition());
+
+		if (!scene.getFirstIntersectedObject(shadowRay, inter))
+		{
+			return false;
+		}
+
+		Vector3d shadowVec = new Vector3d(inter.p);
+		shadowVec.sub(shadowRay.position);
+		lightPosition.sub(shadowRay.position);
+
+		if (shadowVec.length() < lightPosition.length())
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Calculates the specular color based on one light. NEED TO ADJUST FOR OTHER SCENE
 	 * OBJECTS.
 	 * 
@@ -797,30 +798,6 @@ public class SimpleRayTracer
 		double newRColor = mat.diffuseColor.getX() * lightColor.getX();
 		double newGColor = mat.diffuseColor.getY() * lightColor.getY();
 		double newBColor = mat.diffuseColor.getZ() * lightColor.getZ();
-
-		return new Vector3d(newRColor, newGColor, newBColor);
-	}
-
-	public static Vector3d calculateDiffuseShadowColor(Intersection inter, Light light,
-			HashSet<Intersection> hits)
-	{
-		Vector3d lightColor = light.getShadowColor(inter.p, hits);
-		Material mat = inter.shape.getMaterial();
-		double newRColor = mat.diffuseColor.getX() * lightColor.getX();
-		double newGColor = mat.diffuseColor.getY() * lightColor.getY();
-		double newBColor = mat.diffuseColor.getZ() * lightColor.getZ();
-
-		return new Vector3d(newRColor, newGColor, newBColor);
-	}
-
-	public static Vector3d calculateSpecularShadowColor(Intersection inter, Light light,
-			HashSet<Intersection> hits)
-	{
-		Vector3d lightColor = light.getShadowColor(inter.p, hits);
-		Material mat = inter.shape.getMaterial();
-		double newRColor = mat.specularColor.getX() * lightColor.getX();
-		double newGColor = mat.specularColor.getY() * lightColor.getY();
-		double newBColor = mat.specularColor.getZ() * lightColor.getZ();
 
 		return new Vector3d(newRColor, newGColor, newBColor);
 	}

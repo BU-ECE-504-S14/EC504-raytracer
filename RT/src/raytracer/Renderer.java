@@ -48,7 +48,7 @@ public class Renderer
 	{
 		optionProgress = true;
 
-		optionAntialiasing = 1;
+		optionAntialiasing = 0;
 
 		optionWidth = 600;
 		optionHeight = 400;
@@ -64,7 +64,8 @@ public class Renderer
 
 
 			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new PreviewScene(new Sphere())));
+			//new RenderViewer(renderScene(new PreviewScene(new Sphere())));
+			new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
 		{

@@ -30,12 +30,17 @@ public class PointLight implements Light, Serializable
 	 * The position of this Light object, in Scene coordinates.
 	 */
 	protected Vector3d position = new Vector3d(0, 10, 0);
+	
 	/**
 	 * The color of the light given off by this object.
 	 */
 	protected Vector3d color = new Vector3d(1, 1, 1);
-	// private double fallConstant = 0.05;
-
+	
+	/**
+	 * soft shadow component of light //TODO add volumetric lights
+	 */
+	protected double softShadowOffset = 0d;
+	
 	/**
 	 * Determines the radiosity/diffusiveness of light given off by this object.
 	 */
@@ -111,25 +116,6 @@ public class PointLight implements Light, Serializable
 		return new Vector3d(color);
 	}
 
-	@Override
-	public Vector3d getShadowColor(Vector3d currentPosition, HashSet<Intersection> hits)
-	{
-		Vector3d baseColor = getColor(currentPosition);
-		HashMap<SceneObject, Intersection> objs = new HashMap<SceneObject, Intersection>();
-
-		for (Intersection i : hits)
-		{
-			SceneObject o = i.shape;
-			Vector3d transColor = SimpleRayTracer.calculateDiffuseColor(i, this);
-			transColor.negate();
-			baseColor.sub(transColor);
-			double aSq = 1 - o.getMaterial().alpha;
-			baseColor.scale(aSq);
-		}
-		baseColor.clamp(0.0, 1.0);
-		return baseColor;
-	}
-
 	/**
 	 * Transforms the position of this Light based on the provided Matrix.
 	 * 
@@ -154,6 +140,16 @@ public class PointLight implements Light, Serializable
 	public void setRadio(double radio)
 	{
 		this.radiosity = radio;
+	}
+	
+	@Override
+	public void setSoftShadowOffset(double SS){
+		this.softShadowOffset = SS;
+	}
+	
+	@Override
+	public double getSoftShadowOffset(){
+		return this.softShadowOffset;
 	}
 
 	@Override

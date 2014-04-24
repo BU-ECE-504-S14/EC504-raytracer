@@ -49,6 +49,8 @@ public interface Light
 	 */
 	public Vector3d getColor(Vector3d point);
 	
-	public Vector3d getShadowColor(Vector3d point, HashSet<Intersection> hits);
+	public void setSoftShadowOffset(double SS);
+	
+	public double getSoftShadowOffset();
 
 }
