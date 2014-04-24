@@ -27,11 +27,11 @@ public class PreviewScene extends Scene
 	{
 		super();
 
-		camera = new Camera(new Pt(0, 0, 5), new Pt(0, 0, 0), new Vec(0, 1, 0), Math.PI / 4);
+		camera = new Camera(new Pt(3, 3, 3), new Pt(-5, -5, -5), new Vec(0, 1, 0), Math.PI / 4);
 		PointLight demoLight = new PointLight();
 		demoLight.setColor(new Vector3d(1, 1, 1));
 		demoLight.setRadio(1);
-		demoLight.setPosition(new Vector3d(2, 2, 5));
+		demoLight.setPosition(new Vector3d(5, 5, 2));
 
 		lights.add(demoLight);
 
@@ -40,25 +40,50 @@ public class PreviewScene extends Scene
 		demoSphere.material = o.material;
 		demoSphere.setzMinMax(o.getzMin(), o.getzMax());
 		demoSphere.phiMax = o.phiMax;
-		demoSphere.setTransform(new Transformation());
-
+		demoSphere.setTransform(new Transformation());		
+		
 		TriangleMesh previewBox = null;
 
 		try
 		{
-			previewBox = ObjectParser.parseObjectsFromFile("preBox.obj").get(0);
+			previewBox = ObjectParser.parseObjectsFromFile("previewSkybox.obj").get(0);
 		}
 		catch (SceneObjectException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
+		TriangleMesh demoBox = null;
+		
+		try
+		{
+			demoBox = ObjectParser.parseObjectsFromFile("preBox.obj").get(0);
+		}
+		catch (SceneObjectException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		demoBox.material = demoSphere.material;
 		Transformation boxTrans = new Transformation();
-		boxTrans.setScale(new Vector3d(10, 10, 10));
-		boxTrans.setRotation(new AxisAngle4d(0, 1, 0, Math.PI / 4));
-		previewBox.updateTransform(boxTrans);
+		//boxTrans.setRotation(new AxisAngle4d(0,1,0,Math.PI/4));
+		demoBox.updateTransform(boxTrans);
+
+		Transformation preTrans = new Transformation();
+		
+		// The box that surrounds the preview object
+		//preTrans.setScale(new Vector3d(10, 10, 10));
+		//preTrans.setRotation(new AxisAngle4d(0, 1, 0, Math.PI / 4));
+	//	preTrans.setTranslation(new Vector3d(-2.5, -2.5, -2.5));
+		previewBox.updateTransform(preTrans);
+
+		
+		
 		objects.add(demoSphere);
+		//objects.add(demoBox);
 		objects.add(previewBox);
+		buildOctree(3);
+		
 	}
 }
