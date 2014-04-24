@@ -35,7 +35,7 @@ public class MeshPreviewScene extends Scene
 		List<TriangleMesh> meshes = null;
 		try
 		{
-			meshes = ObjectParser.parseObjectsFromFile("buddha_extreme.obj");
+			meshes = ObjectParser.parseObjectsFromFile("buddha.obj");
 		}
 		catch (SceneObjectException e)
 		{
@@ -85,7 +85,7 @@ public class MeshPreviewScene extends Scene
 		//parse.material = demoSphere2.material;
 		parse.material.reflectionIndex = 0.1;
 		Transformation target = new Transformation(demoSphere.getTransform());
-		target.setScale(new Vector3d(5, 5, 5));
+		target.setScale(new Vector3d(15, 15, 15));
 		target.setRotation(new AxisAngle4d(0,1,0,Math.PI/8));
 		parse.updateTransform(target);
 

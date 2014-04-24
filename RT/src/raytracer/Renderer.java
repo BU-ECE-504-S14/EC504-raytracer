@@ -49,8 +49,8 @@ public class Renderer
 
 		optionAntialiasing = 2;
 
-		optionWidth = 5*128;
-		optionHeight = 5*72;
+		optionWidth = 10*128;
+		optionHeight = 10*72;
 
 		optionShadow = 0;
 		showSampleScene();
