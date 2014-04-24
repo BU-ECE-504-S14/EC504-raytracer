@@ -21,9 +21,9 @@ public class Triangle extends AbstractSceneObject
 	{
 		super(m.getID());
 		mesh = m;
-		v[0] = mesh.vertexIndex[3 * n];
-		v[1] = mesh.vertexIndex[3 * n + 1];
-		v[2] = mesh.vertexIndex[3 * n + 2];
+		v[0] = mesh.getVertexIndices()[3 * n];
+		v[1] = mesh.getVertexIndices()[3 * n + 1];
+		v[2] = mesh.getVertexIndices()[3 * n + 2];
 		this.material = m.material;
 		setName("New Triangle");
 	}
@@ -32,9 +32,9 @@ public class Triangle extends AbstractSceneObject
 	public boolean IntersectP(Ray ray)
 	{
 		// get triangle positions. Handedness does not matter in IntersectP
-		Pt p1 = new Pt(mesh.Points[v[0]]);
-		Pt p2 = new Pt(mesh.Points[v[1]]);
-		Pt p3 = new Pt(mesh.Points[v[2]]);
+		Pt p1 = new Pt(mesh.getVertices()[v[0]]);
+		Pt p2 = new Pt(mesh.getVertices()[v[1]]);
+		Pt p3 = new Pt(mesh.getVertices()[v[2]]);
 
 		// compute s1
 		Vec e1 = new Vec(p2);
@@ -83,9 +83,9 @@ public class Triangle extends AbstractSceneObject
 		// get triangle positions
 		// Aaron 4/14/14: Switched p3 and p2 to change 'handedness' of faces to match
 		// Blender default.
-		Pt p1 = new Pt(mesh.Points[v[0]]);
-		Pt p3 = new Pt(mesh.Points[v[1]]);
-		Pt p2 = new Pt(mesh.Points[v[2]]);
+		Pt p1 = new Pt(mesh.getVertices()[v[0]]);
+		Pt p3 = new Pt(mesh.getVertices()[v[1]]);
+		Pt p2 = new Pt(mesh.getVertices()[v[2]]);
 
 		// compute s1
 		Vec e1 = new Vec(p2);
@@ -196,14 +196,14 @@ public class Triangle extends AbstractSceneObject
 	public void GetUVs(float uvs[][])
 	{
 
-		if (mesh.uvs != null)
-		{// if mesh.uvs is not null
-			uvs[0][0] = mesh.uvs[2 * v[0]];
-			uvs[0][1] = mesh.uvs[2 * v[0] + 1];
-			uvs[1][0] = mesh.uvs[2 * v[1]];
-			uvs[1][1] = mesh.uvs[2 * v[1] + 1];
-			uvs[2][0] = mesh.uvs[2 * v[2]];
-			uvs[2][1] = mesh.uvs[2 * v[2] + 1];
+		if (mesh.getUVs() != null)
+		{// if mesh.getuvs() is not null
+			uvs[0][0] = mesh.getUVs()[2 * v[0]];
+			uvs[0][1] = mesh.getUVs()[2 * v[0] + 1];
+			uvs[1][0] = mesh.getUVs()[2 * v[1]];
+			uvs[1][1] = mesh.getUVs()[2 * v[1] + 1];
+			uvs[2][0] = mesh.getUVs()[2 * v[2]];
+			uvs[2][1] = mesh.getUVs()[2 * v[2] + 1];
 		}
 		else
 		{
@@ -219,9 +219,9 @@ public class Triangle extends AbstractSceneObject
 	@Override
 	public BBox getWorldBound()
 	{
-		Pt p1 = new Pt(mesh.Points[v[0]]);
-		Pt p2 = new Pt(mesh.Points[v[1]]);
-		Pt p3 = new Pt(mesh.Points[v[2]]);
+		Pt p1 = new Pt(mesh.getVertices()[v[0]]);
+		Pt p2 = new Pt(mesh.getVertices()[v[1]]);
+		Pt p3 = new Pt(mesh.getVertices()[v[2]]);
 
 		BBox wBox = new BBox(p1);
 		wBox = BBox.union(wBox, p2);

@@ -12,11 +12,14 @@ import java.util.UUID;
 public class TriangleMesh extends AbstractSceneObject
 {
 	private int ntris, nverts;
-	public int[] vertexIndex;
-	public Pt[] Points;
-	public Normal[] normals;
-	public Vec[] tangents;
-	public float uvs[];
+	private int[] vertexIndices;
+
+	private Pt[] vertices;
+
+	private Normal[] normals;
+	private Vec[] tangents;
+	private float uvs[];
+
 	public Transformation trans;
 
 	public TriangleMesh(TriangleMesh t)
@@ -24,15 +27,15 @@ public class TriangleMesh extends AbstractSceneObject
 		this.material = new Material(t.material);
 		ntris = t.ntris;
 		nverts = t.nverts;
-		Points = new Pt[t.Points.length];
-		vertexIndex = new int[t.vertexIndex.length];
-		for (int i = 0; i < vertexIndex.length; i++)
+		vertices = new Pt[t.vertices.length];
+		vertexIndices = new int[t.vertexIndices.length];
+		for (int i = 0; i < vertexIndices.length; i++)
 		{
-			vertexIndex[i] = t.vertexIndex[i];
+			vertexIndices[i] = t.vertexIndices[i];
 		}
-		for (int i = 0; i < t.Points.length; i++)
+		for (int i = 0; i < t.vertices.length; i++)
 		{
-			Points[i] = t.Points[i];
+			vertices[i] = t.vertices[i];
 		}
 
 		if (t.normals != null)
@@ -63,20 +66,40 @@ public class TriangleMesh extends AbstractSceneObject
 		trans = new Transformation(t.trans);
 	}
 
+	public int[] getVertexIndices()
+	{
+		return vertexIndices;
+	}
+
+	public void setVertexIndices(int[] vertexIndices)
+	{
+		this.vertexIndices = vertexIndices;
+	}
+
+	public Pt[] getVertices()
+	{
+		return vertices;
+	}
+
+	public void setVertices(Pt[] points)
+	{
+		vertices = points;
+	}
+
 	public TriangleMesh getCopy()
 	{
 		return new TriangleMesh(this);
 	}
 
 	// Points are expected to be in object space
-	public TriangleMesh(Transformation t, int nt, int nv, int[] vi, Pt[] P,
-			Normal[] N, Vec[] S, float[] uv)
+	public TriangleMesh(Transformation t, int nt, int nv, int[] vi, Pt[] P, Normal[] N, Vec[] S,
+			float[] uv)
 	{
 		this.trans = new Transformation(t);
 		ntris = nt;
 		nverts = nv;
-		vertexIndex = new int[ntris * 3];
-		System.arraycopy(vi, 0, vertexIndex, 0, vi.length);
+		vertexIndices = new int[ntris * 3];
+		System.arraycopy(vi, 0, vertexIndices, 0, vi.length);
 
 		if (uv != null)
 		{
@@ -102,32 +125,47 @@ public class TriangleMesh extends AbstractSceneObject
 		else
 			tangents = null;
 
-		Points = new Pt[nverts];
+		vertices = new Pt[nverts];
 		for (int i = 0; i < nverts; i++)
-			Points[i] = t.object2World(P[i]); // for triangle mesh object points
+			vertices[i] = t.object2World(P[i]); // for triangle mesh object points
 												// are
 												// stored in world space
 		setName("New Triangle Mesh");
 	}
 
+	public float[] getUVs()
+	{
+		return uvs;
+	}
+
+	public void setUVs(float[] uvs)
+	{
+		this.uvs = uvs;
+	}
+
 	public void updateTransform(Transformation t)
 	{
-		for (int i = 0; i < Points.length; i++)
+		for (int i = 0; i < vertices.length; i++)
 		{
-			Points[i] = trans.world2Object(Points[i]);
+			vertices[i] = trans.world2Object(vertices[i]);
 		}
 
 		this.trans = t;
 
-		for (int i = 0; i < Points.length; i++)
+		for (int i = 0; i < vertices.length; i++)
 		{
-			Points[i] = trans.object2World(Points[i]);
+			vertices[i] = trans.object2World(vertices[i]);
 		}
 	}
 
 	public int getPointCount()
 	{
-		return Points.length;
+		return vertices.length;
+	}
+
+	public int getFaceCount()
+	{
+		return ntris;
 	}
 
 	@Override
@@ -151,16 +189,17 @@ public class TriangleMesh extends AbstractSceneObject
 		out += "Triangle Mesh (ID: " + id + "\n";
 		out += "Name: " + name + "\n";
 		out += "Vertices: " + "\n";
-		for (int i = 0; i < Points.length; i++)
+		for (int i = 0; i < vertices.length; i++)
 		{
-			out += "Vertex " + i + ": " + Points[i] + "\n";
+			out += "Vertex " + i + ": " + vertices[i] + "\n";
 		}
 		out += "\n";
 
 		out += "Faces: " + "\n";
-		for (int i = 0; i < vertexIndex.length; i += 3)
+		for (int i = 0; i < vertexIndices.length; i += 3)
 		{
-			out += "Face " + i / 3 + ": " + vertexIndex[i] + ", " + vertexIndex[i + 1] + ", " + vertexIndex[i + 2] + "\n";
+			out += "Face " + i / 3 + ": " + vertexIndices[i] + ", " + vertexIndices[i + 1] + ", "
+					+ vertexIndices[i + 2] + "\n";
 		}
 		return out;
 	}
@@ -170,7 +209,7 @@ public class TriangleMesh extends AbstractSceneObject
 	{
 		BBox wBox = new BBox();
 
-		for (Pt p : Points)
+		for (Pt p : vertices)
 		{
 			wBox = BBox.union(wBox, p);
 		}

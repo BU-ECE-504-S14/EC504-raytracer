@@ -8,6 +8,7 @@ import geometry.Ray;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,7 +25,7 @@ import scene.Scene;
  */
 public class Octree implements AbstractAccelerator, Serializable
 {
-	
+
 	/**
 	 * 
 	 */
@@ -33,8 +34,7 @@ public class Octree implements AbstractAccelerator, Serializable
 	private final float scnBoxEpsilon = 0f;
 	private final float objectBoxEpsilon = 0f;
 
-	public Octree(Scene scn, int maxdepth) throws RefinementException,
-			SplitBeyondMaxDepthException
+	public Octree(Scene scn, int maxdepth) throws RefinementException, SplitBeyondMaxDepthException
 	{
 
 		// create bounding box for root node
@@ -56,13 +56,6 @@ public class Octree implements AbstractAccelerator, Serializable
 		}
 	}
 
-
-	public ArrayList<Octnode> getFirstOctnodes(Ray ray)
-	{
-		return root.getIntersectedChildren(ray);
-	}
-
-
 	public boolean intersectTraverse(Ray ray, Intersection inter) throws NotIntersectableException
 	{
 		return root.intersectTraverse(ray, inter);
@@ -80,18 +73,32 @@ public class Octree implements AbstractAccelerator, Serializable
 		ArrayList<Octleaf> intersectedLeaves = new ArrayList<Octleaf>();
 		node.IntersectP(ray, intersectedLeaves);
 
-		Collections.sort(intersectedLeaves, new OctnodeComparator());
-		int leaves = intersectedLeaves.size();
-		SceneObject nearest = null;
-		for (int ii = 0; ii < leaves; ii++)
+		HashSet<SceneObject> allObjects = new HashSet<SceneObject>();
+		for (int ii = 0; ii < intersectedLeaves.size(); ii++)
 		{
-
 			Octleaf currentLeaf = intersectedLeaves.get(ii);
-			nearest = currentLeaf.nearestIntersect(ray);
+			ArrayList<SceneObject> leafObjects = currentLeaf.getObjects();
+			for (int i = 0; i < leafObjects.size(); i++)
+			{
+				allObjects.add(leafObjects.get(i));
+			}
+		}
+
+		Ray newRay = new Ray(ray);
+		SceneObject nearest = null;
+
+		if (allObjects.size() != 0)
+		{
+			for (SceneObject obj : allObjects)
+			{
+				if (obj.IntersectP(newRay))
+				{
+					nearest = obj;
+				}
+			}
 			if (nearest != null)
 			{
 				return nearest.Intersect(ray, inter);
-				//return true;
 			}
 		}
 
@@ -99,8 +106,7 @@ public class Octree implements AbstractAccelerator, Serializable
 	}
 
 	@Override
-	public boolean Intersect(Ray ray, Intersection inter)
-			throws NotIntersectableException
+	public boolean Intersect(Ray ray, Intersection inter) throws NotIntersectableException
 	{
 		return Intersect(ray, inter, root);
 		//return intersectTraverse(ray, inter, root);
@@ -136,8 +142,7 @@ public class Octree implements AbstractAccelerator, Serializable
 	 * @throws RefinementException
 	 */
 	private void fillBoxesAndObjs(SceneObject obj, ArrayList<SceneObject> objs,
-			ArrayList<SceneObject> tmpObjs, ArrayList<BBox> scnBoxes)
-			throws RefinementException
+			ArrayList<SceneObject> tmpObjs, ArrayList<BBox> scnBoxes) throws RefinementException
 	{
 		BBox correctedBox;
 		if (obj.isIntersectable())

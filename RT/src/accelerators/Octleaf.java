@@ -26,17 +26,15 @@ public class Octleaf extends Octnode implements Serializable
 	private static final long serialVersionUID = 1L;
 	private ArrayList<SceneObject> containedObjects = null;
 
-	public Octleaf(Octleaf o)
-	{
-		super(o.bbox, o.depth, o.maxdepth);
-		disToBBoxIn = o.distanceToBBoxOut();
-		disToBBoxOut = o.distanceToBBoxOut();
-		containedObjects = o.containedObjects;
-	}
-
 	public Octleaf(BBox bBox, int i, int maxdepth)
 	{
 		super(bBox, i, maxdepth);
+	}
+	
+	public Octleaf(Octleaf o)
+	{
+		super(o);
+		containedObjects = o.containedObjects;
 	}
 
 	@Override
@@ -103,13 +101,14 @@ public class Octleaf extends Octnode implements Serializable
 			throws NotIntersectableException
 	{
 
+		Ray newRay = new Ray(ray);
 		SceneObject nearest = null;
 
 		if (containedObjects != null)
 		{
 			for (SceneObject obj : containedObjects)
 			{
-				if (obj.IntersectP(ray))
+				if (obj.IntersectP(newRay))
 				{
 					nearest = obj;
 				}

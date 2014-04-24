@@ -73,4 +73,16 @@ public class SphereLight extends Sphere implements Light, Serializable
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void setSoftShadowOffset(double SS) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getSoftShadowOffset() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

@@ -1,6 +1,10 @@
 package scene;
 
+import java.util.HashSet;
+
 import javax.vecmath.Vector3d;
+
+import objects.SceneObject;
 
 /**
  * An abstract light object, which is defined by a position, color, radiosity value, and
@@ -44,5 +48,9 @@ public interface Light
 	 * @return a Vector3d representing the color of the light at the given position.
 	 */
 	public Vector3d getColor(Vector3d point);
+	
+	public void setSoftShadowOffset(double SS);
+	
+	public double getSoftShadowOffset();
 
 }

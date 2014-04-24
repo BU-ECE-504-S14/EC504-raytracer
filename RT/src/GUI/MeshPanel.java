@@ -18,6 +18,7 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
 import objects.Sphere;
+import objects.TriangleMesh;
 import raytracer.Renderer;
 import scene.MaterialScene;
 import scene.Scene;
@@ -25,14 +26,14 @@ import scene.Scene;
 /**
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
-public class SpherePanel extends JPanel
+public class MeshPanel extends JPanel
 {
-	Sphere mySphere;
+	TriangleMesh myMesh;
 	Renderer materialRenderer = new Renderer();
 	JPanel leftPanel;
 	JPanel rightPanel;
 
-	SphereInfoPanel infoPanel;
+	MeshInfoPanel infoPanel;
 	MaterialPanel matPanel;
 
 	JButton updateButton;
@@ -46,34 +47,12 @@ public class SpherePanel extends JPanel
 
 	static JFrame myFrame = null;
 
-	public static void main(String[] args)
-	{
-		Sphere demoSphere = new Sphere();
-		float radius = .5f;
-		Vector3d position = new Vector3d(0, 0, 2);
-		AxisAngle4d rotation = new AxisAngle4d(0, 0, 0, 0);
-		demoSphere.setTransform(new Vector3d(radius, radius, radius), position, rotation);
-
-		demoSphere.material.diffuseColor = new Vector3d(.8, .15, .15);
-		JFrame testFrame = new JFrame("Scene Object Information: Sphere");
-		//testFrame.setMinimumSize(new Dimension(650, 600));
-	//	testFrame.setPreferredSize(new Dimension(650, 600));
-		testFrame.setResizable(false);
-		testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		SpherePanel testPanel = new SpherePanel(demoSphere);
-		testFrame.add(testPanel);
-		testFrame.pack();
-		testFrame.setVisible(true);
-		myFrame = testFrame;
-	}
-
-	public SpherePanel(Sphere targetSphere)
+	public MeshPanel(TriangleMesh targetMesh)
 	{
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		mySphere = targetSphere;
-		matScene = new MaterialScene(mySphere);
+		myMesh = targetMesh;
+		matScene = new MaterialScene(myMesh);
 		setMaterialViewDefaults();
 
 		setupPanels();
@@ -89,12 +68,11 @@ public class SpherePanel extends JPanel
 		materialRenderer.setOptionShadow(0);
 		materialRenderer.setOptionWidth(300);
 		materialRenderer.setOptionHeight(300);
-		materialRenderer.setOptionMultithreading(false);
 	}
 
 	public void updatePreviewImage()
 	{
-		matScene.updateScene(mySphere);
+		matScene.updateScene(myMesh);
 		try
 		{
 			try
@@ -119,7 +97,7 @@ public class SpherePanel extends JPanel
 
 	public void updatePreviewImage(boolean resize)
 	{
-		matScene.updateScene(mySphere);
+		matScene.updateScene(myMesh);
 		try
 		{
 			try
@@ -149,7 +127,7 @@ public class SpherePanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				updateSphere();
+				updateMesh();
 			}
 		};
 
@@ -176,11 +154,11 @@ public class SpherePanel extends JPanel
 			}
 		};
 
-		infoPanel = new SphereInfoPanel(mySphere);
-		infoPanel.mySpherePanel = this;
+		infoPanel = new MeshInfoPanel(myMesh);
+		infoPanel.myMeshPanel = this;
 		infoPanel.addFieldListeners(up);
 		// infoPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, 150));
-		matPanel = new MaterialPanel(mySphere.material);
+		matPanel = new MaterialPanel(myMesh.material);
 		matPanel.addFieldListeners(up);
 
 		rightPanel = matPanel;
@@ -194,7 +172,7 @@ public class SpherePanel extends JPanel
 		lowerLeftPanel.add(previewPanel);
 		leftPanel.add(lowerLeftPanel);
 		JPanel spacerPanel = new JPanel();
-		spacerPanel.setPreferredSize(new Dimension(rightPanel.WIDTH, rightPanel.HEIGHT/2));
+		spacerPanel.setPreferredSize(new Dimension(rightPanel.WIDTH, rightPanel.HEIGHT / 2));
 
 		rightPanel.add(new JPanel()); // spacer
 		previewPanel.setButtonListeners(box, sphere);
@@ -203,7 +181,7 @@ public class SpherePanel extends JPanel
 		add(rightPanel);
 	}
 
-	public void updateSphere()
+	public void updateMesh()
 	{
 		infoPanel.updateSphereInfo();
 		matPanel.updateMaterialInfo();
@@ -213,6 +191,6 @@ public class SpherePanel extends JPanel
 			myFrame.pack();
 		}
 
-		System.out.println(mySphere.toString());
+		System.out.println(myMesh.toString());
 	}
 }
