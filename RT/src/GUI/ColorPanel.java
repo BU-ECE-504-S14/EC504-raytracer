@@ -30,9 +30,9 @@ public class ColorPanel extends JPanel
 	JLabel redLabel;
 	JLabel greenLabel;
 	JLabel blueLabel;
-	public JTextField redField;
-	public JTextField greenField;
-	public JTextField blueField;
+	public RoundedTextField redField;
+	public RoundedTextField greenField;
+	public RoundedTextField blueField;
 
 	public ColorPanel(String name, Vector3d color)
 	{
@@ -52,6 +52,7 @@ public class ColorPanel extends JPanel
 		double red = Double.parseDouble(redField.getText());
 		double green = Double.parseDouble(greenField.getText());
 		double blue = Double.parseDouble(blueField.getText());
+
 		return new Vector3d(red, green, blue);
 	}
 
@@ -65,9 +66,9 @@ public class ColorPanel extends JPanel
 		namePanel = new JPanel();
 		namePanel.add(nameLabelPanel);
 
-		redField = new JTextField("" + color.getX(), 4);
-		greenField = new JTextField("" + color.getY(), 4);
-		blueField = new JTextField("" + color.getZ(), 4);
+		redField = new RoundedTextField("" + color.getX(), 4);
+		greenField = new RoundedTextField("" + color.getY(), 4);
+		blueField = new RoundedTextField("" + color.getZ(), 4);
 
 		redLabelPanel = new JPanel();
 		greenLabelPanel = new JPanel();

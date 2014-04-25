@@ -183,7 +183,11 @@ public class TriangleMesh extends AbstractSceneObject
 	}
 
 	@Override
-	public String toString()
+	public String toString(){
+		return "Mesh: " + name;
+	}
+	
+	public String paramsToString()
 	{
 		String out = "";
 		out += "Triangle Mesh (ID: " + id + "\n";

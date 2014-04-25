@@ -7,11 +7,13 @@ package GUI;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 import util.RenderSettingException;
 
@@ -66,6 +68,7 @@ public class ThreeRadioPanel extends JPanel
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		name = s;
 		setupPanels(shadowSetting);
+		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
 	}
 

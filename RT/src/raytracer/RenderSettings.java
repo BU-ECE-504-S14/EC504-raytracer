@@ -4,6 +4,7 @@
 
 package raytracer;
 
+import java.io.File;
 import java.io.Serializable;
 
 import util.RenderSettingException;
@@ -13,8 +14,7 @@ import util.RenderSettingException;
  * 
  * @author Aaron Heuckroth
  */
-public class RenderSettings implements Serializable
-{
+public class RenderSettings implements Serializable {
 
 	/**
 	 * 
@@ -34,252 +34,205 @@ public class RenderSettings implements Serializable
 	private boolean TRANSPARENCY = true;
 	private boolean PHONG = true;
 	private boolean VERBOSE = true;
-	private boolean WRITEOUT = false;
+	private File OUTPUT_PATH = null;
+	private int OCTREE_DEPTH = 3;
 
-	public RenderSettings()
-	{
-
+	public boolean checkOctreeDepth(int d) {
+		if (d > 0 && d <= 8) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public int getOCTREE_DEPTH(){
+		return OCTREE_DEPTH;
+	}
+	
+	public void setOCTREE_DEPTH(int d) throws RenderSettingException{
+		if (!checkOctreeDepth(d)){
+			throw new RenderSettingException("Invalid octree depth! Must be between 1 and 8.");
+		}
+		else {
+			OCTREE_DEPTH = d;
+		}
 	}
 
-	public boolean checkRefraction(int r)
-	{
-		if (r >= 0)
-		{
+	public boolean checkRefraction(int r) {
+		if (r >= 0) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
-	public boolean checkReflection(int r)
-	{
-		if (r >= 0)
-		{
+	public boolean checkReflection(int r) {
+		if (r >= 0) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
-	public boolean checkAntialiasing(int aa)
-	{
-		if (aa >= 1 && aa <= 3)
-		{
+	public boolean checkAntialiasing(int aa) {
+		if (aa >= 1 && aa <= 3) {
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
 
-	public boolean checkWidth(int w)
-	{
-		if (w > 0)
-		{
+	public boolean checkWidth(int w) {
+		if (w > 0) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
-	public boolean checkHeight(int h)
-	{
-		if (h > 0)
-		{
+	public boolean checkHeight(int h) {
+		if (h > 0) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
 
-	public boolean checkShadow(int s)
-	{
-		if (s == 1 || s == 2 || s == 0)
-		{
+	public boolean checkShadow(int s) {
+		if (s == 1 || s == 2 || s == 0) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 
 		}
 	}
 
-	public boolean isPROGRESS()
-	{
+	public boolean isPROGRESS() {
 		return PROGRESS;
 	}
 
-	public void setPROGRESS(boolean pROGRESS)
-	{
+	public void setPROGRESS(boolean pROGRESS) {
 		PROGRESS = pROGRESS;
 	}
 
-	public boolean isMULTITHREADING()
-	{
+	public boolean isMULTITHREADING() {
 		return MULTITHREADING;
 	}
 
-	public void setMULTITHREADING(boolean mULTITHREADING)
-	{
+	public void setMULTITHREADING(boolean mULTITHREADING) {
 		MULTITHREADING = mULTITHREADING;
 	}
 
-	public int getANTIALIASING()
-	{
+	public int getANTIALIASING() {
 		return ANTIALIASING;
 	}
 
-	public void setANTIALIASING(int aNTIALIASING) throws RenderSettingException
-	{
-		if (!checkAntialiasing(aNTIALIASING))
-		{
-			throw new RenderSettingException("Antialiasing must be 1,2,3, or 4!");
-		}
-		else
-		{
+	public void setANTIALIASING(int aNTIALIASING) throws RenderSettingException {
+		if (!checkAntialiasing(aNTIALIASING)) {
+			throw new RenderSettingException(
+					"Antialiasing must be 1,2,3, or 4!");
+		} else {
 			ANTIALIASING = aNTIALIASING;
 		}
 	}
 
-	public int getWIDTH()
-	{
+	public int getWIDTH() {
 		return WIDTH;
 	}
 
-	public void setWIDTH(int wIDTH) throws RenderSettingException
-	{
-		if (!checkWidth(wIDTH))
-		{
+	public void setWIDTH(int wIDTH) throws RenderSettingException {
+		if (!checkWidth(wIDTH)) {
 			throw new RenderSettingException("Width must be > 0!");
 		}
 		WIDTH = wIDTH;
 	}
 
-	public int getHEIGHT()
-	{
+	public int getHEIGHT() {
 		return HEIGHT;
 	}
 
-	public void setHEIGHT(int hEIGHT) throws RenderSettingException
-	{
-		if (!checkHeight(hEIGHT))
-		{
+	public void setHEIGHT(int hEIGHT) throws RenderSettingException {
+		if (!checkHeight(hEIGHT)) {
 			throw new RenderSettingException("Height must be > 0!");
-		}
-		else
-		{
+		} else {
 			HEIGHT = hEIGHT;
 		}
 	}
 
-	public int getSHADOW_TYPE()
-	{
+	public int getSHADOW_TYPE() {
 		return SHADOW_TYPE;
 	}
 
-	public void setSHADOW_TYPE(int sHADOW_TYPE) throws RenderSettingException
-	{
-		if (!checkShadow(sHADOW_TYPE))
-		{
+	public void setSHADOW_TYPE(int sHADOW_TYPE) throws RenderSettingException {
+		if (!checkShadow(sHADOW_TYPE)) {
 			throw new RenderSettingException("Reflections must be >= 0!");
-		}
-		else
-		{
+		} else {
 			SHADOW_TYPE = sHADOW_TYPE;
 		}
 	}
 
-	public int getREFRACTION()
-	{
+	public int getREFRACTION() {
 		return REFRACTION;
 	}
 
-	public void setREFRACTION(int rEFRACTION) throws RenderSettingException
-	{
-		if (!checkRefraction(rEFRACTION))
-		{
+	public void setREFRACTION(int rEFRACTION) throws RenderSettingException {
+		if (!checkRefraction(rEFRACTION)) {
 			throw new RenderSettingException("Refractions must be >= 0!");
-		}
-		else
-		{
+		} else {
 			REFRACTION = rEFRACTION;
 		}
 
 	}
 
-	public int getREFLECTION()
-	{
+	public int getREFLECTION() {
 		return REFLECTION;
 	}
 
-	public void setREFLECTION(int rEFLECTION) throws RenderSettingException
-	{
-		if (!checkReflection(rEFLECTION))
-		{
+	public void setREFLECTION(int rEFLECTION) throws RenderSettingException {
+		if (!checkReflection(rEFLECTION)) {
 			throw new RenderSettingException("Relfections must be >= 0!");
-		}
-		else
-		{
+		} else {
 			REFLECTION = rEFLECTION;
 		}
 	}
 
-	public boolean isACCELERATE()
-	{
+	public boolean isACCELERATE() {
 		return ACCELERATE;
 	}
 
-	public void setACCELERATE(boolean aCCELERATE)
-	{
+	public void setACCELERATE(boolean aCCELERATE) {
 		ACCELERATE = aCCELERATE;
 	}
 
-	public boolean isTRANSPARENCY()
-	{
+	public boolean isTRANSPARENCY() {
 		return TRANSPARENCY;
 	}
 
-	public void setTRANSPARENCY(boolean tRANSPARENCY)
-	{
+	public void setTRANSPARENCY(boolean tRANSPARENCY) {
 		TRANSPARENCY = tRANSPARENCY;
 	}
 
-	public boolean isPHONG()
-	{
+	public boolean isPHONG() {
 		return PHONG;
 	}
 
-	public void setPHONG(boolean pHONG)
-	{
+	public void setPHONG(boolean pHONG) {
 		PHONG = pHONG;
 	}
 
-	public boolean isVERBOSE()
-	{
+	public boolean isVERBOSE() {
 		return VERBOSE;
 	}
 
-	public void setVERBOSE(boolean vERBOSE)
-	{
+	public void setVERBOSE(boolean vERBOSE) {
 		VERBOSE = vERBOSE;
 	}
 
-	public boolean isWRITEOUT()
-	{
-		return WRITEOUT;
+	public File getOUTPUT_PATH() {
+		return OUTPUT_PATH;
 	}
 
-	public void setWRITEOUT(boolean wRITEOUT)
-	{
-		WRITEOUT = wRITEOUT;
+	public void setOUTPUT_PATH(File f) {
+		OUTPUT_PATH = f;
 	}
 
 }

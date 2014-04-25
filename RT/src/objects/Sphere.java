@@ -15,15 +15,14 @@ import javax.vecmath.Vector3d;
 import raytracer.Util;
 import scene.Intersection;
 
-public class Sphere extends AbstractSceneObject
-{
+public class Sphere extends AbstractSceneObject {
 	private float radius = 1;
 	private Vector3d position = new Vector3d(0, 0, 0);
 	private float zmin = -1f;
 	private float zmax = 1f;
 	private float thetaMin = 0;
 	private float thetaMax = 360;
-	public float phiMax = (float)Math.PI * 2; // Why is this in Radians when
+	public float phiMax = (float) Math.PI * 2; // Why is this in Radians when
 												// everything
 												// else isn't?
 	private Vector3d scale = new Vector3d(1, 1, 1);
@@ -31,8 +30,7 @@ public class Sphere extends AbstractSceneObject
 	private AxisAngle4d rot = new AxisAngle4d(0, 0, 0, 0);
 	private Transformation trans = new Transformation(scale, pos, rot);
 
-	public Sphere()
-	{
+	public Sphere() {
 		setName("New Sphere");
 	}
 
@@ -42,8 +40,7 @@ public class Sphere extends AbstractSceneObject
 	 * @param s
 	 *            sphere to be copied.
 	 */
-	public Sphere(Sphere s)
-	{
+	public Sphere(Sphere s) {
 		super();
 		this.position = new Vector3d(s.position);
 		this.zmin = s.zmin;
@@ -62,90 +59,80 @@ public class Sphere extends AbstractSceneObject
 	 * 
 	 * @param radius
 	 * @param z0
-	 *            represents either the min or max height of sphere in object space
+	 *            represents either the min or max height of sphere in object
+	 *            space
 	 * @param z1
-	 *            represents either the min or max hieght of sphere in object space
+	 *            represents either the min or max hieght of sphere in object
+	 *            space
 	 * @param pm
-	 *            represents max "circle" of the sphere that will be traced along the xz plane in
-	 *            object space
+	 *            represents max "circle" of the sphere that will be traced
+	 *            along the xz plane in object space
 	 * @param trans
 	 */
-	public Sphere(float z0, float z1, float pm, Transformation t)
-	{
+	public Sphere(float z0, float z1, float pm, Transformation t) {
 		super();
 		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
 		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
-		thetaMin = (float)Math.acos(Util.clamp(zmin / radius, -1f, 1f));
-		thetaMax = (float)Math.acos(Util.clamp(zmax / radius, -1f, 1f));
-		phiMax = (float)Math.toRadians(Util.clamp(pm, 0.0f, 360.0f));
+		thetaMin = (float) Math.acos(Util.clamp(zmin / radius, -1f, 1f));
+		thetaMax = (float) Math.acos(Util.clamp(zmax / radius, -1f, 1f));
+		phiMax = (float) Math.toRadians(Util.clamp(pm, 0.0f, 360.0f));
 		this.trans = new Transformation(t);
 
 		setName("New Sphere");
 
 	}
 
-	public float getzMin()
-	{
+	public float getzMin() {
 		return zmin;
 	}
 
-	public float getzMax()
-	{
+	public float getzMax() {
 		return zmax;
 	}
 
-	public float getRadius()
-	{
-		if ((scale.x == scale.y) && (scale.y == scale.z))
-		{
-			return (float)scale.x;
-		}
-		else
-		{ // find maximum scale to represent radius
+	public float getRadius() {
+		if ((scale.x == scale.y) && (scale.y == scale.z)) {
+			return (float) scale.x;
+		} else { // find maximum scale to represent radius
 			double approxRad = ((scale.x >= scale.y) && (scale.x >= scale.z)) ? scale.x
 					: scale.y;
 			approxRad = (approxRad > scale.z) ? approxRad : scale.z;
-			return (float)approxRad;
+			return (float) approxRad;
 		}
 	}
 
-	public Vector3d getPosition()
-	{
+	public Vector3d getPosition() {
 		return new Vector3d(pos);
 	}
 
-	public void setPosition(Vector3d newPos)
-	{
+	public void setPosition(Vector3d newPos) {
 		pos = new Vector3d(newPos);
 		trans.setTranslation(pos);
 	}
 
-	public Vector3d getScale()
-	{
+	public Vector3d getScale() {
 		return new Vector3d(scale);
 	}
 
 	/**
-	 * Use this method to set radius/scale of world sphere. Because world space representation of
-	 * sphere is based on transformation that includes scale. Radius of sphere is in essence set by
-	 * setting the scale of the sphere. Note: set all scale values equal if you want to set the
-	 * radius of the sphere.
+	 * Use this method to set radius/scale of world sphere. Because world space
+	 * representation of sphere is based on transformation that includes scale.
+	 * Radius of sphere is in essence set by setting the scale of the sphere.
+	 * Note: set all scale values equal if you want to set the radius of the
+	 * sphere.
 	 * 
 	 * @param newScaleAndRadius
 	 */
-	public void setScaleRad(Vector3d newScaleAndRadius)
-	{
+	public void setScaleRad(Vector3d newScaleAndRadius) {
 		scale = new Vector3d(newScaleAndRadius);
 		trans.setScale(scale);
 	}
 
-	public AxisAngle4d getRotation()
-	{
+	public AxisAngle4d getRotation() {
 		return new AxisAngle4d(rot);
 	}
 
-	public void setRotation(AxisAngle4d newRot)
-	{
+	public void setRotation(AxisAngle4d newRot) {
 		rot = new AxisAngle4d(newRot);
 		trans.setRotation(rot);
 	}
@@ -154,50 +141,47 @@ public class Sphere extends AbstractSceneObject
 	 * Set the upper and lower bounds for sphere
 	 * 
 	 * @param z0
-	 *            represents either the min or max height of sphere in object space.
+	 *            represents either the min or max height of sphere in object
+	 *            space.
 	 * @param z1
-	 *            represents either the min or max hieght of sphere in object space.
+	 *            represents either the min or max hieght of sphere in object
+	 *            space.
 	 */
-	public void setzMinMax(float z0, float z1)
-	{
+	public void setzMinMax(float z0, float z1) {
 		zmin = Util.clamp(Math.min(z0, z1), -radius, radius);
 		zmax = Util.clamp(Math.max(z0, z1), -radius, radius);
-		thetaMin = (float)Math.acos(Util.clamp(zmin / radius, -1f, 1f));
-		thetaMax = (float)Math.acos(Util.clamp(zmax / radius, -1f, 1f));
+		thetaMin = (float) Math.acos(Util.clamp(zmin / radius, -1f, 1f));
+		thetaMax = (float) Math.acos(Util.clamp(zmax / radius, -1f, 1f));
 	}
 
-	public float getThetaMin()
-	{
+	public float getThetaMin() {
 		return thetaMin;
 	}
 
-	public float getThetaMax()
-	{
+	public float getThetaMax() {
 		return thetaMax;
 	}
 
 	/**
-	 * Because Sphere's exist only in object space, updating the transformation of a sphere is the
-	 * equivalent of scaling a radius 1 sphere, then translating and rotating that sphere in world
-	 * space.
+	 * Because Sphere's exist only in object space, updating the transformation
+	 * of a sphere is the equivalent of scaling a radius 1 sphere, then
+	 * translating and rotating that sphere in world space.
 	 * 
 	 * @param t
 	 *            updated transformation for this sphere.
 	 */
-	public void setTransform(Transformation t)
-	{
+	public void setTransform(Transformation t) {
 		trans = new Transformation(t);
 	}
 
-	public Transformation getTransform()
-	{
+	public Transformation getTransform() {
 		return new Transformation(trans);
 	}
 
 	/**
-	 * Because Sphere's exist only in object space, updating the transformation of a sphere is the
-	 * equivalent of scaling a radius 1 sphere, then translating and rotating that sphere in world
-	 * space.
+	 * Because Sphere's exist only in object space, updating the transformation
+	 * of a sphere is the equivalent of scaling a radius 1 sphere, then
+	 * translating and rotating that sphere in world space.
 	 * 
 	 * @param newScale
 	 *            updated scale of transformation
@@ -207,22 +191,19 @@ public class Sphere extends AbstractSceneObject
 	 *            updated rotation of transformation
 	 */
 	public void setTransform(Vector3d newScale, Vector3d newPos,
-			AxisAngle4d newRot)
-	{
+			AxisAngle4d newRot) {
 		scale.set(newScale);
 		pos.set(newPos);
 		rot.set(newRot);
 		trans = new Transformation(scale, pos, rot);
 	}
 
-	public Sphere getCopy()
-	{
+	public Sphere getCopy() {
 		return new Sphere(this);
 	}
 
 	@Override
-	public boolean IntersectP(Ray ray)
-	{
+	public boolean IntersectP(Ray ray) {
 		float phi;
 		Pt pHit;
 
@@ -230,10 +211,10 @@ public class Sphere extends AbstractSceneObject
 		Ray o_ray = this.trans.world2Object(ray);
 
 		// calculate quadratic sphere coeffs
-		float A = (float)o_ray.direction.dot(o_ray.direction); // dx^2 + dy^2 +
+		float A = (float) o_ray.direction.dot(o_ray.direction); // dx^2 + dy^2 +
 																// dz^2
-		float B = (float)(2f * o_ray.direction.dot(o_ray.position));
-		float C = (float)(o_ray.position.dot(o_ray.position)) - radius
+		float B = (float) (2f * o_ray.direction.dot(o_ray.position));
+		float C = (float) (o_ray.position.dot(o_ray.position)) - radius
 				* radius;
 
 		float[] t = { 0, 0 };
@@ -244,8 +225,7 @@ public class Sphere extends AbstractSceneObject
 		if (t[0] > o_ray.maxt || t[1] < o_ray.mint)
 			return false;
 		float thit = t[0];
-		if (t[0] < o_ray.mint)
-		{
+		if (t[0] < o_ray.mint) {
 			thit = t[1];
 			if (thit > o_ray.maxt)
 				return false;
@@ -257,8 +237,7 @@ public class Sphere extends AbstractSceneObject
 
 		// test sphere intersection against clipping parameters
 		if ((zmin > -radius && pHit.z < zmin)
-				|| (zmax < radius && pHit.z > zmax) || (phi > phiMax))
-		{
+				|| (zmax < radius && pHit.z > zmax) || (phi > phiMax)) {
 
 			if (thit == t[1])
 				return false;
@@ -278,8 +257,7 @@ public class Sphere extends AbstractSceneObject
 	}
 
 	@Override
-	public boolean Intersect(Ray ray, Intersection inter)
-	{
+	public boolean Intersect(Ray ray, Intersection inter) {
 		float phi;
 		Pt pHit;
 
@@ -287,10 +265,10 @@ public class Sphere extends AbstractSceneObject
 		Ray o_ray = this.trans.world2Object(ray);
 
 		// calculate quadratic sphere coeffs
-		float A = (float)o_ray.direction.dot(o_ray.direction); // dx^2 + dy^2 +
+		float A = (float) o_ray.direction.dot(o_ray.direction); // dx^2 + dy^2 +
 																// dz^2
-		float B = (float)(2f * o_ray.direction.dot(o_ray.position));
-		float C = (float)(o_ray.position.dot(o_ray.position)) - radius
+		float B = (float) (2f * o_ray.direction.dot(o_ray.position));
+		float C = (float) (o_ray.position.dot(o_ray.position)) - radius
 				* radius;
 
 		float[] t = { 0, 0 };
@@ -301,8 +279,7 @@ public class Sphere extends AbstractSceneObject
 		if (t[0] > o_ray.maxt || t[1] < o_ray.mint)
 			return false;
 		float thit = t[0];
-		if (t[0] < o_ray.mint)
-		{
+		if (t[0] < o_ray.mint) {
 			thit = t[1];
 			if (thit > o_ray.maxt)
 				return false;
@@ -314,8 +291,7 @@ public class Sphere extends AbstractSceneObject
 
 		// test sphere intersection against clipping parameters
 		if ((zmin > -radius && pHit.z < zmin)
-				|| (zmax < radius && pHit.z > zmax) || (phi > phiMax))
-		{
+				|| (zmax < radius && pHit.z > zmax) || (phi > phiMax)) {
 
 			if (thit == t[1])
 				return false;
@@ -332,15 +308,15 @@ public class Sphere extends AbstractSceneObject
 
 		// find parametric representation of sphere hit
 		float u = phi / phiMax;
-		float theta = (float)Math.acos(Util.clamp((float)(pHit.z / radius),
+		float theta = (float) Math.acos(Util.clamp((float) (pHit.z / radius),
 				-1f, 1f));
 		float v = (theta - thetaMin) / (thetaMax - thetaMin);
 
 		// compute dpdu dpdv
-		float zradius = (float)Math.sqrt(pHit.x * pHit.x + pHit.y * pHit.y);
+		float zradius = (float) Math.sqrt(pHit.x * pHit.x + pHit.y * pHit.y);
 		float invzradius = 1f / zradius;
-		float cosphi = (float)(pHit.x * invzradius);
-		float sinphi = (float)(pHit.y * invzradius);
+		float cosphi = (float) (pHit.x * invzradius);
+		float sinphi = (float) (pHit.y * invzradius);
 		Vec dpdu = new Vec(-phiMax * pHit.y, phiMax * pHit.x, 0);
 		Vec dpdv = new Vec(pHit.z * cosphi, pHit.z * sinphi, -radius
 				* Math.sin(theta));
@@ -355,15 +331,15 @@ public class Sphere extends AbstractSceneObject
 		d2Pdvv.scale(-(thetaMax - thetaMin) * (thetaMax - thetaMin));
 
 		// compute coeffs for fundamental forms
-		float E = (float)dpdu.dot(dpdu);
-		float F = (float)dpdu.dot(dpdv);
-		float G = (float)dpdv.dot(dpdv);
+		float E = (float) dpdu.dot(dpdu);
+		float F = (float) dpdu.dot(dpdv);
+		float G = (float) dpdv.dot(dpdv);
 		Vec N = new Vec();
 		N.cross(dpdu, dpdv);
 		N.normalize();
-		float e = (float)N.dot(d2Pduu);
-		float f = (float)N.dot(d2Pduv);
-		float g = (float)N.dot(d2Pdvv);
+		float e = (float) N.dot(d2Pduu);
+		float f = (float) N.dot(d2Pduv);
+		float g = (float) N.dot(d2Pdvv);
 
 		float invEGF2 = 1f / (E * G - F * F);
 		Vec sdpdu = new Vec(dpdu);
@@ -392,25 +368,23 @@ public class Sphere extends AbstractSceneObject
 		return true;
 	}
 
-	private float computePhi(Pt pHit)
-	{
+	private float computePhi(Pt pHit) {
 		if (pHit.x == 0 && pHit.y == 0)
 			pHit.x = 1E-5f * radius; // make pHit a small number to avoid 0/0
 										// division
-		float phi = (float)Math.atan2(pHit.y, pHit.x);
+		float phi = (float) Math.atan2(pHit.y, pHit.x);
 		if (phi < 0f)
 			phi += 2f * Math.PI;
 		return phi;
 	}
 
-	private boolean Quadratic(float A, float B, float C, float[] t)
-	{
+	private boolean Quadratic(float A, float B, float C, float[] t) {
 
 		// find quadratic discriminant
 		float discrim = B * B - 4f * A * C;
 		if (discrim <= 0)
 			return false;
-		float rootdiscrim = (float)Math.sqrt(discrim);
+		float rootdiscrim = (float) Math.sqrt(discrim);
 
 		// compute t0,t1 i.e. the roots page no 119
 		float q;
@@ -422,8 +396,7 @@ public class Sphere extends AbstractSceneObject
 		t[1] = new Float(C / q);
 
 		// swap if t1<t0
-		if (t[0] >= t[1])
-		{
+		if (t[0] >= t[1]) {
 			float tmp = t[0];
 			t[0] = t[1];
 			t[1] = tmp;
@@ -432,23 +405,25 @@ public class Sphere extends AbstractSceneObject
 	}
 
 	@Override
-	public BBox getWorldBound()
-	{
+	public BBox getWorldBound() {
 		return trans.object2World(getobjectBound());
 	}
 
 	/**
-	 * @return a BBox representing the bounding box of this sphere in object space
+	 * @return a BBox representing the bounding box of this sphere in object
+	 *         space
 	 */
-	private BBox getobjectBound()
-	{
+	private BBox getobjectBound() {
 		return new BBox(new Pt(-radius, -radius, zmin), new Pt(radius, radius,
 				zmax));
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
+		return "Sphere: " + name;
+	}
+
+	public String paramsToString() {
 		return "Sphere name= " + name + ", radius=" + radius + ", position="
 				+ position + ")" + material.toString() + trans.toString();
 	}

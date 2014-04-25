@@ -2,6 +2,7 @@ package geometry;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.vecmath.Vector3d;
 
@@ -28,6 +29,8 @@ public class Ray
 	public float mint; // base position on parametric line (any point less than rMin is
 						// behind ray)
 	public int depth; // numbers of times ray has been reflected/refracted
+	
+	public static int counter = 0;
 
 	
 	public Ray(Pt origin, Vec dir)
@@ -38,6 +41,7 @@ public class Ray
 		maxt = Float.POSITIVE_INFINITY;
 		this.mint = 0;
 		depth = 0;
+		counter++;
 	}
 
 	public Ray(Pt origin, Vec dir, float mint)
@@ -48,6 +52,7 @@ public class Ray
 		maxt = Float.POSITIVE_INFINITY;
 		this.mint = mint;
 		depth = 0;
+		counter++;
 	}
 
 	public Ray(Pt origin, Vec dir, float mint, float maxt)
@@ -58,6 +63,7 @@ public class Ray
 		this.maxt = maxt;
 		this.mint = mint;
 		depth = 0;
+		counter++;
 	}
 
 	public Ray(Pt origin, Vec dir, Ray r, float mint)
@@ -68,6 +74,7 @@ public class Ray
 		this.maxt = Float.POSITIVE_INFINITY;
 		this.mint = mint;
 		depth = r.depth + 1;
+		counter++;
 	}
 
 	public Ray(Pt origin, Vec dir, Ray r, float mint, float maxt)
@@ -78,6 +85,7 @@ public class Ray
 		this.maxt = maxt;
 		this.mint = mint;
 		depth = r.depth + 1;
+		counter++;
 	}
 
 	public Ray(Ray r)
@@ -87,6 +95,7 @@ public class Ray
 		maxt = r.maxt;
 		mint = r.mint;
 		depth = r.depth;
+		counter++;
 	}
 
 	public static Ray refractRay(Ray ray, Intersection i, double refractionIndex, double correction)
@@ -172,8 +181,11 @@ public class Ray
 		Vector3d dVNeg = new Vector3d(dV); 			dVNeg.normalize();
 		dUNeg.negate(); 							dVNeg.negate();
 		
-		double randdv = Math.random()*offset;		double randdu = Math.random()*offset;
-		double randdvNeg = Math.random()*offset;	double randduNeg = Math.random()*offset;
+		Random r = new Random();
+		r.setSeed(7);
+		
+		double randdv = r.nextDouble()*offset;		double randdu = r.nextDouble()*offset;
+		double randdvNeg = r.nextDouble()*offset;	double randduNeg = r.nextDouble()*offset;
 		dU.scale(randdu); 							dV.scale(randdv);
 		dUNeg.scale(randdvNeg); 					dVNeg.scale(randduNeg);
 		

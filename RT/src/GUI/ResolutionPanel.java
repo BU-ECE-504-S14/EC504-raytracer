@@ -6,12 +6,16 @@ package GUI;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
@@ -41,6 +45,8 @@ public class ResolutionPanel extends JPanel
 	{
 		super();
 		setup("Resolution: ", width, height);
+		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+
 	}
 
 	public void addFieldListeners(ActionListener go)
@@ -75,7 +81,7 @@ public class ResolutionPanel extends JPanel
 		namePanel = new JPanel();
 		namePanel.add(nameLabelPanel);
 
-		positionSubPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		positionSubPanel = new JPanel(new GridLayout(2,1));
 
 		xField = new JTextField("" + width, 4);
 		yField = new JTextField("" + height, 4);
