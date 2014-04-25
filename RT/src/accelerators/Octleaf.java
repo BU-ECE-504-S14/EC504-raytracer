@@ -19,7 +19,6 @@ import geometry.Ray;
 public class Octleaf extends Octnode implements Serializable
 {
 
-	
 	/**
 	 * 
 	 */
@@ -30,7 +29,7 @@ public class Octleaf extends Octnode implements Serializable
 	{
 		super(bBox, i, maxdepth);
 	}
-	
+
 	public Octleaf(Octleaf o)
 	{
 		super(o);
@@ -97,18 +96,15 @@ public class Octleaf extends Octnode implements Serializable
 		return this.containedObjects;
 	}
 
-	public SceneObject nearestIntersect(Ray ray)
-			throws NotIntersectableException
+	public SceneObject nearestIntersect(Ray ray) throws NotIntersectableException
 	{
-
-		Ray newRay = new Ray(ray);
 		SceneObject nearest = null;
 
 		if (containedObjects != null)
 		{
 			for (SceneObject obj : containedObjects)
 			{
-				if (obj.IntersectP(newRay))
+				if (obj.IntersectP(ray))
 				{
 					nearest = obj;
 				}

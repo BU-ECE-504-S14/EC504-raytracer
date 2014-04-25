@@ -84,14 +84,13 @@ public class Octree implements AbstractAccelerator, Serializable
 			}
 		}
 
-		Ray newRay = new Ray(ray);
 		SceneObject nearest = null;
 
 		if (allObjects.size() != 0)
 		{
 			for (SceneObject obj : allObjects)
 			{
-				if (obj.IntersectP(newRay))
+				if (obj.IntersectP(ray))
 				{
 					nearest = obj;
 				}

@@ -25,7 +25,8 @@ import raytracer.Renderer;
 import scene.MaterialScene;
 import scene.Scene;
 
-public class ObjectTable extends JPanel {
+public class ObjectTable extends JPanel
+{
 
 	JPanel nameLabelPanel;
 	JLabel nameLabel;
@@ -35,13 +36,17 @@ public class ObjectTable extends JPanel {
 	private JPanel mainPanel;
 	private Scene s;
 
-	public void openObjectPanel(SceneObject o) {
+	public void openObjectPanel(SceneObject o)
+	{
 		JFrame f = new JFrame();
 
 		JPanel p = null;
-		if (o instanceof Sphere) {
+		if (o instanceof Sphere)
+		{
 			p = new SpherePanel((Sphere) o);
-		} else if (o instanceof TriangleMesh) {
+		}
+		else if (o instanceof TriangleMesh)
+		{
 			p = new MeshPanel((TriangleMesh) o);
 		}
 		f.add(p);
@@ -49,20 +54,27 @@ public class ObjectTable extends JPanel {
 		f.setVisible(true);
 	}
 
-	public void updateObjects(SceneObject[] objects) {
+	public void updateObjects(SceneObject[] objects, boolean shift)
+	{
 		int index = list.getSelectedIndex();
 		list.setListData(objects);
-		if (index != 0) {
-			index--;
+		if (shift)
+		{
+			if (index != 0)
+			{
+				index--;
+			}
+			list.setSelectedIndex(index);
 		}
-		list.setSelectedIndex(index);
 	}
 
-	public SceneObject getSelectedObject() {
+	public SceneObject getSelectedObject()
+	{
 		return (SceneObject) list.getSelectedValue();
 	}
 
-	public ObjectTable(SceneObject[] objects) {
+	public ObjectTable(SceneObject[] objects)
+	{
 
 		namePanel = new JPanel();
 		nameLabel = new JLabel("Scene Objects:");
@@ -78,13 +90,17 @@ public class ObjectTable extends JPanel {
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		list.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent evt) {
+			public void mouseClicked(MouseEvent evt)
+			{
 				JList list = (JList) evt.getSource();
-				if (evt.getClickCount() == 2) {
+				if (evt.getClickCount() == 2)
+				{
 					SceneObject o = (SceneObject) list.getModel().getElementAt(
 							list.locationToIndex(evt.getPoint()));
 					openObjectPanel(o);
-				} else if (evt.getClickCount() == 3) { // Triple-click
+				}
+				else if (evt.getClickCount() == 3)
+				{ // Triple-click
 					SceneObject o = (SceneObject) list.getModel().getElementAt(
 							list.locationToIndex(evt.getPoint()));
 					openObjectPanel(o);
