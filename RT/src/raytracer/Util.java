@@ -20,7 +20,7 @@ public class Util
 		double[] newValues = new double[4];
 		double[] oldValues = new double[4];
 		vector.get(oldValues);
-		
+
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
@@ -125,6 +125,14 @@ public class Util
 			return max;
 		else
 			return val;
+
+	}
+
+	public static Double chopDouble(double d)
+	{
+		int i = (int) (d * 100);
+		double e = (double) i / 100.0;
+		return e;
 	}
 
 	/**
@@ -148,16 +156,20 @@ public class Util
 		}
 		v3.cross(n, v2);
 	}
-	
+
 	/**
-	 *  Perform linear interpolation on points a and b. 
-	 *  
-	 * @param t percentage of linear interpolation between a and b
-	 * @param a min float
-	 * @param b max float
+	 * Perform linear interpolation on points a and b.
+	 * 
+	 * @param t
+	 *            percentage of linear interpolation between a and b
+	 * @param a
+	 *            min float
+	 * @param b
+	 *            max float
 	 * @return
 	 */
-	public static float lerp(float t, float a, float b) {
-		return (1f - t)*a + t*b;
+	public static float lerp(float t, float a, float b)
+	{
+		return (1f - t) * a + t * b;
 	}
 }

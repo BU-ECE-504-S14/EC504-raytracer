@@ -161,7 +161,7 @@ public class SpheresInSpace extends Scene
 		 */
 		
 		//Camera
-		camera.setPostion(new Pt(600f, 1000f, 2000f));
+		camera.setPosition(new Pt(600f, 1000f, 2000f));
 		camera.lookAt(new Pt(0f, 0f, 0f), new Vec(0, 1, 0));
 		camera.fieldOfView = 0.3f;
 		// Prints out all object ids

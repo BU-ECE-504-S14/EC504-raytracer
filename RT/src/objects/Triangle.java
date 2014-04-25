@@ -6,8 +6,8 @@ import geometry.BBox;
 import geometry.Normal;
 import geometry.Pt;
 import geometry.Ray;
+import geometry.Transformation;
 import geometry.Vec;
-
 import raytracer.Util;
 import scene.Intersection;
 
@@ -16,6 +16,10 @@ public class Triangle extends AbstractSceneObject
 
 	public TriangleMesh mesh;
 	public int v[] = new int[3];
+	
+	public Transformation getTransform(){
+		return mesh.trans;
+	}
 
 	public Triangle(TriangleMesh m, int n)
 	{

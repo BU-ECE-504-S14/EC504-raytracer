@@ -41,7 +41,7 @@ public class SimpleRayTracer
 	private BufferedImage outputImage;
 
 	/** Margin of error when comparing doubles */
-	private static final double FLOAT_CORRECTION = 0.001;
+	private static final double FLOAT_CORRECTION = 0.01;
 
 	public int rayCounter;
 

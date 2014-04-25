@@ -21,6 +21,7 @@ import raytracer.Util;
  */
 public class PointLight implements Light, Serializable
 {
+
 	/**
 	 * 
 	 */
@@ -30,21 +31,26 @@ public class PointLight implements Light, Serializable
 	 * The position of this Light object, in Scene coordinates.
 	 */
 	protected Vector3d position = new Vector3d(0, 10, 0);
-	
+
 	/**
 	 * The color of the light given off by this object.
 	 */
-	protected Vector3d color = new Vector3d(1, 1, 1);
-	
+	public Vector3d color = new Vector3d(1, 1, 1);
+
 	/**
 	 * soft shadow component of light //TODO add volumetric lights
 	 */
 	protected double softShadowOffset = 0d;
-	
+
 	/**
 	 * Determines the radiosity/diffusiveness of light given off by this object.
 	 */
 	protected double radiosity = 1;
+
+	public String toString()
+	{
+		return "Point Light at: " + position;
+	}
 
 	/**
 	 * Determines the rate at which light intensity decreases with distance from the light
@@ -141,19 +147,21 @@ public class PointLight implements Light, Serializable
 	{
 		this.radiosity = radio;
 	}
-	
+
 	@Override
-	public void setSoftShadowOffset(double SS){
+	public void setSoftShadowOffset(double SS)
+	{
 		this.softShadowOffset = SS;
-	}
-	
-	@Override
-	public double getSoftShadowOffset(){
-		return this.softShadowOffset;
 	}
 
 	@Override
-	public String toString()
+	public double getSoftShadowOffset()
+	{
+		return this.softShadowOffset;
+	}
+
+	
+	public String paramsToString()
 	{
 		return "PointLight(position=" + position + ", color=" + color + ")";
 	}

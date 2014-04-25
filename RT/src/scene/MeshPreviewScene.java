@@ -80,7 +80,7 @@ public class MeshPreviewScene extends Scene
 		//Camera
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
 				(float)(Math.PI / 4));
-		camera.setPostion(new Pt(-12f, 0f, 17f));
+		camera.setPosition(new Pt(-12f, 0f, 17f));
 		camera.lookAt(new Pt(-10,1,0), new Vec(0, 1, 0));
 		camera.fieldOfView = 1.05;
 		
@@ -109,7 +109,7 @@ public class MeshPreviewScene extends Scene
 		Transformation target = new Transformation(demoSphere2.getTransform());
 		target.setScale(new Vector3d(10, 10, 10));
 		target.setRotation(new AxisAngle4d(0,1,0,-5.5*Math.PI/14));
-		parse1.updateTransform(target);
+		parse1.setTransform(target);
 
 		//sphere
 		try
@@ -131,7 +131,7 @@ public class MeshPreviewScene extends Scene
 		target = new Transformation(demoSphere2.getTransform());
 		target.setScale(new Vector3d(10, 10, 10));
 		target.setRotation(new AxisAngle4d(0,1,0,-5.5*Math.PI/14));
-		parse2.updateTransform(target);
+		parse2.setTransform(target);
 
 		
 		//snowflakes
@@ -155,7 +155,7 @@ public class MeshPreviewScene extends Scene
 		target = new Transformation(demoSphere2.getTransform());
 		target.setScale(new Vector3d(10, 10, 10));
 		target.setRotation(new AxisAngle4d(0,1,0,-5.5*Math.PI/14));
-		parse3.updateTransform(target);
+		parse3.setTransform(target);
 		
 		//buddha
 		try
@@ -177,7 +177,7 @@ public class MeshPreviewScene extends Scene
 		target = new Transformation(demoSphere2.getTransform());
 		target.setScale(new Vector3d(10, 10, 10));
 		target.setRotation(new AxisAngle4d(0,1,0,-5.5*Math.PI/14));
-		parse4.updateTransform(target);
+		parse4.setTransform(target);
 		
 		objects.add(parse1);
 		objects.add(parse2);

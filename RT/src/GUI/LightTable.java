@@ -22,10 +22,12 @@ import objects.Sphere;
 import objects.TriangleMesh;
 import raytracer.RenderViewer;
 import raytracer.Renderer;
+import scene.Light;
 import scene.MaterialScene;
+import scene.PointLight;
 import scene.Scene;
 
-public class ObjectTable extends JPanel
+public class LightTable extends JPanel
 {
 
 	JPanel nameLabelPanel;
@@ -36,19 +38,12 @@ public class ObjectTable extends JPanel
 	private JPanel mainPanel;
 	private Scene s;
 
-	public void openObjectPanel(SceneObject o)
+	public void openLightPanel(PointLight l)
 	{
-		JFrame f = new JFrame();
+		JFrame f = new JFrame("Point Light Information");
 
-		JPanel p = null;
-		if (o instanceof Sphere)
-		{
-			p = new SpherePanel((Sphere) o);
-		}
-		else if (o instanceof TriangleMesh)
-		{
-			p = new MeshPanel((TriangleMesh) o);
-		}
+		JPanel p = new LightPanel(l);
+
 		f.add(p);
 		f.pack();
 		f.setVisible(true);
@@ -72,16 +67,12 @@ public class ObjectTable extends JPanel
 	{
 		return (SceneObject) list.getSelectedValue();
 	}
-	
-	public void onMouseClick(MouseAdapter m){
-		list.addMouseListener(m);
-	}
 
-	public ObjectTable(SceneObject[] objects)
+	public LightTable(PointLight[] lights)
 	{
 
 		namePanel = new JPanel();
-		nameLabel = new JLabel("Scene Objects:");
+		nameLabel = new JLabel("Lights:");
 		nameLabelPanel = new JPanel();
 		nameLabelPanel.add(nameLabel);
 		namePanel.add(nameLabelPanel);
@@ -90,7 +81,7 @@ public class ObjectTable extends JPanel
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		mainPanel.add(namePanel);
 
-		list = new JList<SceneObject>(objects);
+		list = new JList<PointLight>(lights);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		list.addMouseListener(new MouseAdapter() {
@@ -99,16 +90,15 @@ public class ObjectTable extends JPanel
 				JList list = (JList) evt.getSource();
 				if (evt.getClickCount() == 2)
 				{
-					SceneObject o = (SceneObject) list.getModel().getElementAt(
+					PointLight l = (PointLight) list.getModel().getElementAt(
 							list.locationToIndex(evt.getPoint()));
-					openObjectPanel(o);
+					openLightPanel(l);
 				}
 				else if (evt.getClickCount() == 3)
 				{ // Triple-click
-					SceneObject o = (SceneObject) list.getModel().getElementAt(
+					PointLight l = (PointLight) list.getModel().getElementAt(
 							list.locationToIndex(evt.getPoint()));
-					openObjectPanel(o);
-
+					openLightPanel(l);
 				}
 			}
 		});

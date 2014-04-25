@@ -85,11 +85,13 @@ public class MaterialScene extends Scene
 		demoBox.material = demoSphere.material;
 		Transformation boxTrans = new Transformation();
 		boxTrans.setRotation(new AxisAngle4d(1, .3, 1, .17));
-		demoBox.updateTransform(boxTrans);
+		demoBox.setTransform(boxTrans);
+		
+		
 
 		Transformation preTrans = new Transformation();
 
-		previewBox.updateTransform(preTrans);
+		previewBox.setTransform(preTrans);
 
 		if (o instanceof Sphere)
 		{
@@ -103,6 +105,11 @@ public class MaterialScene extends Scene
 
 	public void updateScene(SceneObject o)
 	{
+		if (o instanceof Sphere){
+			Sphere s = (Sphere) o;
+			demoSphere.setzMinMax(s.getzMin(), s.getzMax());
+			demoSphere.phiMax = s.phiMax;
+		}
 		demoSphere.material = o.getMaterial();
 		demoBox.material = o.getMaterial();
 	}
@@ -110,7 +117,7 @@ public class MaterialScene extends Scene
 	public void setBox()
 	{
 		this.objects = new ArrayList<SceneObject>();
-
+		
 		addSceneObject(previewBox);
 		addSceneObject(demoBox);
 		buildOctree(3);

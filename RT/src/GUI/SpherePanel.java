@@ -181,6 +181,8 @@ public class SpherePanel extends JPanel
 				}
 			}
 		};
+		
+
 
 		infoPanel = new SphereInfoPanel(mySphere);
 		infoPanel.mySpherePanel = this;
@@ -188,6 +190,7 @@ public class SpherePanel extends JPanel
 		// infoPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, 150));
 		matPanel = new MaterialPanel(mySphere.material);
 		matPanel.addFieldListeners(up);
+		
 
 		rightPanel = matPanel;
 		leftPanel = new JPanel();
@@ -204,7 +207,11 @@ public class SpherePanel extends JPanel
 
 		rightPanel.add(new JPanel()); // spacer
 		previewPanel.setButtonListeners(box, sphere);
-
+		
+		
+		updateButton = new JButton("Update");
+		updateButton.addActionListener(up);
+		matPanel.add(updateButton);
 		add(leftPanel);
 		add(rightPanel);
 	}

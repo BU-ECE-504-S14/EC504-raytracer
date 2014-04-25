@@ -178,6 +178,10 @@ public class MeshPanel extends JPanel
 
 		rightPanel.add(new JPanel()); // spacer
 		previewPanel.setButtonListeners(box, sphere);
+		
+		updateButton = new JButton("Update");
+		updateButton.addActionListener(up);
+		rightPanel.add(updateButton);
 
 		add(leftPanel);
 		add(rightPanel);

@@ -53,7 +53,7 @@ public class BoxTestScene extends Scene
 
 		lights.add(demoLight);
 
-		camera.setPostion(new Pt(new Vector3d(0,0,50)));
+		camera.setPosition(new Pt(new Vector3d(0,0,50)));
 		camera.lookAt(new Pt(new Vector3d(0,0,0)), new Vec(0, 1, 0));
 		
 		for (TriangleMesh tm : meshes){

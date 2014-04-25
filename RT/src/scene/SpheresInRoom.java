@@ -114,7 +114,7 @@ public class SpheresInRoom extends Scene
 		scale = new Vector3d(1000, 1000, 1000);
 		position = new Vector3d(0, 0, -1000);
 		rotation = new AxisAngle4d(1,0,0,Math.PI/2);
-		planeArray[0].updateTransform(new Transformation(scale,position,rotation));
+		planeArray[0].setTransform(new Transformation(scale,position,rotation));
 		planeArray[0].material.alpha = 1;
 		planeArray[0].material.diffuseColor = new Vector3d(.5,.5,.5);
 		planeArray[0].material.reflectionIndex = 0.2;
@@ -122,7 +122,7 @@ public class SpheresInRoom extends Scene
 		scale = new Vector3d(1000, 1000, 1000);
 		position = new Vector3d(150, 0, 0);
 		rotation = new AxisAngle4d(0,0,1,Math.PI/2);
-		planeArray[1].updateTransform(new Transformation(scale,position,rotation));
+		planeArray[1].setTransform(new Transformation(scale,position,rotation));
 		planeArray[1].material.alpha = 1;
 		planeArray[1].material.diffuseColor = new Vector3d(1,0,0);
 		planeArray[1].material.reflectionIndex = 0.2;
@@ -130,7 +130,7 @@ public class SpheresInRoom extends Scene
 		scale = new Vector3d(1000, 1000, 1000);
 		position = new Vector3d(-150, 0, 0);
 		rotation = new AxisAngle4d(0,0,1,Math.PI/2);
-		planeArray[2].updateTransform(new Transformation(scale,position,rotation));
+		planeArray[2].setTransform(new Transformation(scale,position,rotation));
 		planeArray[2].material.alpha = 1;
 		planeArray[2].material.diffuseColor = new Vector3d(0,0,1);
 		planeArray[2].material.reflectionIndex = 0.2;
@@ -138,7 +138,7 @@ public class SpheresInRoom extends Scene
 		scale = new Vector3d(1000, 1000, 1000);
 		position = new Vector3d(0, -85, 0);
 		rotation = new AxisAngle4d(1,0,0,0);
-		planeArray[3].updateTransform(new Transformation(scale,position,rotation));
+		planeArray[3].setTransform(new Transformation(scale,position,rotation));
 		planeArray[3].material.alpha = 1;
 		planeArray[3].material.diffuseColor = new Vector3d(1,1,0);
 		planeArray[3].material.reflectionIndex = 0.2;
@@ -150,7 +150,7 @@ public class SpheresInRoom extends Scene
 		//Camera
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
 				(float)(Math.PI / 4));
-		camera.setPostion(new Pt(0f, 50f, 1400f));
+		camera.setPosition(new Pt(0f, 50f, 1400f));
 		camera.lookAt(new Pt(0f, 0f, 0f), new Vec(0, 1, 0));
 		camera.fieldOfView = 0.3f;
 		// Prints out all object ids

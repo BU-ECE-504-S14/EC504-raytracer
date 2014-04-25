@@ -146,7 +146,7 @@ public class Camera implements Serializable{
 	 * 
 	 * @param newPos desired position of camera.
 	 */
-	public void setPostion(Pt newPos) {
+	public void setPosition(Pt newPos) {
 		this.position = new Pt(newPos);
 		Transformation t = new Transformation(new Vector3d(1,1,1), position, orientation);
 		this.transformationMatrix = t.o2w;

@@ -93,7 +93,7 @@ public class BunnyScene extends Scene
 		BBo.material.specularIndex = 1;
 		 */
 		
-		camera.setPostion(new Pt(0f, 18f, 40f));
+		camera.setPosition(new Pt(0f, 18f, 40f));
 		camera.lookAt(new Pt(0,-5,0), new Vec(0, 1, 0));
 
 		TriangleMesh parse = new TriangleMesh(meshes.get(0));
@@ -105,7 +105,7 @@ public class BunnyScene extends Scene
 		Transformation target = new Transformation(demoSphere2.getTransform());
 		target.setScale(new Vector3d(10, 10, 10));
 		target.setRotation(new AxisAngle4d(0,1,0,-5.5*Math.PI/14));
-		parse.updateTransform(target);
+		parse.setTransform(target);
 
 		// objects.add(plane);
 		objects.add(parse);

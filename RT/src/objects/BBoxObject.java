@@ -6,6 +6,7 @@ import geometry.BBox;
 import geometry.Normal;
 import geometry.Pt;
 import geometry.Ray;
+import geometry.Transformation;
 import geometry.Vec;
 /**
  * bounding box objects are simple objects based on the bounding boxes of shapes. They are meant for preview scenes
@@ -19,6 +20,11 @@ public class BBoxObject extends AbstractSceneObject {
 	
 	public BBoxObject(BBox b) {
 		this.bb = new BBox(b);
+	}
+	
+	@Override
+	public Transformation getTransform(){
+		return null;
 	}
 	
 	@Override

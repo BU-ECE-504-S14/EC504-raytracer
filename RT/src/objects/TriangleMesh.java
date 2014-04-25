@@ -66,6 +66,11 @@ public class TriangleMesh extends AbstractSceneObject
 		trans = new Transformation(t.trans);
 	}
 
+	public Transformation getTransform()
+	{
+		return trans;
+	}
+
 	public int[] getVertexIndices()
 	{
 		return vertexIndices;
@@ -143,7 +148,7 @@ public class TriangleMesh extends AbstractSceneObject
 		this.uvs = uvs;
 	}
 
-	public void updateTransform(Transformation t)
+	public void setTransform(Transformation t)
 	{
 		for (int i = 0; i < vertices.length; i++)
 		{
@@ -183,17 +188,18 @@ public class TriangleMesh extends AbstractSceneObject
 	}
 
 	@Override
-	public String toString(){
+	public String toString()
+	{
 		return "Mesh: " + name;
 	}
-	
+
 	public String paramsToString()
 	{
 		String out = "";
-		System.out.println( "Triangle Mesh (ID: " + id);
-		System.out.println( "Name: " + name );
-		System.out.println( "Vertices: " + nverts);
-		System.out.println( "Faces: " + ntris);
+		System.out.println("Triangle Mesh (ID: " + id);
+		System.out.println("Name: " + name);
+		System.out.println("Vertices: " + nverts);
+		System.out.println("Faces: " + ntris);
 		return out;
 	}
 

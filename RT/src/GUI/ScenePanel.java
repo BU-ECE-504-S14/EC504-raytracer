@@ -1,9 +1,14 @@
 package GUI;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
 
@@ -11,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -18,6 +24,7 @@ import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
 import parser.ObjectParser;
+import raytracer.Camera;
 import raytracer.RenderViewer;
 import raytracer.Renderer;
 import scene.BuddhaScene;
@@ -31,12 +38,17 @@ public class ScenePanel extends JPanel
 {
 
 	JPanel previewPanel;
+	TransformPanel transformPanel;
+	LightTable lights;
 	ObjectTable objects;
 	Scene myScene;
 	RenderSettingsPanel rendering;
 
+	CameraPanel cameraPanel;
+
 	JPanel listPanel;
 
+	JPanel rightPanel;
 	JPanel buttonPanel;
 
 	JButton dupeObject;
@@ -75,6 +87,7 @@ public class ScenePanel extends JPanel
 
 	public void setupPanels()
 	{
+		lights = new LightTable(myScene.getLightArray());
 		listPanel = new JPanel();
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(4, 2));
@@ -82,6 +95,7 @@ public class ScenePanel extends JPanel
 		rendering = new RenderSettingsPanel(myScene);
 		objects = new ObjectTable(myScene.getObjectArray());
 		previewPanel = new JPanel();
+		rightPanel = new JPanel(new BorderLayout());
 
 		listPanel.setPreferredSize(new Dimension(300, 600));
 
@@ -108,6 +122,26 @@ public class ScenePanel extends JPanel
 		buttonPanel.add(load);
 		buttonPanel.add(settings);
 		buttonPanel.setPreferredSize(new Dimension(300, 200));
+
+		transformPanel = new TransformPanel(new Sphere());
+		updateTransformPanel();
+		cameraPanel = new CameraPanel();
+		rightPanel.add(transformPanel, BorderLayout.NORTH);
+		rightPanel.add(new JPanel());
+
+		updateCameraPanel();
+		rightPanel.add(cameraPanel, BorderLayout.SOUTH);
+
+		objects.onMouseClick(new MouseAdapter() {
+			public void mouseClicked(MouseEvent evt)
+			{
+				JList list = (JList) evt.getSource();
+				if (evt.getClickCount() == 1)
+				{
+					updateTransformPanel();
+				}
+			}
+		});
 
 		addSphere.addActionListener(new ActionListener() {
 
@@ -190,9 +224,69 @@ public class ScenePanel extends JPanel
 		});
 
 		listPanel.add(objects);
+		listPanel.add(lights);
 		listPanel.add(renderButtonPanel);
 		listPanel.add(buttonPanel);
 		this.add(listPanel);
+		this.add(rightPanel);
+	}
+
+	public void updateCameraPanel()
+	{
+		if (myScene.getCamera() == null)
+		{
+			// do nothing!
+		}
+		else
+		{
+			cameraPanel.setCamera(myScene.getCamera());
+
+			cameraPanel.setTargetListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+
+					if (objects.getSelectedObject() != null)
+					{
+						cameraPanel.setTarget(objects.getSelectedObject());
+					}
+				}
+
+			});
+			cameraPanel.revalidate();
+		}
+	}
+
+	public void updateTransformPanel()
+	{
+		if (myScene.getObjects().size() == 0)
+		{
+			Sphere dummySphere = new Sphere();
+			dummySphere.setName("Dummy sphere -- add more scene objects!");
+			transformPanel.newObject(dummySphere);
+		}
+		else if (objects.getSelectedObject() == null)
+		{
+			transformPanel.newObject(myScene.getObjects().get(0));
+		}
+		else
+		{
+			transformPanel.newObject(objects.getSelectedObject());
+		}
+
+		transformPanel.addFieldListeners(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				transformPanel.updateTransformInfo();
+				updateList();
+			}
+		});
+
+		System.out.println(transformPanel.myObject.getTransform().toString());
+		transformPanel.revalidate();
 	}
 
 	public void showSettings()
@@ -204,8 +298,9 @@ public class ScenePanel extends JPanel
 	{
 		objects.updateObjects(myScene.getObjectArray(), false);
 	}
-	
-	public void updateList(boolean b){
+
+	public void updateList(boolean b)
+	{
 		objects.updateObjects(myScene.getObjectArray(), b);
 	}
 
@@ -363,8 +458,11 @@ public class ScenePanel extends JPanel
 
 	public void removeObject(SceneObject o)
 	{
-		myScene.removeSceneObject(o);
-		updateList(true);
+		if (myScene.getObjects().size() > 1)
+		{
+			myScene.removeSceneObject(o);
+			updateList(true);
+		}
 	}
 
 	public void dupeObject(SceneObject o)
