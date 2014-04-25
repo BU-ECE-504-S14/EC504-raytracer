@@ -50,7 +50,9 @@ public class RenderSettingsPanel extends JPanel {
 	Scene myScene;
 
 	JPanel mainPanel;
-	ResolutionPanel resPanel;
+	//ResolutionPanel resPanel;
+	ParameterPanel width;
+	ParameterPanel height;
 	CheckBoxPanel threadingPanel;
 	CheckBoxPanel phongPanel;
 	ThreeRadioPanel shadowPanel;
@@ -102,9 +104,8 @@ public class RenderSettingsPanel extends JPanel {
 	}
 
 	public void addPanels() {
-		JPanel space = new JPanel();
-		space.add(resPanel);
-		mainPanel.add(space);
+		mainPanel.add(width);
+		mainPanel.add(height);
 		mainPanel.add(shadowPanel);
 		mainPanel.add(antiAPanel);
 		mainPanel.add(threadingPanel);
@@ -124,8 +125,10 @@ public class RenderSettingsPanel extends JPanel {
 
 	public void setupPanels() {
 		RenderSettings mySettings = myScene.settings;
-		resPanel = new ResolutionPanel(mySettings.getWIDTH(),
-				mySettings.getHEIGHT());
+		//resPanel = new ResolutionPanel(mySettings.getWIDTH(),
+		//		mySettings.getHEIGHT());
+		width = new ParameterPanel("Width: ", ""+mySettings.getWIDTH(), 4);
+		height = new ParameterPanel("Height: ", ""+mySettings.getHEIGHT(), 4);
 		threadingPanel = new CheckBoxPanel("Multithreading: ",
 				mySettings.isMULTITHREADING());
 		phongPanel = new CheckBoxPanel("Phong Shading: ", mySettings.isPHONG());
@@ -262,7 +265,9 @@ public class RenderSettingsPanel extends JPanel {
 	public void updatePanels() {
 		RenderSettings mySettings = myScene.settings;
 
-		resPanel.setValue(mySettings.getHEIGHT(), mySettings.getWIDTH());
+		//resPanel.setValue(mySettings.getHEIGHT(), mySettings.getWIDTH());
+		width.setText(""+mySettings.getWIDTH());
+		height.setText(""+mySettings.getHEIGHT());
 		threadingPanel.setValue(mySettings.isMULTITHREADING());
 		phongPanel.setValue(mySettings.isPHONG());
 		antiAPanel.setValue(mySettings.getANTIALIASING());
@@ -282,7 +287,9 @@ public class RenderSettingsPanel extends JPanel {
 	}
 
 	public void addFieldListeners(ActionListener act) {
-		resPanel.addFieldListeners(act);
+		//resPanel.addFieldListeners(act);
+		width.addFieldListener(act);
+		height.addFieldListener(act);
 		reflectPanel.addFieldListener(act);
 		refractPanel.addFieldListener(act);
 		depthPanel.addFieldListener(act);
@@ -303,8 +310,8 @@ public class RenderSettingsPanel extends JPanel {
 		RenderSettings mySettings = myScene.settings;
 
 		try {
-			mySettings.setWIDTH(resPanel.getWidth());
-			mySettings.setHEIGHT(resPanel.getHeight());
+			mySettings.setWIDTH(Integer.parseInt(width.getValue()));
+			mySettings.setHEIGHT(Integer.parseInt(height.getValue()));
 			mySettings.setMULTITHREADING(threadingPanel.getValue());
 			mySettings.setPHONG(phongPanel.getValue());
 			mySettings.setSHADOW_TYPE(shadowPanel.getValue());

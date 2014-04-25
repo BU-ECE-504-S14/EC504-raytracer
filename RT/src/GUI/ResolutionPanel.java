@@ -75,13 +75,12 @@ public class ResolutionPanel extends JPanel
 
 	public void setup(String name, int width, int height)
 	{
+		positionSubPanel = new JPanel();
 		nameLabel = new JLabel(name);
 		nameLabelPanel = new JPanel();
 		nameLabelPanel.add(nameLabel);
 		namePanel = new JPanel();
 		namePanel.add(nameLabelPanel);
-
-		positionSubPanel = new JPanel(new GridLayout(2,1));
 
 		xField = new JTextField("" + width, 4);
 		yField = new JTextField("" + height, 4);
@@ -90,9 +89,9 @@ public class ResolutionPanel extends JPanel
 		yLabelPanel = new JPanel();
 
 		xLabel = new JLabel("  Width: ");
-		//xLabel.setLabelFor(xField);
+		xLabel.setLabelFor(xField);
 		yLabel = new JLabel("Height: ");
-		//yLabel.setLabelFor(yField);
+		yLabel.setLabelFor(yField);
 
 		xLabelPanel.add(xLabel);
 		yLabelPanel.add(yLabel);

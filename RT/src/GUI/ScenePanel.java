@@ -22,6 +22,7 @@ import raytracer.RenderViewer;
 import raytracer.Renderer;
 import scene.MaterialScene;
 import scene.Scene;
+import scene.SpheresInRoom;
 import util.SceneObjectException;
 
 public class ScenePanel extends JPanel {
@@ -52,7 +53,7 @@ public class ScenePanel extends JPanel {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Sphere s = new Sphere();
-		Scene scn = new MaterialScene(s);
+		Scene scn = new SpheresInRoom();
 		ScenePanel sp = new ScenePanel(scn);
 
 		f.add(sp);

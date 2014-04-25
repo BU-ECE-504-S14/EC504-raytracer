@@ -27,7 +27,7 @@ public class RenderSettings implements Serializable {
 	private int ANTIALIASING = 1;
 	private int WIDTH = 100;
 	private int HEIGHT = 100;
-	private int SHADOW_TYPE = 0;
+	private int SHADOW_TYPE = 1;
 	private int REFRACTION = 1;
 	private int REFLECTION = 1;
 	private boolean ACCELERATE = true;
