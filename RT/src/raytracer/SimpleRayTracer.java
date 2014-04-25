@@ -52,8 +52,8 @@ public class SimpleRayTracer
 	 */
 	public BufferedImage render(Scene s) throws Exception
 	{
-		int height = s.settings.HEIGHT;
-		int width = s.settings.WIDTH;
+		int height = s.settings.getHEIGHT();
+		int width = s.settings.getWIDTH();
 		double startTime = System.currentTimeMillis();
 
 		BufferedImage image = new BufferedImage(width, height,
@@ -68,7 +68,7 @@ public class SimpleRayTracer
 					System.out.print('*');
 				color.set(0, 0, 0);
 
-				if (s.settings.ANTIALIASING <= 1)
+				if (s.settings.getANTIALIASING() <= 1)
 				{
 					Ray ray = constructRayThroughPixel(i, j, s);/*
 																 * create this ray through
@@ -109,8 +109,8 @@ public class SimpleRayTracer
 	 */
 	public BufferedImage renderThreads(Scene s) throws Exception
 	{
-		int height = s.settings.HEIGHT;
-		int width = s.settings.WIDTH;
+		int height = s.settings.getHEIGHT();
+		int width = s.settings.getWIDTH();
 		double start = System.currentTimeMillis();
 
 		double startTime = System.currentTimeMillis();
@@ -126,7 +126,7 @@ public class SimpleRayTracer
 		outputImage = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
 
-		double raysPerPixel = Math.pow(s.settings.ANTIALIASING, 2);
+		double raysPerPixel = Math.pow(s.settings.getANTIALIASING(), 2);
 
 		// Make all of the ColorPixel callables
 
@@ -134,7 +134,7 @@ public class SimpleRayTracer
 		{
 			for (int j = 0; j < height; j++)
 			{
-				if (s.settings.ANTIALIASING > 1)
+				if (s.settings.getANTIALIASING() > 1)
 				{
 					List<Ray> rays = constructRaysThroughPixel(j, i, s);
 					for (Ray r : rays)
@@ -320,7 +320,7 @@ public class SimpleRayTracer
 	private static Vector3d getPhongColor(Ray ray, Intersection inter, Light light,
 			int currentReflection, int currentRefraction, Scene s) throws Exception
 	{
-		int shadowType = s.settings.SHADOW_TYPE;
+		int shadowType = s.settings.getSHADOW_TYPE();
 		// ******** Color components for each light
 		Vector3d ambient = new Vector3d(0, 0, 0);
 		Vector3d diffuse = new Vector3d(0, 0, 0);
@@ -536,7 +536,7 @@ public class SimpleRayTracer
 		 */
 
 		{
-			if (currentReflection < s.settings.REFLECTION)
+			if (currentReflection < s.settings.getREFLECTION())
 			{
 				if (reflectionIndex > 0)
 				{
@@ -552,7 +552,7 @@ public class SimpleRayTracer
 
 		if (alpha < 1)
 		{
-			if (currentRefraction < s.settings.REFRACTION)
+			if (currentRefraction < s.settings.getREFRACTION())
 			{
 				Ray refraction;
 				if (refractionIndex == -1
@@ -716,8 +716,8 @@ public class SimpleRayTracer
 
 	public static Ray constructRayThroughPixel(double i, double j, Scene s)
 	{
-		int width = s.settings.WIDTH;
-		int height = s.settings.HEIGHT;
+		int width = s.settings.getWIDTH();
+		int height = s.settings.getHEIGHT();
 		double xDir = (j - width / 2f);
 		double yDir = (i - height / 2f);
 		double zDir = Math.min(width, height)
@@ -736,7 +736,7 @@ public class SimpleRayTracer
 
 	public static List<Ray> constructRaysThroughPixel(double i, double j, Scene s)
 	{
-		int antiAlias = s.settings.ANTIALIASING;
+		int antiAlias = s.settings.getANTIALIASING();
 		Random rand = new Random();
 		rand.setSeed(0);
 		rand.nextDouble();

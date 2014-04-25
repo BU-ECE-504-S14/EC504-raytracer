@@ -45,6 +45,10 @@ public class RadioButtonPanel extends JPanel
 		super(new FlowLayout(FlowLayout.LEFT));
 		setup(paramName, initialValue);
 	}
+	
+	public void setButtonLabel(String s){
+		paramLabel.setText(s);
+	}
 
 	public void addFieldListener(ActionListener go)
 	{

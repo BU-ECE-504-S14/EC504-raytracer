@@ -49,7 +49,7 @@ public class CheckBoxPanel extends JPanel
 		return paramBox.isSelected();
 	}
 	
-	public void setSelected(boolean b){
+	public void setValue(boolean b){
 		paramBox.setSelected(b);
 	}
 

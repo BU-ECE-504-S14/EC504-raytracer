@@ -29,8 +29,8 @@ import raytracer.Camera;
 import raytracer.RenderSettings;
 
 /**
- * A representation of a scene, which contains various objects which can be intersected and
- * illuminated by rays.
+ * A representation of a scene, which contains various objects which can be intersected
+ * and illuminated by rays.
  * 
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
@@ -43,21 +43,24 @@ public class Scene implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	protected ArrayList<SceneObject> objects;
-	protected Collection<Light> lights = new HashSet<Light>(); // TODO possibly need to change data
+	protected Collection<Light> lights = new HashSet<Light>(); // TODO possibly need to
+																// change data
 																// type
 	protected Camera camera;
 	protected boolean accelFlag; // true when the accelerator is updated and usable
 	protected AbstractAccelerator accelerator;
-	
+	protected String name;
+
 	public RenderSettings settings;
 
 	public Scene()
 	{
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
-				(float)(Math.PI / 4));
+				(float) (Math.PI / 4));
 		objects = new ArrayList<SceneObject>();
 		lights = new HashSet<Light>();
 		settings = new RenderSettings();
+		name = "New Scene";
 	}
 
 	public Scene(Scene s)
@@ -68,11 +71,11 @@ public class Scene implements Serializable
 		{
 			if (so instanceof TriangleMesh)
 			{
-				objects.add(((TriangleMesh)so).getCopy());
+				objects.add(((TriangleMesh) so).getCopy());
 			}
 			else if (so instanceof Sphere)
 			{
-				objects.add(((Sphere)so).getCopy());
+				objects.add(((Sphere) so).getCopy());
 			}
 		}
 		lights = new HashSet<Light>();
@@ -80,9 +83,14 @@ public class Scene implements Serializable
 		{
 			if (l instanceof PointLight)
 			{
-				lights.add(((PointLight)l).getCopy());
+				lights.add(((PointLight) l).getCopy());
 			}
 		}
+	}
+
+	public void setName(String s)
+	{
+		name = s;
 	}
 
 	public static void writeSceneToFile(Scene targetScene, String filePath)
@@ -109,7 +117,7 @@ public class Scene implements Serializable
 		{
 			FileInputStream fIn = new FileInputStream(filePath);
 			ObjectInputStream in = new ObjectInputStream(fIn);
-			s = (Scene)in.readObject();
+			s = (Scene) in.readObject();
 			in.close();
 			fIn.close();
 		}
@@ -142,7 +150,7 @@ public class Scene implements Serializable
 		this.objects.add(obj);
 		accelFlag = false;
 	}
-	
+
 	public void removeSceneObject(SceneObject obj)
 	{
 		this.objects.remove(obj);
@@ -175,8 +183,8 @@ public class Scene implements Serializable
 	}
 
 	/**
-	 * looks for the first object that a ray intersects, and the point at which the ray intersects
-	 * that object. If no intersection return null.
+	 * looks for the first object that a ray intersects, and the point at which the ray
+	 * intersects that object. If no intersection return null.
 	 * 
 	 * @param ray
 	 *            , ray that you want to analyze.
@@ -190,8 +198,8 @@ public class Scene implements Serializable
 	}
 
 	/* ask aaron about this coding practice. Is this overloading. */
-	public boolean getFirstIntersectedObject(Ray ray,
-			Intersection inter, Collection<SceneObject> objs) throws Exception
+	public boolean getFirstIntersectedObject(Ray ray, Intersection inter,
+			Collection<SceneObject> objs) throws Exception
 	{
 		boolean intersectedFlag = false;
 

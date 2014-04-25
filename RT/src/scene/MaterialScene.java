@@ -32,8 +32,9 @@ public class MaterialScene extends Scene
 	static Sphere demoSphere;
 	static TriangleMesh demoBox;
 	static TriangleMesh previewBox;
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args)
+	{
 		MaterialScene m = new MaterialScene(new Sphere());
 		JFrame frame = new JFrame();
 		frame.add(new MeshPanel(m.demoBox));
@@ -42,8 +43,7 @@ public class MaterialScene extends Scene
 
 	public MaterialScene(SceneObject o)
 	{
-		super();
-		
+
 		settings = new MatSettings(300, 300);
 
 		camera = new Camera(new Pt(3, 3, 3), new Pt(-5, -5, -5), new Vec(0, 1, 0), Math.PI / 4);
@@ -56,7 +56,7 @@ public class MaterialScene extends Scene
 
 		demoSphere = new Sphere();
 
-		demoSphere.material = new Material(o.getMaterial());
+		demoSphere.material = o.getMaterial();
 		demoSphere.setTransform(new Transformation());
 
 		previewBox = null;
@@ -82,7 +82,7 @@ public class MaterialScene extends Scene
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		demoBox.material = new Material(demoSphere.material);
+		demoBox.material = demoSphere.material;
 		Transformation boxTrans = new Transformation();
 		boxTrans.setRotation(new AxisAngle4d(1, .3, 1, .17));
 		demoBox.updateTransform(boxTrans);
@@ -90,7 +90,6 @@ public class MaterialScene extends Scene
 		Transformation preTrans = new Transformation();
 
 		previewBox.updateTransform(preTrans);
-		previewBox.material.diffuseIndex = .9;
 
 		if (o instanceof Sphere)
 		{
@@ -104,13 +103,12 @@ public class MaterialScene extends Scene
 
 	public void updateScene(SceneObject o)
 	{
-		demoSphere.material = new Material(o.getMaterial());
-		demoBox.material = new Material(o.getMaterial());
+		demoSphere.material = o.getMaterial();
+		demoBox.material = o.getMaterial();
 	}
 
 	public void setBox()
 	{
-		removeSceneObject(demoSphere);
 		this.objects = new ArrayList<SceneObject>();
 
 		addSceneObject(previewBox);

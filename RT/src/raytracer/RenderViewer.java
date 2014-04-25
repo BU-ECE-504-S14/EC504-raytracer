@@ -27,11 +27,18 @@ public class RenderViewer extends JFrame
 		RenderViewer r = new RenderViewer();
 
 	}
+	
+	public RenderViewer(boolean exitOnClose)
+	{
+		super("Basic Graphical Rendering");
+		if (exitOnClose){
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
+	}
 
 	public RenderViewer()
 	{
-		super("Basic Graphical Rendering");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this(false);
 	}
 
 	public RenderViewer(BufferedImage bi)

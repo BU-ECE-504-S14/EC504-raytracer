@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
-@author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
 public class ParameterPanel extends JPanel
 {
@@ -29,6 +29,10 @@ public class ParameterPanel extends JPanel
 	public void addFieldListener(ActionListener go)
 	{
 		paramField.addActionListener(go);
+	}
+	
+	public void setText(String s){
+		paramField.setText(s);
 	}
 
 	public String getValue()

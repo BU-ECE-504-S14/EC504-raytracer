@@ -7,7 +7,7 @@ package util;
 /**
  * @author BU CS673 - Clone Productions
  */
-public class ColorFormatException extends Exception
+public class MaterialFormatException extends Exception
 {
 	/**
 	 * Constructs a ColorFormatException object with the specified message.
@@ -15,7 +15,7 @@ public class ColorFormatException extends Exception
 	 * @param message
 	 *            the exception's detail message.
 	 */
-	public ColorFormatException(String message)
+	public MaterialFormatException(String message)
 	{
 		super(message);
 	}
@@ -26,7 +26,7 @@ public class ColorFormatException extends Exception
 	 * @param exception
 	 *            the exception to wrap.
 	 */
-	public ColorFormatException(Throwable exception)
+	public MaterialFormatException(Throwable exception)
 	{
 		super(exception);
 	}

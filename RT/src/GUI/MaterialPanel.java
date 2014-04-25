@@ -16,7 +16,7 @@ import javax.vecmath.Vector3d;
 
 import objects.Material;
 import objects.Sphere;
-import util.ColorFormatException;
+import util.MaterialFormatException;
 
 /**
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
@@ -38,7 +38,7 @@ public class MaterialPanel extends JPanel
 	public static void main(String[] args)
 	{
 		Sphere demoSphere = new Sphere();
-		demoSphere.setScaleRad(new Vector3d(20f,20f,20f));
+		demoSphere.setScaleRad(new Vector3d(20f, 20f, 20f));
 		demoSphere.setPosition(new Vector3d(15, 10, 5));
 		JFrame testFrame = new JFrame();
 		MaterialPanel testPanel = new MaterialPanel(demoSphere.material);
@@ -110,6 +110,18 @@ public class MaterialPanel extends JPanel
 			return true;
 	}
 
+	public boolean isValidIndex(double refraction)
+	{
+		if (refraction < 1)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
 	public void updateMaterialInfo()
 	{
 		try
@@ -117,8 +129,9 @@ public class MaterialPanel extends JPanel
 			Vector3d diffuseColor = diffusePanel.getColor();
 			Vector3d specularColor = specularPanel.getColor();
 
-			if (!isValidColor(diffuseColor) || !isValidColor(specularColor)){
-				throw new ColorFormatException("Entered invalid color value!");
+			if (!isValidColor(diffuseColor) || !isValidColor(specularColor))
+			{
+				throw new MaterialFormatException("Entered invalid color value!");
 			}
 
 			double diffuseIndex = Double.parseDouble(diffuseIndexPanel.getValue());
@@ -127,6 +140,12 @@ public class MaterialPanel extends JPanel
 			double alpha = Double.parseDouble(alphaPanel.getValue());
 			double reflection = Double.parseDouble(reflectionPanel.getValue());
 			double refraction = Double.parseDouble(refractionPanel.getValue());
+
+			if (!isValidIndex(refraction))
+			{
+				throw new MaterialFormatException("Entered invalid refraction value! Must be >=1.");
+			}
+
 			double shininess = Double.parseDouble(shininessPanel.getValue());
 
 			myMaterial.diffuseColor = diffuseColor;

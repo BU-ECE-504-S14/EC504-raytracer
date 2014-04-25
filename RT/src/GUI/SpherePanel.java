@@ -27,7 +27,7 @@ import scene.Scene;
  */
 public class SpherePanel extends JPanel
 {
-	Sphere mySphere;
+	public Sphere mySphere;
 	Renderer materialRenderer = new Renderer();
 	JPanel leftPanel;
 	JPanel rightPanel;
@@ -40,7 +40,7 @@ public class SpherePanel extends JPanel
 	PreviewPanel previewPanel;
 
 	JPanel lowerLeftPanel;
-	MaterialScene matScene;
+	public MaterialScene matScene;
 
 	BufferedImage preview = null;
 
@@ -101,7 +101,7 @@ public class SpherePanel extends JPanel
 		{
 			try
 			{
-				preview = materialRenderer.renderScene(matScene);
+				previewPanel.setImage(materialRenderer.renderScene(matScene));
 			}
 			catch (Exception e)
 			{
@@ -114,7 +114,6 @@ public class SpherePanel extends JPanel
 			e.printStackTrace();
 		}
 
-		previewPanel.setImage(preview);
 		previewPanel.updatePreview();
 
 	}
@@ -126,7 +125,7 @@ public class SpherePanel extends JPanel
 		{
 			try
 			{
-				preview = materialRenderer.renderScene(matScene);
+				previewPanel.setImage(materialRenderer.renderScene(matScene));
 			}
 			catch (Exception e)
 			{
@@ -139,7 +138,6 @@ public class SpherePanel extends JPanel
 			e.printStackTrace();
 		}
 
-		previewPanel.setImage(preview);
 		previewPanel.updatePreview(resize);
 
 	}
@@ -152,6 +150,8 @@ public class SpherePanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				updateSphere();
+				matScene.updateScene(mySphere);
+				updatePreviewImage();
 			}
 		};
 
@@ -161,8 +161,10 @@ public class SpherePanel extends JPanel
 			{
 				{
 
+					updateSphere();
 					matScene.setBox();
-					updatePreviewImage(false);
+					matScene.updateScene(mySphere);
+					updatePreviewImage();
 				}
 			}
 		};
@@ -172,8 +174,10 @@ public class SpherePanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				{
+					updateSphere();
 					matScene.setSphere();
-					updatePreviewImage(false);
+					matScene.updateScene(mySphere);
+					updatePreviewImage();
 				}
 			}
 		};
@@ -209,7 +213,6 @@ public class SpherePanel extends JPanel
 	{
 		infoPanel.updateSphereInfo();
 		matPanel.updateMaterialInfo();
-		updatePreviewImage(false);
 		if (myFrame != null)
 		{
 			myFrame.pack();

@@ -15,12 +15,15 @@ import javax.swing.JTextField;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
+import util.RenderSettingException;
+
 /**
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
 public class ResolutionPanel extends JPanel
 {
 
+	JPanel mainPanel;
 	JPanel nameLabelPanel;
 	JLabel nameLabel;
 	JPanel namePanel;
@@ -34,11 +37,10 @@ public class ResolutionPanel extends JPanel
 	public JTextField xField;
 	public JTextField yField;
 
-	public ResolutionPanel(String name, Vector2d position)
+	public ResolutionPanel(int width, int height)
 	{
 		super();
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setup(name, position);
+		setup("Resolution: ", width, height);
 	}
 
 	public void addFieldListeners(ActionListener go)
@@ -47,14 +49,25 @@ public class ResolutionPanel extends JPanel
 		yField.addActionListener(go);
 	}
 
-	public Vector2d getResolution()
+	public void setValue(int width, int height)
 	{
-		double x = Double.parseDouble(xField.getText());
-		double y = Double.parseDouble(yField.getText());
-		return new Vector2d(x, y);
+		xField.setText("" + width);
+		yField.setText("" + height);
 	}
 
-	public void setup(String name, Vector2d position)
+	public int getWidth()
+	{
+		String x = xField.getText();
+		return Integer.parseInt(x);
+	}
+
+	public int getHeight()
+	{
+		String y = yField.getText();
+		return Integer.parseInt(y);
+	}
+
+	public void setup(String name, int width, int height)
 	{
 		nameLabel = new JLabel(name);
 		nameLabelPanel = new JPanel();
@@ -64,16 +77,16 @@ public class ResolutionPanel extends JPanel
 
 		positionSubPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-		xField = new JTextField("" + position.getX(), 4);
-		yField = new JTextField("" + position.getY(), 4);
+		xField = new JTextField("" + width, 4);
+		yField = new JTextField("" + height, 4);
 
 		xLabelPanel = new JPanel();
 		yLabelPanel = new JPanel();
 
-		xLabel = new JLabel("  Width: ", 6);
-		xLabel.setLabelFor(xField);
-		yLabel = new JLabel("Height: ", 6);
-		yLabel.setLabelFor(yField);
+		xLabel = new JLabel("  Width: ");
+		//xLabel.setLabelFor(xField);
+		yLabel = new JLabel("Height: ");
+		//yLabel.setLabelFor(yField);
 
 		xLabelPanel.add(xLabel);
 		yLabelPanel.add(yLabel);
@@ -83,12 +96,13 @@ public class ResolutionPanel extends JPanel
 		positionSubPanel.add(new JPanel()); // spacer
 		positionSubPanel.add(yLabel);
 		positionSubPanel.add(yField);
-		positionSubPanel.add(new JPanel()); // spacer
+		
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
-		namePanel.setMaximumSize(new Dimension(Short.MAX_VALUE, 25));
-		namePanel.setMinimumSize(new Dimension(Short.MAX_VALUE, 25));
-
-		add(namePanel);
-		add(positionSubPanel);
+		mainPanel.add(namePanel);
+		mainPanel.add(positionSubPanel);
+		
+		add(mainPanel);
 	}
 }

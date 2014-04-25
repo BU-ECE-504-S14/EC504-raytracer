@@ -21,6 +21,7 @@ import scene.BoxTestScene;
 import scene.MeshPreviewScene;
 import scene.PointLight;
 import scene.MaterialScene;
+import util.RenderSettingException;
 
 /**
  * Ray tracing renderer, for EC504 at Boston University based on the work of Rafael Martin
@@ -46,16 +47,24 @@ public class Renderer
 	public void showSampleScene()
 	{
 		Scene s = new MaterialScene(new Sphere());
-		s.settings.ANTIALIASING = 1;
-		s.settings.MULTITHREADING = true;
-		s.settings.WIDTH = 400;
-		s.settings.HEIGHT = 600;
+		try
+		{
+			s.settings.setANTIALIASING(1);
+			s.settings.setMULTITHREADING(true);
+			s.settings.setWIDTH(400);
+			s.settings.setHEIGHT(600);
+		}
+		catch (RenderSettingException e1)
+		{
+			e1.printStackTrace();
+		}
+
 		try
 		{
 
 			// new RenderViewer(renderScene(constructSampleScene()));
 			new RenderViewer(renderScene(s));
-			//new RenderViewer(renderScene(new MeshPreviewScene()));
+			// new RenderViewer(renderScene(new MeshPreviewScene()));
 		}
 		catch (Exception e)
 		{
@@ -71,7 +80,7 @@ public class Renderer
 	 * @throws IOException
 	 *             if there are errors in the file access input/output
 	 */
-	public BufferedImage renderScene(Scene scene) throws Exception
+	public static BufferedImage renderScene(Scene scene) throws Exception
 	{
 
 		progress = 0.0;
@@ -79,9 +88,8 @@ public class Renderer
 
 		/* Ultra simple raytracer */
 		SimpleRayTracer rayTracer = new SimpleRayTracer();
-		long time = System.currentTimeMillis();
-		//BufferedImage result = rayTracer.render(optionProgress);
-		 BufferedImage result = rayTracer.renderThreads(scene);
+		// BufferedImage result = rayTracer.render(optionProgress);
+		BufferedImage result = rayTracer.renderThreads(scene);
 		return result;
 	}
 }
