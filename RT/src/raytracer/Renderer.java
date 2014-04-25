@@ -110,8 +110,6 @@ public class Renderer
 		SimpleRayTracer rayTracer = new SimpleRayTracer();
 		BufferedImage result;
 
-		Ray.rayConstructionCount = 0;
-		Intersection.updateInterCount = 0;
 
 		if (scene.settings.isACCELERATE() && !scene.accelFlag)
 		{
@@ -143,11 +141,6 @@ public class Renderer
 			}
 		}
 
-		if (scene.settings.isVERBOSE())
-		{
-			System.out.println("Total rays generated: " + Ray.rayConstructionCount);
-			System.out.println("Total rays generated: " + Intersection.updateInterCount);
-		}
 		return result;
 	}
 }
