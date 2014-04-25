@@ -48,24 +48,15 @@ public class LightTable extends JPanel
 		f.pack();
 		f.setVisible(true);
 	}
-
-	public void updateObjects(SceneObject[] objects, boolean shift)
+	
+	public void updateLights(PointLight[] lights)
 	{
-		int index = list.getSelectedIndex();
-		list.setListData(objects);
-		if (shift)
-		{
-			if (index != 0)
-			{
-				index--;
-			}
-			list.setSelectedIndex(index);
-		}
+		list.setListData(lights);
 	}
 
-	public SceneObject getSelectedObject()
+	public PointLight getSelectedObject()
 	{
-		return (SceneObject) list.getSelectedValue();
+		return (PointLight) list.getSelectedValue();
 	}
 
 	public LightTable(PointLight[] lights)

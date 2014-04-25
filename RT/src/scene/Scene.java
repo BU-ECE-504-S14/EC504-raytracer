@@ -273,6 +273,11 @@ public class Scene implements Serializable
 		return intersectedFlag;
 	}
 
+	public void removeLight(Light l)
+	{
+		lights.remove(l);
+	}
+
 	public void dumpScene()
 	{
 		System.out.println("SCENE");
