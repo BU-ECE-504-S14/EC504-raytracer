@@ -179,9 +179,9 @@ public class BuddhaScene extends Scene
 		target.setRotation(new AxisAngle4d(0,1,0,-5.5*Math.PI/14));
 		parse4.updateTransform(target);
 		
-		objects.add(parse1);
-		objects.add(parse2);
-		objects.add(parse3);
+		//objects.add(parse1);
+		//objects.add(parse2);
+		//objects.add(parse3);
 		objects.add(parse4);
 		
 		// Prints out all object ids
@@ -193,7 +193,7 @@ public class BuddhaScene extends Scene
 		 * for(SceneObject tmptmpobj:soa) System.out.println(tmptmpobj.getID()); } }
 		 */
 		
-		this.buildOctree(8);
+		this.buildOctree(5);
 
 	}
 }

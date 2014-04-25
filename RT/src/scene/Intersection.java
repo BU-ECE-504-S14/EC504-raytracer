@@ -20,7 +20,6 @@ public class Intersection
 	public SceneObject shape; // object that was intersected
 	public Vector3d dpdu, dpdv; // parameterizations tangent to normalized normal
 	public Vector3d dndu, dndv; // change in normals at point of intersection
-	public static volatile int updateInterCount = 0;
 
 	/**
 	 * 
@@ -72,7 +71,6 @@ public class Intersection
 	public void update(Vector3d p, Vector3d dpdu, Vector3d dpdv, Vector3d dndu, Vector3d dndv,
 			float u, float v, SceneObject shape)
 	{
-		updateInterCount++;
 		this.p = new Vector3d(p);
 		this.dpdu = new Vector3d(dpdu);
 		this.dpdv = new Vector3d(dpdv);
