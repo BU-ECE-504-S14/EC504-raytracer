@@ -57,7 +57,7 @@ public class ScenePanel extends JPanel
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Sphere s = new Sphere();
-		Scene scn = new BunnyScene();
+		Scene scn = new MaterialScene(s);
 		ScenePanel sp = new ScenePanel(scn);
 
 		f.add(sp);

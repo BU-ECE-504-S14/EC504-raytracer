@@ -58,10 +58,10 @@ public class BunnyScene extends Scene
 		demoLight2.setPosition(new Vector3d(0, 0, 0));
 		demoLight3.setPosition(new Vector3d(0, 0, -50));
 		
-		demoLight1.setColor(new Vector3d(.3, .8, .8));
+		demoLight1.setColor(new Vector3d(1, 1, 1));
 		demoLight2.setColor(new Vector3d(1, 1, 1));
 		demoLight2.setSoftShadowOffset(.6);
-		demoLight3.setColor(new Vector3d(.8, .3, .8));
+		demoLight3.setColor(new Vector3d(1, 1, 1));
 
 		demoLight1.setRadio(1);
 		demoLight2.setRadio(1);
