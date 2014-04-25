@@ -1,0 +1,11 @@
+# Blender v2.70 (sub 0) OBJ File: 'buddhasnowedited.blend'
+# www.blender.org
+mtllib plane_ofbuddha.mtl
+o Plane
+v -22.616425 -8.469266 12.676537
+v -4.981060 -9.258920 -25.134422
+v -22.616409 16.973139 12.145199
+v -4.981045 16.183485 -25.665760
+usemtl None
+s off
+f 1 2 4 3

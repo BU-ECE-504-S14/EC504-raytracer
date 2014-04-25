@@ -1,43 +1,86 @@
+/**
+ * 
+ */
 package scene;
 
 import javax.vecmath.Vector3d;
 
-import raytracer.Ray;
-
+import objects.SceneObject;
 
 /**
- * Representation of the intersection points of rays with SceneObjects.
- * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
+ * @author Tolga
+ * 
  */
-public class Intersection {
+public class Intersection
+{
 
-	/* point of intersection from the point of view of the scene (ie not camera or object)*/
-	public Vector3d point;
+	public Vector3d p; // point of intersection
+	public Vector3d nn; // normalized normal of object at intersection
+	public float u, v; // texture points
+	public SceneObject shape; // object that was intersected
+	public Vector3d dpdu, dpdv; // parameterizations tangent to normalized normal
+	public Vector3d dndu, dndv; // change in normals at point of intersection
 
-	public Vector3d normal;
-
-	/**distance from rays origin to the point of intersection*/
-	public double distance;
-	
-	
-	public Ray ray;
-
-	public Intersection() {
-		point = new Vector3d();
-		normal = new Vector3d();
+	/**
+	 * 
+	 */
+	public Intersection()
+	{
+		u = v = 0;
+		shape = null;
 	}
 
-	public Intersection(Vector3d point, Vector3d normal, double distance, Ray ray) {
-		this.point = new Vector3d(point);
-		this.normal = new Vector3d(normal);
-		this.distance = distance;
-		this.ray = new Ray(ray.position, ray.origin, ray.direction, ray.remainingReflections);
+	public Intersection(Intersection i)
+	{
+		this.p = i.p;
+		this.dpdu = i.dpdu;
+		this.dpdv = i.dpdv;
+		this.dndu = i.dndu;
+		this.dndv = i.dndv;
+		this.u = i.u;
+		this.v = i.v;
+		this.shape = i.shape;
+		this.nn = i.nn;
+		/*
+		 * if(false){//shape && shape.ReverseOrientation shape.TransformSwapsHandedness)
+		 * nn.negate(); }
+		 */
 	}
 
-	@Override
-	public String toString() {
-		return "Intersection(point=" + point.toString() + ", normal="
-				+ normal.toString() + ", distance=" + distance + ")";
+	public Intersection(Vector3d p, Vector3d dpdu, Vector3d dpdv, Vector3d dndu, Vector3d dndv,
+			float u, float v, SceneObject shape)
+	{
+		this.p = new Vector3d(p);
+		this.dpdu = new Vector3d(dpdu);
+		this.dpdv = new Vector3d(dpdv);
+		this.dndu = new Vector3d(dndu);
+		this.dndv = new Vector3d(dndv);
+		this.u = u;
+		this.v = v;
+		this.shape = shape;
+		nn = new Vector3d();
+		nn.cross(dpdu, dpdv);
+		nn.normalize();
+		/*
+		 * if(false){//shape && shape.ReverseOrientation shape.TransformSwapsHandedness)
+		 * nn.negate(); }
+		 */
+
 	}
 
+	public void update(Vector3d p, Vector3d dpdu, Vector3d dpdv, Vector3d dndu, Vector3d dndv,
+			float u, float v, SceneObject shape)
+	{
+		this.p = new Vector3d(p);
+		this.dpdu = new Vector3d(dpdu);
+		this.dpdv = new Vector3d(dpdv);
+		this.dndu = new Vector3d(dndu);
+		this.dndv = new Vector3d(dndv);
+		this.u = u;
+		this.v = v;
+		this.shape = shape;
+		nn = new Vector3d();
+		nn.cross(dpdu, dpdv);
+		nn.normalize();
+	}
 }
