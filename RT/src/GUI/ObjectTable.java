@@ -54,18 +54,10 @@ public class ObjectTable extends JPanel
 		f.setVisible(true);
 	}
 
-	public void updateObjects(SceneObject[] objects, boolean shift)
+	public void updateObjects(SceneObject[] objects)
 	{
 		int index = list.getSelectedIndex();
 		list.setListData(objects);
-		if (shift)
-		{
-			if (index != 0)
-			{
-				index--;
-			}
-			list.setSelectedIndex(index);
-		}
 	}
 
 	public SceneObject getSelectedObject()

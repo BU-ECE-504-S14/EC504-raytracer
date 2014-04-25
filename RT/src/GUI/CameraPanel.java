@@ -119,20 +119,20 @@ public class CameraPanel extends JPanel
 
 		this.add(axisPanel);
 
-		posPanel = new PositionPanel("Position: ", myCamera.getPosition());
+		posPanel = new PositionPanel("Camera Position: ", myCamera.getPosition());
 		this.add(posPanel);
 
-		tarPanel = new PositionPanel("Target: ", new Vector3d(0, 0, 0));
+		tarPanel = new PositionPanel("Camera Target: ", new Vector3d(0, 0, 0));
 		this.add(tarPanel);
-		upPanel = new PositionPanel("Up Vector: ", new Vector3d(0, 1, 0));
+		upPanel = new PositionPanel("Camera Up Vector: ", new Vector3d(0, 1, 0));
 
 		this.add(upPanel);
-		fovPanel = new ParameterPanel("FOV: ", "" + Math.toDegrees(myCamera.fieldOfView), 4);
+		fovPanel = new ParameterPanel("Camera FOV: ", "" + Math.toDegrees(myCamera.fieldOfView), 4);
 		this.add(fovPanel);
 
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-		updateButton = new JButton("Update");
+		updateButton = new JButton("Update Camera");
 		updateButton.addActionListener(up);
 		buttonPanel.add(updateButton);
 

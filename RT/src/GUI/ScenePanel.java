@@ -29,7 +29,9 @@ import raytracer.RenderViewer;
 import raytracer.Renderer;
 import scene.BuddhaScene;
 import scene.BunnyScene;
+import scene.Light;
 import scene.MaterialScene;
+import scene.PointLight;
 import scene.Scene;
 import scene.SpheresInRoom;
 import scene.SpheresInSpace;
@@ -61,6 +63,8 @@ public class ScenePanel extends JPanel
 	JButton load;
 	JButton settings;
 	JButton renderButton;
+	JButton addLight;
+	JButton remLight;
 
 	File lastFile = null;
 
@@ -71,7 +75,6 @@ public class ScenePanel extends JPanel
 
 		Sphere s = new Sphere();
 		ScenePanel sp = new ScenePanel(new MaterialScene(s));
-
 		f.add(sp);
 		f.pack();
 		f.setVisible(true);
@@ -83,6 +86,7 @@ public class ScenePanel extends JPanel
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		myScene = s;
 		setupPanels();
+		this.setMinimumSize(new Dimension(600, 700));
 	}
 
 	public void setupPanels()
@@ -90,30 +94,33 @@ public class ScenePanel extends JPanel
 		lights = new LightTable(myScene.getLightArray());
 		listPanel = new JPanel();
 		buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(4, 2));
+		buttonPanel.setLayout(new GridLayout(5, 2));
 		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 		rendering = new RenderSettingsPanel(myScene);
 		objects = new ObjectTable(myScene.getObjectArray());
 		previewPanel = new JPanel();
 		rightPanel = new JPanel(new BorderLayout());
 
-		listPanel.setPreferredSize(new Dimension(300, 600));
+		listPanel.setPreferredSize(new Dimension(300, 700));
+		rightPanel.setPreferredSize(new Dimension(300, 700));
+		rightPanel.setMinimumSize(new Dimension(300, 700));
 
-		addMesh = new JButton("Add meshes");
+		addMesh = new JButton("Import meshes");
 		addSphere = new JButton("Add sphere");
 		dupeObject = new JButton("Duplicate");
 		removeObject = new JButton("Remove");
-		importScene = new JButton("Import scene objects");
+		importScene = new JButton("Import scene");
 		save = new JButton("Save Scene");
 		load = new JButton("Load Scene");
 		settings = new JButton("Render Settings");
 		renderButton = new JButton("Render Scene");
+		addLight = new JButton("Add Light");
+		remLight = new JButton("Remove Light");
 
-		JPanel renderButtonPanel = new JPanel();
-		renderButtonPanel.add(renderButton);
 		renderButton.setPreferredSize(new Dimension(150, 75));
 
 		buttonPanel.add(addSphere);
+		buttonPanel.add(addLight);
 		buttonPanel.add(addMesh);
 		buttonPanel.add(importScene);
 		buttonPanel.add(dupeObject);
@@ -121,7 +128,7 @@ public class ScenePanel extends JPanel
 		buttonPanel.add(save);
 		buttonPanel.add(load);
 		buttonPanel.add(settings);
-		buttonPanel.setPreferredSize(new Dimension(300, 200));
+		buttonPanel.add(renderButton);
 
 		transformPanel = new TransformPanel(new Sphere());
 		updateTransformPanel();
@@ -153,6 +160,22 @@ public class ScenePanel extends JPanel
 
 		});
 
+		addLight.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				addLight();
+			}
+		});
+
+		remLight.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				removeLight((PointLight) lights.getSelectedObject());
+			}
+		});
+
 		addMesh.addActionListener(new ActionListener() {
 
 			@Override
@@ -169,6 +192,7 @@ public class ScenePanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				dupeObject(objects.getSelectedObject());
+				dupeLight(lights.getSelectedObject());
 			}
 
 		});
@@ -179,6 +203,7 @@ public class ScenePanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				removeObject(objects.getSelectedObject());
+				removeLight((PointLight) lights.getSelectedObject());
 			}
 
 		});
@@ -223,9 +248,10 @@ public class ScenePanel extends JPanel
 			}
 		});
 
+		buttonPanel.setPreferredSize(new Dimension(300, 150));
+		buttonPanel.setMinimumSize(new Dimension(300, 150));
 		listPanel.add(objects);
 		listPanel.add(lights);
-		listPanel.add(renderButtonPanel);
 		listPanel.add(buttonPanel);
 		this.add(listPanel);
 		this.add(rightPanel);
@@ -281,7 +307,7 @@ public class ScenePanel extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				transformPanel.updateTransformInfo();
-				updateList();
+				updateLists();
 			}
 		});
 
@@ -294,14 +320,10 @@ public class ScenePanel extends JPanel
 		new RenderSettingsFrame(myScene, "Rendering Settings");
 	}
 
-	public void updateList()
+	public void updateLists()
 	{
-		objects.updateObjects(myScene.getObjectArray(), false);
-	}
-
-	public void updateList(boolean b)
-	{
-		objects.updateObjects(myScene.getObjectArray(), b);
+		objects.updateObjects(myScene.getObjectArray());
+		lights.updateLights(myScene.getLightArray());
 	}
 
 	public void renderScene()
@@ -317,10 +339,28 @@ public class ScenePanel extends JPanel
 		}
 	}
 
+	public void addLight()
+	{
+		myScene.addLight(new PointLight());
+		updateLists();
+	}
+
+	public void removeLight(PointLight l)
+	{
+		if (l != null)
+		{
+			if (myScene.getLights().size() > 1)
+			{
+				myScene.removeLight(l);
+				updateLists();
+			}
+		}
+	}
+
 	public void addNewSphere()
 	{
 		myScene.addSceneObject(new Sphere());
-		updateList();
+		updateLists();
 	}
 
 	public void loadScene()
@@ -330,7 +370,8 @@ public class ScenePanel extends JPanel
 		{
 			lastFile = f;
 			myScene = Scene.readSceneFromFile(f);
-			updateList();
+			updateLists();
+			updateCameraPanel();
 		}
 	}
 
@@ -420,7 +461,7 @@ public class ScenePanel extends JPanel
 			{
 				myScene.addSceneObject(o);
 			}
-			updateList();
+			updateLists();
 		}
 	}
 
@@ -452,32 +493,49 @@ public class ScenePanel extends JPanel
 			{
 				myScene.addSceneObject(t);
 			}
-			updateList();
+			updateLists();
 		}
 	}
 
 	public void removeObject(SceneObject o)
 	{
-		if (myScene.getObjects().size() > 1)
+		if (o != null)
 		{
-			myScene.removeSceneObject(o);
-			updateList(true);
+			if (myScene.getObjects().size() > 1)
+			{
+				myScene.removeSceneObject(o);
+				updateLists();
+			}
+		}
+	}
+
+	public void dupeLight(PointLight l)
+	{
+		if (l != null)
+		{
+			PointLight newLight = new PointLight(l);
+
+			myScene.addLight(newLight);
+			updateLists();
 		}
 	}
 
 	public void dupeObject(SceneObject o)
 	{
-		SceneObject newObject = null;
-		if (o instanceof TriangleMesh)
+		if (o != null)
 		{
-			newObject = new TriangleMesh((TriangleMesh) o);
-		}
-		if (o instanceof Sphere)
-		{
-			newObject = new Sphere((Sphere) o);
-		}
+			SceneObject newObject = null;
+			if (o instanceof TriangleMesh)
+			{
+				newObject = new TriangleMesh((TriangleMesh) o);
+			}
+			if (o instanceof Sphere)
+			{
+				newObject = new Sphere((Sphere) o);
+			}
 
-		myScene.addSceneObject(newObject);
-		updateList();
+			myScene.addSceneObject(newObject);
+			updateLists();
+		}
 	}
 }
