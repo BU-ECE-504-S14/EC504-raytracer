@@ -11,7 +11,7 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
 import objects.SceneObject;
-import raytracer.SimpleRayTracer;
+import raytracer.RayTracer;
 import raytracer.Util;
 
 /**

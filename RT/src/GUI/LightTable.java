@@ -40,7 +40,7 @@ public class LightTable extends JPanel
 
 	public void openLightPanel(PointLight l)
 	{
-		JFrame f = new JFrame("Point Light Information");
+		JFrame f = new JFrame("Point Light Properties");
 
 		JPanel p = new LightPanel(l);
 
@@ -97,7 +97,7 @@ public class LightTable extends JPanel
 		mainPanel.add(list);
 		add(mainPanel);
 
-		this.setPreferredSize(new Dimension(100, 300));
+		this.setPreferredSize(new Dimension(300, 300));
 	}
 
 }

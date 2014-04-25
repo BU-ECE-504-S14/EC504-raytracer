@@ -6,6 +6,7 @@ package GUI;
 
 import geometry.Transformation;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.vecmath.AxisAngle4d;
@@ -34,6 +36,10 @@ public class TransformPanel extends JPanel
 	SceneObject myObject;
 	public SpherePanel myObjectPanel;
 
+	JPanel titlePanel;
+	JLabel titleLabel;
+	JPanel titleLabelPanel;
+
 	ParameterPanel namePanel;
 	PositionPanel transformScale;
 	PositionPanel transformPosition;
@@ -50,6 +56,7 @@ public class TransformPanel extends JPanel
 		myObject = targetObject;
 		setupPanels();
 		setVisible(true);
+		this.setBorder(new LineBorder(Color.BLACK));
 	}
 
 	public void addFieldListeners(ActionListener go)
@@ -65,6 +72,14 @@ public class TransformPanel extends JPanel
 	{
 
 		removeAll();
+		
+		titlePanel = new JPanel();
+		titleLabel = new JLabel("Transform Selected Object");
+		titleLabelPanel = new JPanel();
+		
+		titleLabelPanel.add(titleLabel);
+		titlePanel.add(titleLabelPanel);
+		
 		namePanel = new ParameterPanel("Name: ", myObject.getName(), 20);
 
 		transformPosition = new PositionPanel("Transform position: ", myObject.getTransform()
@@ -91,6 +106,7 @@ public class TransformPanel extends JPanel
 
 		});
 
+		add(titlePanel);
 		add(namePanel);
 		add(transformPosition);
 		add(transformScale);

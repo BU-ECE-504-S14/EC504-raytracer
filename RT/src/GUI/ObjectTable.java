@@ -38,7 +38,7 @@ public class ObjectTable extends JPanel
 
 	public void openObjectPanel(SceneObject o)
 	{
-		JFrame f = new JFrame();
+		JFrame f = new JFrame("Scene Object Properties");
 
 		JPanel p = null;
 		if (o instanceof Sphere)
@@ -108,7 +108,7 @@ public class ObjectTable extends JPanel
 		mainPanel.add(list);
 		add(mainPanel);
 
-		this.setPreferredSize(new Dimension(100, 300));
+		this.setPreferredSize(new Dimension(300, 300));
 	}
 
 }

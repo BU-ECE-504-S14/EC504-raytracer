@@ -36,7 +36,7 @@ import scene.Scene;
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
  */
 
-public class SimpleRayTracer
+public class RayTracer
 {
 	private BufferedImage outputImage;
 
@@ -837,9 +837,9 @@ public class SimpleRayTracer
 		List<Ray> rays = null;
 		Vector3d color = new Vector3d(0, 0, 0);
 		double divisor = 1;
-		SimpleRayTracer myTracer;
+		RayTracer myTracer;
 
-		public ColorPixel(int i, int j, Ray r, Scene s, SimpleRayTracer rt)
+		public ColorPixel(int i, int j, Ray r, Scene s, RayTracer rt)
 		{
 			myTracer = rt;
 			pixelScene = s;
@@ -853,7 +853,7 @@ public class SimpleRayTracer
 			pixelScene = s;
 		}
 
-		public ColorPixel(int i, int j, Ray r, Scene s, SimpleRayTracer rt, double totalRays)
+		public ColorPixel(int i, int j, Ray r, Scene s, RayTracer rt, double totalRays)
 		{
 			myTracer = rt;
 			pixelScene = s;
