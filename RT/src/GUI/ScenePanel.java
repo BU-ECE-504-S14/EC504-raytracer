@@ -20,6 +20,7 @@ import objects.TriangleMesh;
 import parser.ObjectParser;
 import raytracer.RenderViewer;
 import raytracer.Renderer;
+import scene.BuddhaScene;
 import scene.MaterialScene;
 import scene.Scene;
 import scene.SpheresInRoom;
@@ -53,7 +54,7 @@ public class ScenePanel extends JPanel {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Sphere s = new Sphere();
-		Scene scn = new SpheresInRoom();
+		Scene scn = new BuddhaScene();
 		ScenePanel sp = new ScenePanel(scn);
 
 		f.add(sp);
