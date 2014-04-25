@@ -1,0 +1,13 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl Material.001
+Ns 107.843137
+Ka 0.000000 0.000000 0.000000
+Kd 0.632479 0.441899 0.100942
+Ks 0.954904 0.835516 0.184791
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Untitled
+map_Bump e:\\A_BLENDER\\BLENDER FILES\\genie lamp\\genie lamp TEXTURE .jpg
