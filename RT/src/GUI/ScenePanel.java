@@ -102,10 +102,12 @@ public class ScenePanel extends JPanel
 		previewPanel = new JPanel();
 		rightPanel = new JPanel(new BorderLayout());
 
-		listPanel.setPreferredSize(new Dimension(300, 700));
-		rightPanel.setPreferredSize(new Dimension(300, 700));
-		rightPanel.setMinimumSize(new Dimension(300, 700));
-		rightPanel.setMaximumSize(new Dimension(300, 700));
+
+		listPanel.setMinimumSize(new Dimension(350, 700));
+		listPanel.setPreferredSize(new Dimension(350, 700));
+		rightPanel.setPreferredSize(new Dimension(350, 700));
+		rightPanel.setMinimumSize(new Dimension(350, 700));
+
 
 		addMesh = new JButton("Import meshes");
 		addSphere = new JButton("Add sphere");
