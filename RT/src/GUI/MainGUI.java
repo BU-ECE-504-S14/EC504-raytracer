@@ -4,6 +4,8 @@
 
 package GUI;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 
 import objects.Sphere;
@@ -21,13 +23,12 @@ public class MainGUI extends JFrame
 	}
 	public MainGUI()
 	{
-		super();
+		super("BRUTE FORCE: Fully Open-Source Ray Carnage Engine");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		Sphere s = new Sphere();
 		Scene scn = new MaterialScene(s);
 		ScenePanel sp = new ScenePanel(scn);
-
+		this.setMaximumSize(new Dimension(600, 700));
 		add(sp);
 		pack();
 		setVisible(true);

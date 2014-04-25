@@ -8,6 +8,7 @@ import geometry.Pt;
 import geometry.Vec;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -20,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
@@ -70,6 +72,7 @@ public class CameraPanel extends JPanel
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		myCamera = null;
+		this.setBorder(new LineBorder(Color.BLACK));
 	}
 
 	public CameraPanel(Camera targetCamera)
@@ -103,6 +106,7 @@ public class CameraPanel extends JPanel
 		nameLabel = new JLabel("Camera (Look-At):");
 		nameLabelPanel = new JPanel();
 		nameLabelPanel.add(nameLabel);
+		namePanel.add(nameLabelPanel);
 		this.add(namePanel);
 
 		axisInfo = new JPanel();

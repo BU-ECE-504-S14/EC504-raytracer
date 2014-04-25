@@ -106,7 +106,7 @@ public class Renderer
 		done = false;
 
 		/* Ultra simple raytracer */
-		SimpleRayTracer rayTracer = new SimpleRayTracer();
+		RayTracer rayTracer = new RayTracer();
 		BufferedImage result;
 
 

@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -104,6 +105,7 @@ public class ScenePanel extends JPanel
 		listPanel.setPreferredSize(new Dimension(300, 700));
 		rightPanel.setPreferredSize(new Dimension(300, 700));
 		rightPanel.setMinimumSize(new Dimension(300, 700));
+		rightPanel.setMaximumSize(new Dimension(300, 700));
 
 		addMesh = new JButton("Import meshes");
 		addSphere = new JButton("Add sphere");
@@ -134,7 +136,6 @@ public class ScenePanel extends JPanel
 		updateTransformPanel();
 		cameraPanel = new CameraPanel();
 		rightPanel.add(transformPanel, BorderLayout.NORTH);
-		rightPanel.add(new JPanel());
 
 		updateCameraPanel();
 		rightPanel.add(cameraPanel, BorderLayout.SOUTH);
@@ -354,6 +355,9 @@ public class ScenePanel extends JPanel
 				myScene.removeLight(l);
 				updateLists();
 			}
+			else {
+				System.out.println("Must have at least one light in the scene, ignoring delete!");
+			}
 		}
 	}
 
@@ -505,6 +509,9 @@ public class ScenePanel extends JPanel
 			{
 				myScene.removeSceneObject(o);
 				updateLists();
+			}
+			else {
+				System.out.println("Must have at least one object in the scene, ignoring delete!");
 			}
 		}
 	}
