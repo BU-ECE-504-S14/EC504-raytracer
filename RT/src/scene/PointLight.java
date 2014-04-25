@@ -1,11 +1,17 @@
 package scene;
 
+import geometry.Ray;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
+import objects.SceneObject;
+import raytracer.RayTracer;
 import raytracer.Util;
 
 /**
@@ -15,6 +21,7 @@ import raytracer.Util;
  */
 public class PointLight implements Light, Serializable
 {
+
 	/**
 	 * 
 	 */
@@ -24,16 +31,26 @@ public class PointLight implements Light, Serializable
 	 * The position of this Light object, in Scene coordinates.
 	 */
 	protected Vector3d position = new Vector3d(0, 10, 0);
+
 	/**
 	 * The color of the light given off by this object.
 	 */
-	protected Vector3d color = new Vector3d(1, 1, 1);
-	// private double fallConstant = 0.05;
+	public Vector3d color = new Vector3d(1, 1, 1);
+
+	/**
+	 * soft shadow component of light //TODO add volumetric lights
+	 */
+	protected double softShadowOffset = 0d;
 
 	/**
 	 * Determines the radiosity/diffusiveness of light given off by this object.
 	 */
 	protected double radiosity = 1;
+
+	public String toString()
+	{
+		return "Point Light at: " + position;
+	}
 
 	/**
 	 * Determines the rate at which light intensity decreases with distance from the light
@@ -132,7 +149,19 @@ public class PointLight implements Light, Serializable
 	}
 
 	@Override
-	public String toString()
+	public void setSoftShadowOffset(double SS)
+	{
+		this.softShadowOffset = SS;
+	}
+
+	@Override
+	public double getSoftShadowOffset()
+	{
+		return this.softShadowOffset;
+	}
+
+	
+	public String paramsToString()
 	{
 		return "PointLight(position=" + position + ", color=" + color + ")";
 	}

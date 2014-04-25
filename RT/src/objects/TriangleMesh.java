@@ -1,26 +1,41 @@
 package objects;
 
+import geometry.BBox;
+import geometry.Normal;
+import geometry.Pt;
+import geometry.Transformation;
+import geometry.Vec;
+
 import java.util.ArrayList;
-import scene.Transformation;
+import java.util.UUID;
 
 public class TriangleMesh extends AbstractSceneObject
 {
 	private int ntris, nverts;
-	public int[] vertexIndex;
-	public Pt[] Points;
-	public Normal[] normals;
-	public Vec[] tangents;
-	public float uvs[];
+	private int[] vertexIndices;
+
+	private Pt[] vertices;
+
+	private Normal[] normals;
+	private Vec[] tangents;
+	private float uvs[];
+
 	public Transformation trans;
 
 	public TriangleMesh(TriangleMesh t)
 	{
+		this.material = new Material(t.material);
 		ntris = t.ntris;
 		nverts = t.nverts;
-		Points = new Pt[t.Points.length];
-		for (int i = 0; i < t.Points.length; i++)
+		vertices = new Pt[t.vertices.length];
+		vertexIndices = new int[t.vertexIndices.length];
+		for (int i = 0; i < vertexIndices.length; i++)
 		{
-			Points[i] = t.Points[i];
+			vertexIndices[i] = t.vertexIndices[i];
+		}
+		for (int i = 0; i < t.vertices.length; i++)
+		{
+			vertices[i] = t.vertices[i];
 		}
 
 		if (t.normals != null)
@@ -51,6 +66,31 @@ public class TriangleMesh extends AbstractSceneObject
 		trans = new Transformation(t.trans);
 	}
 
+	public Transformation getTransform()
+	{
+		return trans;
+	}
+
+	public int[] getVertexIndices()
+	{
+		return vertexIndices;
+	}
+
+	public void setVertexIndices(int[] vertexIndices)
+	{
+		this.vertexIndices = vertexIndices;
+	}
+
+	public Pt[] getVertices()
+	{
+		return vertices;
+	}
+
+	public void setVertices(Pt[] points)
+	{
+		vertices = points;
+	}
+
 	public TriangleMesh getCopy()
 	{
 		return new TriangleMesh(this);
@@ -63,12 +103,12 @@ public class TriangleMesh extends AbstractSceneObject
 		this.trans = new Transformation(t);
 		ntris = nt;
 		nverts = nv;
-		vertexIndex = new int[ntris * 3];
-		System.arraycopy(vi, 0, vertexIndex, 0, vi.length);
+		vertexIndices = new int[ntris * 3];
+		System.arraycopy(vi, 0, vertexIndices, 0, vi.length);
 
 		if (uv != null)
 		{
-			uvs = new float[nverts * 2];
+			uvs = new float[ntris * 3];
 			System.arraycopy(uv, 0, uvs, 0, uv.length);
 		}
 		else
@@ -90,31 +130,47 @@ public class TriangleMesh extends AbstractSceneObject
 		else
 			tangents = null;
 
-		Points = new Pt[nverts];
+		vertices = new Pt[nverts];
 		for (int i = 0; i < nverts; i++)
-			Points[i] = t.object2World(P[i]); // for triangle mesh object points are
+			vertices[i] = t.object2World(P[i]); // for triangle mesh object points
+												// are
 												// stored in world space
 		setName("New Triangle Mesh");
 	}
 
-	public void updateTransform(Transformation t)
+	public float[] getUVs()
 	{
-		for (int i = 0; i < Points.length; i++)
+		return uvs;
+	}
+
+	public void setUVs(float[] uvs)
+	{
+		this.uvs = uvs;
+	}
+
+	public void setTransform(Transformation t)
+	{
+		for (int i = 0; i < vertices.length; i++)
 		{
-			Points[i] = trans.world2Object(Points[i]);
+			vertices[i] = trans.world2Object(vertices[i]);
 		}
 
 		this.trans = t;
 
-		for (int i = 0; i < Points.length; i++)
+		for (int i = 0; i < vertices.length; i++)
 		{
-			Points[i] = trans.object2World(Points[i]);
+			vertices[i] = trans.object2World(vertices[i]);
 		}
 	}
 
 	public int getPointCount()
 	{
-		return Points.length;
+		return vertices.length;
+	}
+
+	public int getFaceCount()
+	{
+		return ntris;
 	}
 
 	@Override
@@ -129,6 +185,35 @@ public class TriangleMesh extends AbstractSceneObject
 		SOA.ensureCapacity(ntris); // avoid vector doubling copy cost
 		for (int i = 0; i < ntris; i++)
 			SOA.add(new Triangle(this, i));
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Mesh: " + name;
+	}
+
+	public String paramsToString()
+	{
+		String out = "";
+		System.out.println("Triangle Mesh (ID: " + id);
+		System.out.println("Name: " + name);
+		System.out.println("Vertices: " + nverts);
+		System.out.println("Faces: " + ntris);
+		return out;
+	}
+
+	@Override
+	public BBox getWorldBound()
+	{
+		BBox wBox = new BBox();
+
+		for (Pt p : vertices)
+		{
+			wBox = BBox.union(wBox, p);
+		}
+
+		return wBox;
 	}
 
 }

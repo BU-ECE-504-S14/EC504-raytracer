@@ -4,31 +4,19 @@
 
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.vecmath.Vector3d;
 
 import objects.Material;
-import objects.SceneObject;
 import objects.Sphere;
-import util.ColorFormatException;
-import util.SceneObjectException;
+import util.MaterialFormatException;
 
 /**
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist
@@ -42,7 +30,7 @@ public class MaterialPanel extends JPanel
 	ParameterPanel diffuseIndexPanel;
 	ParameterPanel specularIndexPanel;
 	ParameterPanel ambientPanel;
-	ParameterPanel transparencyPanel;
+	ParameterPanel alphaPanel;
 	ParameterPanel refractionPanel;
 	ParameterPanel reflectionPanel;
 	ParameterPanel shininessPanel;
@@ -50,8 +38,8 @@ public class MaterialPanel extends JPanel
 	public static void main(String[] args)
 	{
 		Sphere demoSphere = new Sphere();
-		demoSphere.radius = 20;
-		demoSphere.position = new Vector3d(15, 10, 5);
+		demoSphere.setScaleRad(new Vector3d(20f, 20f, 20f));
+		demoSphere.setPosition(new Vector3d(15, 10, 5));
 		JFrame testFrame = new JFrame();
 		MaterialPanel testPanel = new MaterialPanel(demoSphere.material);
 		testFrame.add(testPanel);
@@ -77,7 +65,7 @@ public class MaterialPanel extends JPanel
 		diffuseIndexPanel.addFieldListener(go);
 		specularIndexPanel.addFieldListener(go);
 		ambientPanel.addFieldListener(go);
-		transparencyPanel.addFieldListener(go);
+		alphaPanel.addFieldListener(go);
 		reflectionPanel.addFieldListener(go);
 		refractionPanel.addFieldListener(go);
 		shininessPanel.addFieldListener(go);
@@ -92,7 +80,7 @@ public class MaterialPanel extends JPanel
 				4);
 		ambientPanel = new ParameterPanel("Ambient intensity: ", "" + myMaterial.ambientIntensity,
 				4);
-		transparencyPanel = new ParameterPanel("Transparency: ", "" + myMaterial.transparency, 4);
+		alphaPanel = new ParameterPanel("Alpha: ", "" + myMaterial.alpha, 4);
 		reflectionPanel = new ParameterPanel("Reflection: ", "" + myMaterial.reflectionIndex, 4);
 		refractionPanel = new ParameterPanel("Refraction: ", "" + myMaterial.refractionIndex, 4);
 		shininessPanel = new ParameterPanel("Shininess: ", "" + myMaterial.shininess, 4);
@@ -102,7 +90,7 @@ public class MaterialPanel extends JPanel
 		add(diffuseIndexPanel);
 		add(specularIndexPanel);
 		add(ambientPanel);
-		add(transparencyPanel);
+		add(alphaPanel);
 		add(reflectionPanel);
 		add(refractionPanel);
 		add(shininessPanel);
@@ -122,6 +110,18 @@ public class MaterialPanel extends JPanel
 			return true;
 	}
 
+	public boolean isValidIndex(double refraction)
+	{
+		if (refraction < 1)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
 	public void updateMaterialInfo()
 	{
 		try
@@ -129,16 +129,23 @@ public class MaterialPanel extends JPanel
 			Vector3d diffuseColor = diffusePanel.getColor();
 			Vector3d specularColor = specularPanel.getColor();
 
-			if (!isValidColor(diffuseColor) || !isValidColor(specularColor)){
-				throw new ColorFormatException("Entered invalid color value!");
+			if (!isValidColor(diffuseColor) || !isValidColor(specularColor))
+			{
+				throw new MaterialFormatException("Entered invalid color value!");
 			}
 
 			double diffuseIndex = Double.parseDouble(diffuseIndexPanel.getValue());
 			double specularIndex = Double.parseDouble(specularIndexPanel.getValue());
 			double ambientIntensity = Double.parseDouble(ambientPanel.getValue());
-			double transparency = Double.parseDouble(transparencyPanel.getValue());
+			double alpha = Double.parseDouble(alphaPanel.getValue());
 			double reflection = Double.parseDouble(reflectionPanel.getValue());
 			double refraction = Double.parseDouble(refractionPanel.getValue());
+
+			if (!isValidIndex(refraction))
+			{
+				throw new MaterialFormatException("Entered invalid refraction value! Must be >=1.");
+			}
+
 			double shininess = Double.parseDouble(shininessPanel.getValue());
 
 			myMaterial.diffuseColor = diffuseColor;
@@ -146,7 +153,7 @@ public class MaterialPanel extends JPanel
 			myMaterial.diffuseIndex = diffuseIndex;
 			myMaterial.specularIndex = specularIndex;
 			myMaterial.ambientIntensity = ambientIntensity;
-			myMaterial.transparency = transparency;
+			myMaterial.alpha = alpha;
 			myMaterial.reflectionIndex = reflection;
 			myMaterial.refractionIndex = refraction;
 			myMaterial.shininess = shininess;
