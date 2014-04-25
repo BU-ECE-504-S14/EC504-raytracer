@@ -18,8 +18,7 @@ import javax.swing.border.BevelBorder;
 import util.RenderSettingException;
 
 /**
- * @author BU CS673 - Clone Productions
- */
+@author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist */
 public class ThreeRadioPanel extends JPanel
 {
 	private String name = "Three Radio Panel";

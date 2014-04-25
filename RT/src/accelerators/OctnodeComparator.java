@@ -9,7 +9,7 @@ import accelerators.Octnode;
 import java.util.Comparator;
 
 /**
- * @author BU CS673 - Clone Productions
+ * @author AWH
  */
 public class OctnodeComparator implements Comparator<Octnode>
 {

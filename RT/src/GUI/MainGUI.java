@@ -13,8 +13,7 @@ import scene.MaterialScene;
 import scene.Scene;
 
 /**
- * @author BU CS673 - Clone Productions
- */
+@author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and Bryant Moquist */
 public class MainGUI extends JFrame
 {
 
