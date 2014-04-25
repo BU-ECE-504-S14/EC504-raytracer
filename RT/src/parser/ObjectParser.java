@@ -38,7 +38,7 @@ public class ObjectParser
 		List<TriangleMesh> objects = null;
 		try
 		{
-			objects = ObjectParser.parseObjectsFromFile("buddha.obj");
+			objects = ObjectParser.parseObjectsFromFile("smallbunny.obj");
 		}
 		catch (SceneObjectException ex)
 		{
@@ -309,6 +309,7 @@ public class ObjectParser
 			ex.printStackTrace();
 		}
 
+		System.out.println("Finished parsing materials!");
 		return materials;
 
 	}
@@ -509,6 +510,8 @@ public class ObjectParser
 		{
 			ex.printStackTrace();
 		}
+		System.out.println("Finished parsing objects, materials next...!");
+
 
 		HashMap<String, Material> materials = parseMaterialFromFile(matLibrary);
 		for (int i = 0; i < objects.size(); i++)
@@ -516,6 +519,7 @@ public class ObjectParser
 			TriangleMesh current = objects.get(i);
 			current.material = materials.get(materialMap.get(current.getID()));
 		}
+		System.out.println("Finished parsing objects with materials!");
 
 		return objects;
 

@@ -20,6 +20,7 @@ import objects.TriangleMesh;
 import scene.BoxTestScene;
 import scene.MeshPreviewScene;
 import scene.PointLight;
+import scene.SpheresInRoom;
 import scene.SpheresInSpace;
 
 
@@ -56,8 +57,8 @@ public class Renderer
 
 		r.optionAntialiasing = 0;
 
-		r.optionWidth = 10*128;
-		r.optionHeight = 10*72;
+		r.optionWidth = 12*128;
+		r.optionHeight = 12*72;
 
 		r.optionShadow = 0;
 		r.showSampleScene();
@@ -69,7 +70,7 @@ public class Renderer
 		{
 
 			// new RenderViewer(renderScene(constructSampleScene()));
-			new RenderViewer(renderScene(new SpheresInSpace()));
+			new RenderViewer(renderScene(new SpheresInRoom()));
 
 		}
 		catch (Exception e)

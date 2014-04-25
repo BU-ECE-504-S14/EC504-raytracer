@@ -16,6 +16,7 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
 import objects.AbstractSceneObject.RefinementException;
+import objects.Material;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
@@ -48,9 +49,9 @@ public class SpheresInRoom extends Scene
         Vector3d scale;
 		Vector3d position;
 		AxisAngle4d rotation = new AxisAngle4d(0, 0, 1, 0);
-
+		
 		//Spheres
-		Sphere sphereArray[] = new Sphere[17];
+		Sphere sphereArray[] = new Sphere[5];
 		for(int i = 0; i < sphereArray.length ; i++){
 			sphereArray[i] = new Sphere();
 		}
@@ -59,6 +60,7 @@ public class SpheresInRoom extends Scene
 		position = new Vector3d(100, -50, 0);
 		sphereArray[0].setTransform(scale, position, rotation);
 		sphereArray[0].material.diffuseColor = yellow;
+		//sphereArray[0].material.reflectionIndex = 0;
 		
 		scale = new Vector3d(20, 20, 20);
 		position = new Vector3d(0, 0, 0);
@@ -69,83 +71,20 @@ public class SpheresInRoom extends Scene
 		position = new Vector3d(50, 100, -100);
 		sphereArray[2].setTransform(scale, position, rotation);
 		sphereArray[2].material.diffuseColor = darkGreen;
-
-		scale = new Vector3d(100, 100, 100);
+		
+		scale = new Vector3d(20, 20, 20);
 		position = new Vector3d(-100, -50, 400);
 		sphereArray[3].setTransform(scale, position, rotation);
 		sphereArray[3].material.diffuseColor = orange;
-
+		
 		scale = new Vector3d(27, 27, 27);
 		position = new Vector3d(-40, -50, -100);
 		sphereArray[4].setTransform(scale, position, rotation);
 		sphereArray[4].material.diffuseColor = green;
-      
-		scale = new Vector3d(20, 20, 20);
-		position = new Vector3d(-100, -80, 250);
-		sphereArray[5].setTransform(scale, position, rotation);
-		sphereArray[5].material.diffuseColor = lightPurple;
-
-		scale = new Vector3d(100, 100, 100);
-		position = new Vector3d(-200, -200, -400);
-		sphereArray[6].setTransform(scale, position, rotation);
-		sphereArray[6].material.diffuseColor = darkPurple;
-		
-		scale = new Vector3d(50, 50, 50);
-		position = new Vector3d(-150, 100, 400);
-		sphereArray[7].setTransform(scale, position, rotation);
-		sphereArray[7].material.diffuseColor = darkGreen;
-
-		scale = new Vector3d(27, 27, 27);
-		position = new Vector3d(300, 200, 150);
-		sphereArray[8].setTransform(scale, position, rotation);
-		sphereArray[8].material.diffuseColor = green;
-
-		scale = new Vector3d(27, 27, 27);
-		position = new Vector3d(400, 200, 100);
-		sphereArray[9].setTransform(scale, position, rotation);
-		sphereArray[9].material.diffuseColor = darkPurple;
-
-		scale = new Vector3d(27, 27, 27);
-		position = new Vector3d(-100, 100, 150);
-		sphereArray[10].setTransform(scale, position, rotation);
-		sphereArray[10].material.diffuseColor = green;
-          
-		scale = new Vector3d(200, 200, 200);
-		position = new Vector3d(200, -300, -200);
-		sphereArray[11].setTransform(scale, position, rotation);
-		sphereArray[11].material.diffuseColor = lightPurple;
-  
-		scale = new Vector3d(40, 40, 40);
-		position = new Vector3d(-150, 100, -300);
-		sphereArray[12].setTransform(scale, position, rotation);
-		sphereArray[12].material.diffuseColor = orange;
-		
-		scale = new Vector3d(100, 100, 100);
-		position = new Vector3d(100, 250, -150);
-		sphereArray[13].setTransform(scale, position, rotation);
-		sphereArray[13].material.diffuseColor = green;
- 
-		scale = new Vector3d(30, 30, 30);
-		position = new Vector3d(200, -100, 100);
-		sphereArray[14].setTransform(scale, position, rotation);
-		sphereArray[14].material.diffuseColor = yellow;
-		
-		scale = new Vector3d(30, 30, 30);
-		position = new Vector3d(300, -200, 20);
-		sphereArray[15].setTransform(scale, position, rotation);
-		sphereArray[15].material.diffuseColor = yellow;
-		
-		scale = new Vector3d(500, 500, 500);
-		position = new Vector3d(-200, -500, -2000);
-		sphereArray[16].setTransform(scale, position, rotation);
-		sphereArray[16].material.diffuseColor = yellow;
 		
 		for(int i = 0; i<sphereArray.length ; i++){
 			objects.add(sphereArray[i]);
 		}
-		
-		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
-				(float)(Math.PI / 4));
 		
 		//Lights
 		PointLight demoLight1 = new PointLight();
@@ -154,14 +93,64 @@ public class SpheresInRoom extends Scene
 		demoLight1.setRadio(1);
 		lights.add(demoLight1);
 
-		/*demoSphere2.material.diffuseColor = new Vector3d(0.6, 0.6, 1);
-		demoSphere2.material.ambientIntensity = .1;
-		demoSphere2.material.diffuseIndex = .5;
-		demoSphere2.material.specularIndex = 1;
-		 */
+		//Planes
+		
+		List<TriangleMesh> meshes = null;
+		try
+		{
+			meshes = ObjectParser.parseObjectsFromFile("planeAtOrigin.obj");
+		}
+		catch (SceneObjectException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		TriangleMesh planeArray[] = new TriangleMesh[4];
+		for(int i = 0; i < planeArray.length ; i++){
+			planeArray[i] = new TriangleMesh(meshes.get(0));
+		}
+		
+		scale = new Vector3d(1000, 1000, 1000);
+		position = new Vector3d(0, 0, -1000);
+		rotation = new AxisAngle4d(1,0,0,Math.PI/2);
+		planeArray[0].updateTransform(new Transformation(scale,position,rotation));
+		planeArray[0].material.alpha = 1;
+		planeArray[0].material.diffuseColor = new Vector3d(.5,.5,.5);
+		planeArray[0].material.reflectionIndex = 0.2;
+		
+		scale = new Vector3d(1000, 1000, 1000);
+		position = new Vector3d(150, 0, 0);
+		rotation = new AxisAngle4d(0,0,1,Math.PI/2);
+		planeArray[1].updateTransform(new Transformation(scale,position,rotation));
+		planeArray[1].material.alpha = 1;
+		planeArray[1].material.diffuseColor = new Vector3d(1,0,0);
+		planeArray[1].material.reflectionIndex = 0.2;
+		
+		scale = new Vector3d(1000, 1000, 1000);
+		position = new Vector3d(-150, 0, 0);
+		rotation = new AxisAngle4d(0,0,1,Math.PI/2);
+		planeArray[2].updateTransform(new Transformation(scale,position,rotation));
+		planeArray[2].material.alpha = 1;
+		planeArray[2].material.diffuseColor = new Vector3d(0,0,1);
+		planeArray[2].material.reflectionIndex = 0.2;
+		
+		scale = new Vector3d(1000, 1000, 1000);
+		position = new Vector3d(0, -85, 0);
+		rotation = new AxisAngle4d(1,0,0,0);
+		planeArray[3].updateTransform(new Transformation(scale,position,rotation));
+		planeArray[3].material.alpha = 1;
+		planeArray[3].material.diffuseColor = new Vector3d(1,1,0);
+		planeArray[3].material.reflectionIndex = 0.2;
+		
+		for(int i = 0; i<planeArray.length ; i++){
+			objects.add(planeArray[i]);
+		}
 		
 		//Camera
-		camera.setPostion(new Pt(600f, 1000f, 2000f));
+		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
+				(float)(Math.PI / 4));
+		camera.setPostion(new Pt(0f, 50f, 1400f));
 		camera.lookAt(new Pt(0f, 0f, 0f), new Vec(0, 1, 0));
 		camera.fieldOfView = 0.3f;
 		// Prints out all object ids
@@ -172,7 +161,7 @@ public class SpheresInRoom extends Scene
 		 * catch (RefinementException e) { // TODO Auto-generated catch block e.printStackTrace(); }
 		 * for(SceneObject tmptmpobj:soa) System.out.println(tmptmpobj.getID()); } }
 		 */
-		this.buildOctree(5);
+		this.buildOctree(3);
 
 	}
 }

@@ -38,7 +38,7 @@ public class MeshPreviewScene extends Scene
 		List<TriangleMesh> meshes = null;
 		try
 		{
-			meshes = ObjectParser.parseObjectsFromFile("buddha.obj");
+			meshes = ObjectParser.parseObjectsFromFile("onlybunny.obj");
 		}
 		catch (SceneObjectException e)
 		{
@@ -48,66 +48,67 @@ public class MeshPreviewScene extends Scene
 
 		camera = new Camera(new Vector3d(0, 0, 10), new AxisAngle4d(0, 0, -1, 0),
 				(float)(Math.PI / 4));
-		PointLight demoLight = new PointLight();
+		
+		PointLight demoLight1 = new PointLight();
 		PointLight demoLight2 = new PointLight();
 		PointLight demoLight3 = new PointLight();
 
-		demoLight.setPosition(new Vector3d(100, 100, 50));
-		demoLight2.setPosition(new Vector3d(0, 10, 10));
+		demoLight1.setPosition(new Vector3d(0, 27, 60));
+		demoLight2.setPosition(new Vector3d(0, 0, 0));
 		demoLight3.setPosition(new Vector3d(0, 0, -50));
-
-
 		
-
+		demoLight1.setColor(new Vector3d(.3, .8, .8));
 		demoLight2.setColor(new Vector3d(1, 1, 1));
 		demoLight2.setSoftShadowOffset(.6);
 		demoLight3.setColor(new Vector3d(.8, .3, .8));
-		demoLight.setColor(new Vector3d(.3, .8, .8));
-		demoLight.setRadio(1);
+
+		demoLight1.setRadio(1);
 		demoLight2.setRadio(1);
 		demoLight3.setRadio(1);
 
-		//lights.add(demoLight);
-		lights.add(demoLight2);
+		lights.add(demoLight1);
+		//lights.add(demoLight2);
 		//lights.add(demoLight3);
 
-		Sphere demoSphere = new Sphere();
+		Sphere demoSphere1 = new Sphere();
 		Sphere demoSphere2 = new Sphere();
+		
+		Vector3d scale = new Vector3d(10, 10, 10);
+		Vector3d position = new Vector3d(0, 0, 100);
+		AxisAngle4d rotation = new AxisAngle4d(0, 0, 1, 0);
+		demoSphere2.setTransform(scale, position, rotation);
+		
 		demoSphere2.material.diffuseColor = new Vector3d(0.6, 0.6, 1);
 		demoSphere2.material.ambientIntensity = .1;
 		demoSphere2.material.diffuseIndex = .5;
 		demoSphere2.material.specularIndex = 1;
-			
-		Vector3d scale = new Vector3d(10, 10, 10);
-		Vector3d position = new Vector3d(0, 0, 100);
-		AxisAngle4d rotation = new AxisAngle4d(0, 0, 1, 0);
-
-		demoSphere2.setTransform(scale, position, rotation);
 		demoSphere2.material.reflectionIndex = 0;
 		
-		BBoxObject BBo = new BBoxObject(demoSphere2.getWorldBound());
+		/*
+		BBoxObject BBo = new BBoxObject(demoSphere1.getWorldBound());
 		BBo.material.diffuseColor = new Vector3d(1,.1,.1);
 		BBo.material.ambientIntensity = .1;
 		BBo.material.diffuseIndex = .5;
 		BBo.material.specularIndex = 1;
-
-		camera.setPostion(new Pt(0f, 0f, 4f));
-		camera.lookAt(new Pt(demoSphere2.getPosition()), new Vec(0, 1, 0));
+		 */
+		
+		camera.setPostion(new Pt(0f, 20f, 50f));
+		camera.lookAt(new Pt(demoSphere1.getPosition()), new Vec(0, 1, 0));
 
 		TriangleMesh parse = meshes.get(0);
-		parse.material = new Material(demoSphere2.material);
 		parse.material.alpha = 1;
-		parse.material.diffuseColor = new Vector3d(1,0,0);
-		parse.material.reflectionIndex = .5;
-		Transformation target = new Transformation(demoSphere.getTransform());
-		target.setScale(new Vector3d(1, 1, 1));
-		target.setRotation(new AxisAngle4d(1,0,0,Math.PI/2));
+		parse.material.reflectionIndex = 0;
+		//parse.material.diffuseColor = new Vector3d(1,0,0);
+		
+		Transformation target = new Transformation(demoSphere1.getTransform());
+		target.setScale(new Vector3d(10, 10, 10));
+		target.setRotation(new AxisAngle4d(0,1,0,0));
 		parse.updateTransform(target);
 
 		// objects.add(plane);
-		//objects.add(parse);
-		objects.add(demoSphere);
-		objects.add(demoSphere2);
+		objects.add(parse);
+		objects.add(demoSphere1);
+		//objects.add(demoSphere2);
 		//objects.add(BBo);
 
 		// Prints out all object ids

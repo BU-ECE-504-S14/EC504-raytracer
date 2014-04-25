@@ -172,7 +172,7 @@ public class SpheresInSpace extends Scene
 		 * catch (RefinementException e) { // TODO Auto-generated catch block e.printStackTrace(); }
 		 * for(SceneObject tmptmpobj:soa) System.out.println(tmptmpobj.getID()); } }
 		 */
-		this.buildOctree(5);
+		this.buildOctree(3);
 
 	}
 }
