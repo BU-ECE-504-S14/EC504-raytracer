@@ -21,12 +21,14 @@ import parser.ObjectParser;
 import raytracer.RenderViewer;
 import raytracer.Renderer;
 import scene.BuddhaScene;
+import scene.BunnyScene;
 import scene.MaterialScene;
 import scene.Scene;
 import scene.SpheresInRoom;
 import util.SceneObjectException;
 
-public class ScenePanel extends JPanel {
+public class ScenePanel extends JPanel
+{
 
 	JPanel previewPanel;
 	ObjectTable objects;
@@ -49,7 +51,8 @@ public class ScenePanel extends JPanel {
 
 	File lastFile = null;
 
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -62,14 +65,16 @@ public class ScenePanel extends JPanel {
 		f.setVisible(true);
 	}
 
-	public ScenePanel(Scene s) {
+	public ScenePanel(Scene s)
+	{
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		myScene = s;
 		setupPanels();
 	}
 
-	public void setupPanels() {
+	public void setupPanels()
+	{
 		listPanel = new JPanel();
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(4, 2));
@@ -77,7 +82,7 @@ public class ScenePanel extends JPanel {
 		rendering = new RenderSettingsPanel(myScene);
 		objects = new ObjectTable(myScene.getObjectArray());
 		previewPanel = new JPanel();
-		
+
 		listPanel.setPreferredSize(new Dimension(300, 600));
 
 		addMesh = new JButton("Add meshes");
@@ -89,10 +94,10 @@ public class ScenePanel extends JPanel {
 		load = new JButton("Load Scene");
 		settings = new JButton("Render Settings");
 		renderButton = new JButton("Render Scene");
-		
+
 		JPanel renderButtonPanel = new JPanel();
 		renderButtonPanel.add(renderButton);
-		renderButton.setPreferredSize(new Dimension(150,75));
+		renderButton.setPreferredSize(new Dimension(150, 75));
 
 		buttonPanel.add(addSphere);
 		buttonPanel.add(addMesh);
@@ -107,7 +112,8 @@ public class ScenePanel extends JPanel {
 		addSphere.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				addNewSphere();
 			}
 
@@ -116,7 +122,8 @@ public class ScenePanel extends JPanel {
 		addMesh.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				addMeshesFromObj();
 			}
 
@@ -125,7 +132,8 @@ public class ScenePanel extends JPanel {
 		dupeObject.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				dupeObject(objects.getSelectedObject());
 			}
 
@@ -134,7 +142,8 @@ public class ScenePanel extends JPanel {
 		removeObject.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				removeObject(objects.getSelectedObject());
 			}
 
@@ -142,35 +151,40 @@ public class ScenePanel extends JPanel {
 
 		importScene.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				addMeshesFromScn();
 			}
 		});
 
 		save.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				saveScene();
 			}
 		});
 
 		load.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				loadScene();
 			}
 		});
-		
+
 		settings.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				showSettings();
 			}
 		});
-		
+
 		renderButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				renderScene();
 			}
 		});
@@ -180,146 +194,188 @@ public class ScenePanel extends JPanel {
 		listPanel.add(buttonPanel);
 		this.add(listPanel);
 	}
-	
-	public void showSettings(){
+
+	public void showSettings()
+	{
 		new RenderSettingsFrame(myScene, "Rendering Settings");
 	}
 
-	public void updateList() {
-		objects.updateObjects(myScene.getObjectArray());
-
+	public void updateList()
+	{
+		objects.updateObjects(myScene.getObjectArray(), false);
 	}
 	
-	public void renderScene(){
-		try {
+	public void updateList(boolean b){
+		objects.updateObjects(myScene.getObjectArray(), b);
+	}
+
+	public void renderScene()
+	{
+		try
+		{
 			new RenderViewer(Renderer.renderScene(myScene));
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void addNewSphere() {
+	public void addNewSphere()
+	{
 		myScene.addSceneObject(new Sphere());
 		updateList();
 	}
 
-	public void loadScene() {
+	public void loadScene()
+	{
 		File f = getSceneFile();
-		if (f != null) {
+		if (f != null)
+		{
 			lastFile = f;
 			myScene = Scene.readSceneFromFile(f);
 			updateList();
 		}
 	}
 
-	public File getOutputLocation() {
+	public File getOutputLocation()
+	{
 		JFileChooser choose = null;
-		if (lastFile != null) {
+		if (lastFile != null)
+		{
 			choose = new JFileChooser(lastFile);
-		} else {
+		}
+		else
+		{
 			choose = new JFileChooser("./scn");
 		}
 
 		choose.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"BRUTE FORCE scenes (.scn)", "scn");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("BRUTE FORCE scenes (.scn)",
+				"scn");
 		choose.setFileFilter(filter);
-		
-		int result  = choose.showSaveDialog(this);
-		
-		if (result == choose.APPROVE_OPTION) {
-			if (!choose.getSelectedFile().getAbsolutePath().endsWith(".scn")) {
+
+		int result = choose.showSaveDialog(this);
+
+		if (result == choose.APPROVE_OPTION)
+		{
+			if (!choose.getSelectedFile().getAbsolutePath().endsWith(".scn"))
+			{
 				return new File(choose.getSelectedFile() + ".scn");
-			} else {
+			}
+			else
+			{
 				return choose.getSelectedFile();
 			}
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 	}
 
-	public File getObjFile() {
+	public File getObjFile()
+	{
 		File target = null;
 		JFileChooser choose = new JFileChooser("./res");
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"Wavefront Objects (.obj)", "obj");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Wavefront Objects (.obj)",
+				"obj");
 		choose.setFileFilter(filter);
 		int returnVal = choose.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+		{
 			target = choose.getSelectedFile();
-			if (myScene.settings.isVERBOSE()) {
-				System.out.println("Importing triangle mesh from: "
-						+ target.getName());
+			if (myScene.settings.isVERBOSE())
+			{
+				System.out.println("Importing triangle mesh from: " + target.getName());
 			}
 		}
 		return target;
 	}
 
-	public File getSceneFile() {
+	public File getSceneFile()
+	{
 		File target = null;
 		JFileChooser choose = new JFileChooser("./scn");
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"BRUTE FORCE scenes (.scn)", "scn");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("BRUTE FORCE scenes (.scn)",
+				"scn");
 		choose.setFileFilter(filter);
 		int returnVal = choose.showOpenDialog(this);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+		{
 			target = choose.getSelectedFile();
-			if (myScene.settings.isVERBOSE()) {
+			if (myScene.settings.isVERBOSE())
+			{
 				System.out.println("Importing scene from: " + target.getName());
 			}
 		}
 		return target;
 	}
 
-	public void addMeshesFromScn() {
+	public void addMeshesFromScn()
+	{
 		File scnFile = getSceneFile();
-		if (scnFile != null) {
+		if (scnFile != null)
+		{
 			List<SceneObject> objects = null;
 
 			objects = ObjectParser.parseObjectsFromSceneFile(scnFile);
-			for (SceneObject o : objects) {
+			for (SceneObject o : objects)
+			{
 				myScene.addSceneObject(o);
 			}
 			updateList();
 		}
 	}
 
-	public void saveScene() {
+	public void saveScene()
+	{
 		File outFile = getOutputLocation();
-		if (outFile != null) {
+		if (outFile != null)
+		{
 			Scene.writeSceneToFile(myScene, outFile);
 		}
 	}
 
-	public void addMeshesFromObj() {
+	public void addMeshesFromObj()
+	{
 		File meshFile = getObjFile();
-		if (meshFile != null) {
+		if (meshFile != null)
+		{
 
 			List<TriangleMesh> meshes = null;
-			try {
+			try
+			{
 				meshes = ObjectParser.parseObjectsFromFile(meshFile);
-			} catch (SceneObjectException e) {
+			}
+			catch (SceneObjectException e)
+			{
 				e.printStackTrace();
 			}
-			for (TriangleMesh t : meshes) {
+			for (TriangleMesh t : meshes)
+			{
 				myScene.addSceneObject(t);
 			}
 			updateList();
 		}
 	}
 
-	public void removeObject(SceneObject o) {
+	public void removeObject(SceneObject o)
+	{
 		myScene.removeSceneObject(o);
-		updateList();
+		updateList(true);
 	}
 
-	public void dupeObject(SceneObject o) {
+	public void dupeObject(SceneObject o)
+	{
 		SceneObject newObject = null;
-		if (o instanceof TriangleMesh) {
+		if (o instanceof TriangleMesh)
+		{
 			newObject = new TriangleMesh((TriangleMesh) o);
 		}
-		if (o instanceof Sphere) {
+		if (o instanceof Sphere)
+		{
 			newObject = new Sphere((Sphere) o);
 		}
 

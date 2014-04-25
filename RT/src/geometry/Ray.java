@@ -30,7 +30,7 @@ public class Ray
 						// behind ray)
 	public int depth; // numbers of times ray has been reflected/refracted
 	
-	public static int counter = 0;
+	public static volatile int rayConstructionCount = 0;
 
 	
 	public Ray(Pt origin, Vec dir)
@@ -41,7 +41,7 @@ public class Ray
 		maxt = Float.POSITIVE_INFINITY;
 		this.mint = 0;
 		depth = 0;
-		counter++;
+		rayConstructionCount++;
 	}
 
 	public Ray(Pt origin, Vec dir, float mint)
@@ -52,7 +52,7 @@ public class Ray
 		maxt = Float.POSITIVE_INFINITY;
 		this.mint = mint;
 		depth = 0;
-		counter++;
+		rayConstructionCount++;
 	}
 
 	public Ray(Pt origin, Vec dir, float mint, float maxt)
@@ -63,7 +63,7 @@ public class Ray
 		this.maxt = maxt;
 		this.mint = mint;
 		depth = 0;
-		counter++;
+		rayConstructionCount++;
 	}
 
 	public Ray(Pt origin, Vec dir, Ray r, float mint)
@@ -74,7 +74,7 @@ public class Ray
 		this.maxt = Float.POSITIVE_INFINITY;
 		this.mint = mint;
 		depth = r.depth + 1;
-		counter++;
+		rayConstructionCount++;
 	}
 
 	public Ray(Pt origin, Vec dir, Ray r, float mint, float maxt)
@@ -85,7 +85,7 @@ public class Ray
 		this.maxt = maxt;
 		this.mint = mint;
 		depth = r.depth + 1;
-		counter++;
+		rayConstructionCount++;
 	}
 
 	public Ray(Ray r)
@@ -95,7 +95,7 @@ public class Ray
 		maxt = r.maxt;
 		mint = r.mint;
 		depth = r.depth;
-		counter++;
+		rayConstructionCount++;
 	}
 
 	public static Ray refractRay(Ray ray, Intersection i, double refractionIndex, double correction)
