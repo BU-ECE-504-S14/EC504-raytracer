@@ -74,7 +74,7 @@ public class MeshPreviewScene extends Scene
 		Sphere demoSphere2 = new Sphere();
 		
 		Vector3d scale = new Vector3d(10, 10, 10);
-		Vector3d position = new Vector3d(0, 0, 100);
+		Vector3d position = new Vector3d(0, -10, 0);
 		AxisAngle4d rotation = new AxisAngle4d(0, 0, 1, 0);
 		demoSphere2.setTransform(scale, position, rotation);
 		
@@ -92,22 +92,23 @@ public class MeshPreviewScene extends Scene
 		BBo.material.specularIndex = 1;
 		 */
 		
-		camera.setPostion(new Pt(0f, 20f, 50f));
-		camera.lookAt(new Pt(demoSphere1.getPosition()), new Vec(0, 1, 0));
+		camera.setPostion(new Pt(0f, 18f, 40f));
+		camera.lookAt(new Pt(0,-5,0), new Vec(0, 1, 0));
 
-		TriangleMesh parse = meshes.get(0);
+		TriangleMesh parse = new TriangleMesh(meshes.get(0));
 		parse.material.alpha = 1;
 		parse.material.reflectionIndex = 0;
-		//parse.material.diffuseColor = new Vector3d(1,0,0);
+		parse.material.diffuseColor = new Vector3d(0.6,0.6,0.6);
+		parse.material.specularIndex = 0;
 		
-		Transformation target = new Transformation(demoSphere1.getTransform());
+		Transformation target = new Transformation(demoSphere2.getTransform());
 		target.setScale(new Vector3d(10, 10, 10));
-		target.setRotation(new AxisAngle4d(0,1,0,0));
+		target.setRotation(new AxisAngle4d(0,1,0,-5.5*Math.PI/14));
 		parse.updateTransform(target);
 
 		// objects.add(plane);
 		objects.add(parse);
-		objects.add(demoSphere1);
+		//objects.add(demoSphere1);
 		//objects.add(demoSphere2);
 		//objects.add(BBo);
 
@@ -120,7 +121,7 @@ public class MeshPreviewScene extends Scene
 		 * for(SceneObject tmptmpobj:soa) System.out.println(tmptmpobj.getID()); } }
 		 */
 		
-		this.buildOctree(3);
+		this.buildOctree(7);
 
 	}
 }
