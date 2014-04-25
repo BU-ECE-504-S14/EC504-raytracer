@@ -41,7 +41,7 @@ public class SimpleRayTracer
 	private static BufferedImage outputImage;
 	public static final boolean SOFT_SHADOWS = true;
 	
-	public static int MAX_REFRACTIONS = 5;
+	public static int MAX_REFRACTIONS = 3;
 	public static int MAX_REFLECTIONS = 3;
 	public static boolean RECURSIVE_SHADOWS = true;
 	public static boolean MULTITHREAD = true;

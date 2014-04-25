@@ -55,10 +55,10 @@ public class Renderer
 		Renderer r = new Renderer();
 		r.optionProgress = true;
 
-		r.optionAntialiasing = 2;
+		r.optionAntialiasing = 1;
 
-		r.optionWidth = 6*128;
-		r.optionHeight = 6*72;
+		r.optionWidth = (int) (10*128);
+		r.optionHeight = (int) (10*72);
 
 		r.optionShadow = 0;
 		r.showSampleScene();
@@ -71,6 +71,7 @@ public class Renderer
 
 			// new RenderViewer(renderScene(constructSampleScene()));
 			new RenderViewer(renderScene(new MeshPreviewScene()));
+			//new RenderViewer(renderScene(new SpheresInRoom()));
 
 		}
 		catch (Exception e)

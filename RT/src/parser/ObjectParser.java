@@ -183,7 +183,7 @@ public class ObjectParser
 			fMeshInd[i] = faceMesh.get(i);
 		}
 		float[] uvs = null;
-		if (texVertices.size() > 0)
+		if (false && texVertices.size() > 0)
 		{
 			uvs = new float[faceTex.size()];
 			for (int i = 0; i < faceTex.size(); i++)
