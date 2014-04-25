@@ -25,11 +25,11 @@ public class RenderSettings implements Serializable {
 
 	private boolean MULTITHREADING = false;
 	private int ANTIALIASING = 1;
-	private int WIDTH = 100;
-	private int HEIGHT = 100;
-	private int SHADOW_TYPE = 1;
-	private int REFRACTION = 1;
-	private int REFLECTION = 1;
+	private int WIDTH = 400;
+	private int HEIGHT = 300;
+	private int SHADOW_TYPE = 2;
+	private int REFRACTION = 3;
+	private int REFLECTION = 3;
 	private boolean ACCELERATE = true;
 	private boolean TRANSPARENCY = true;
 	private boolean PHONG = true;
@@ -98,7 +98,7 @@ public class RenderSettings implements Serializable {
 	}
 
 	public boolean checkShadow(int s) {
-		if (s == 1 || s == 2 || s == 0) {
+		if (s == 1 || s == 2 || s == 3) {
 			return true;
 		} else {
 			return false;
@@ -164,7 +164,7 @@ public class RenderSettings implements Serializable {
 
 	public void setSHADOW_TYPE(int sHADOW_TYPE) throws RenderSettingException {
 		if (!checkShadow(sHADOW_TYPE)) {
-			throw new RenderSettingException("Reflections must be >= 0!");
+			throw new RenderSettingException("Shadow type must be 1-3");
 		} else {
 			SHADOW_TYPE = sHADOW_TYPE;
 		}

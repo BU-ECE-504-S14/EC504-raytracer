@@ -320,7 +320,7 @@ public class SimpleRayTracer {
 		Ray chkRay = Ray.makeShadowRay(inter, light, FLOAT_CORRECTION);
 		double alpha = inter.shape.getMaterial().alpha;
 
-		if (shadowType == 1) {
+		if (shadowType == 2) {
 			if (inShadow(chkRay, light, s)
 
 			&& light.getSoftShadowOffset() > 0d) {
@@ -362,7 +362,7 @@ public class SimpleRayTracer {
 			}
 		}
 
-		else if (shadowType == 2) {
+		else if (shadowType == 3) {
 
 			Ray shadowRay = Ray.makeShadowRay(inter, light, FLOAT_CORRECTION);
 

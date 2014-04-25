@@ -134,11 +134,9 @@ public class RenderSettingsPanel extends JPanel {
 		phongPanel = new CheckBoxPanel("Phong Shading: ", mySettings.isPHONG());
 		shadowPanel = new ThreeRadioPanel("Shadow Type: ",
 				mySettings.getSHADOW_TYPE());
-		shadowPanel.setValues(0, 1, 2);
 		shadowPanel.setNames("Simple: ", "Soft: ", "Pretty (recursive): ");
 		antiAPanel = new ThreeRadioPanel("Antialiasing amount: ",
 				mySettings.getANTIALIASING());
-		antiAPanel.setValues(1, 2, 3);
 		antiAPanel.setNames("1x (none): ", "4x: ", " 9x: ");
 		reflectPanel = new ParameterPanel("Reflections: ", ""
 				+ mySettings.getREFLECTION(), 2);
@@ -194,24 +192,8 @@ public class RenderSettingsPanel extends JPanel {
 			}
 		};
 
-		FocusListener focus = new FocusListener() {
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				updateSettings();
-				updatePanels();
-			}
-
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				updateSettings();
-				updatePanels();
-			}
-
-		};
-
 		addFieldListeners(act);
-		addFocusListeners(focus);
+		//addFocusListeners(focus);
 
 		ActionListener rend = new ActionListener() {
 
