@@ -28,7 +28,7 @@ public class MainGUI extends JFrame
 		Sphere s = new Sphere();
 		Scene scn = new MaterialScene(s);
 		ScenePanel sp = new ScenePanel(scn);
-		this.setMaximumSize(new Dimension(600, 700));
+		this.setMinimumSize(new Dimension(700, 700));
 		add(sp);
 		pack();
 		setVisible(true);
