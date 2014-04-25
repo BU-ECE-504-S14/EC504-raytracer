@@ -1,0 +1,11 @@
+# Blender v2.70 (sub 0) OBJ File: ''
+# www.blender.org
+mtllib planeAtOrigin.mtl
+o Plane
+v -1.000000 0.000000 1.000000
+v 1.000000 0.000000 1.000000
+v -1.000000 0.000000 -1.000000
+v 1.000000 0.000000 -1.000000
+usemtl None
+s off
+f 1 2 4 3

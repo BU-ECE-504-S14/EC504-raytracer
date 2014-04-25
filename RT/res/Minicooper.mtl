@@ -1,0 +1,11 @@
+# Blender MTL File: 'Mini cooper.blend'
+# Material Count: 1
+
+newmtl Body01
+Ns 259.176999
+Ka 0.000000 0.000000 0.000000
+Kd 0.119966 0.118850 0.118850
+Ks 0.119565 0.117692 0.117692
+Ni 1.000000
+d 1.000000
+illum 2

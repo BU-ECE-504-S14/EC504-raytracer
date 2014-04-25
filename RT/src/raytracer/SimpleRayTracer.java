@@ -36,8 +36,8 @@ import scene.Scene;
  * @author Rana Alrabeh, Tolga Bolukbasi, Aaron Heuckroth, David Klaus, and
  *         Bryant Moquist
  */
+
 public class SimpleRayTracer {
-	private int rayCount;
 	private BufferedImage outputImage;
 
 	/** Margin of error when comparing doubles */

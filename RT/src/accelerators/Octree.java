@@ -98,8 +98,7 @@ public class Octree implements AbstractAccelerator, Serializable
 			}
 			if (nearest != null)
 			{
-				nearest.Intersect(newRay, inter);
-				return true;
+				return nearest.Intersect(ray, inter);
 			}
 		}
 
@@ -110,7 +109,7 @@ public class Octree implements AbstractAccelerator, Serializable
 	public boolean Intersect(Ray ray, Intersection inter) throws NotIntersectableException
 	{
 		return Intersect(ray, inter, root);
-		// return intersectTraverse(ray, inter, root);
+		//return intersectTraverse(ray, inter, root);
 	}
 
 	/*

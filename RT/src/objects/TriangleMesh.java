@@ -190,21 +190,10 @@ public class TriangleMesh extends AbstractSceneObject
 	public String paramsToString()
 	{
 		String out = "";
-		out += "Triangle Mesh (ID: " + id + "\n";
-		out += "Name: " + name + "\n";
-		out += "Vertices: " + "\n";
-		for (int i = 0; i < vertices.length; i++)
-		{
-			out += "Vertex " + i + ": " + vertices[i] + "\n";
-		}
-		out += "\n";
-
-		out += "Faces: " + "\n";
-		for (int i = 0; i < vertexIndices.length; i += 3)
-		{
-			out += "Face " + i / 3 + ": " + vertexIndices[i] + ", " + vertexIndices[i + 1] + ", "
-					+ vertexIndices[i + 2] + "\n";
-		}
+		System.out.println( "Triangle Mesh (ID: " + id);
+		System.out.println( "Name: " + name );
+		System.out.println( "Vertices: " + nverts);
+		System.out.println( "Faces: " + ntris);
 		return out;
 	}
 

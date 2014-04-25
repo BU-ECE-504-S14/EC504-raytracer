@@ -37,9 +37,14 @@ public class ObjectParser {
 	public static void main(String[] args) {
 		System.out.println("Getting objects...");
 		List<TriangleMesh> objects = null;
-		try {
-			objects = ObjectParser.parseObjectsFromFile("box.obj");
-		} catch (SceneObjectException ex) {
+
+		try
+		{
+			objects = ObjectParser.parseObjectsFromFile("smallbunny.obj");
+		}
+		catch (SceneObjectException ex)
+		{
+
 			System.out.println("Unable to parse file..");
 			ex.printStackTrace();
 		}
@@ -168,7 +173,9 @@ public class ObjectParser {
 			fMeshInd[i] = faceMesh.get(i);
 		}
 		float[] uvs = null;
-		if (texVertices.size() > 0) {
+
+		if (false && texVertices.size() > 0)
+		{
 			uvs = new float[faceTex.size()];
 			for (int i = 0; i < faceTex.size(); i++) {
 				uvs[i] = texVertices.get(faceTex.get(i));
@@ -276,6 +283,7 @@ public class ObjectParser {
 			ex.printStackTrace();
 		}
 
+		System.out.println("Finished parsing materials!");
 		return materials;
 	}
 	
@@ -403,13 +411,17 @@ public class ObjectParser {
 							newMesh[1] = mesh[1];
 							newMesh[2] = mesh[2];
 							newMesh[3] = mesh[0];
-							newMesh[4] = mesh[2];
+							newMesh[4] = mesh[2];	
 							newMesh[5] = mesh[3];
 
 							for (int i = 0; i < newMesh.length; i++) {
 
 								faceMeshIndices.add(newMesh[i] - vertexOffset);
 							}
+						} else {
+								for (int i = 0; i < mesh.length; i++){
+									faceMeshIndices.add(mesh[i] - vertexOffset);
+								}	
 						}
 					}
 
@@ -467,12 +479,15 @@ public class ObjectParser {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+		System.out.println("Finished parsing objects, materials next...!");
+
 
 		HashMap<String, Material> materials = parseMaterialFromFile(matLibrary);
 		for (int i = 0; i < objects.size(); i++) {
 			TriangleMesh current = objects.get(i);
 			current.material = materials.get(materialMap.get(current.getID()));
 		}
+		System.out.println("Finished parsing objects with materials!");
 
 		return objects;
 

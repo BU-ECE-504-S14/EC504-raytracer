@@ -23,7 +23,7 @@ public class OctnodeComparator implements Comparator<Octnode>
 		{
 			return -1;
 		}
-		else if (in2 >= in1)
+		else if (in2 > in1)
 		{
 			return 1;
 		}

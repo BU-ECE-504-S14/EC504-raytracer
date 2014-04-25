@@ -38,6 +38,7 @@ import raytracer.RenderViewer;
 import raytracer.Renderer;
 import scene.MaterialScene;
 import scene.Scene;
+import scene.SpheresInRoom;
 import util.RenderSettingException;
 import util.SceneObjectException;
 
@@ -90,8 +91,7 @@ public class RenderSettingsPanel extends JPanel {
 		f.setLayout(new FlowLayout(FlowLayout.LEFT));
 		Sphere sphere = new Sphere();
 		SpherePanel m = new SpherePanel(sphere);
-		RenderSettingsPanel rsp = new RenderSettingsPanel(new MaterialScene(
-				sphere));
+		RenderSettingsPanel rsp = new RenderSettingsPanel(new SpheresInRoom());
 
 		f.add(rsp);
 		f.add(m);
