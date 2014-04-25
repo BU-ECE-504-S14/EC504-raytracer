@@ -20,7 +20,6 @@ import objects.Material;
 import objects.SceneObject;
 import objects.Sphere;
 import objects.TriangleMesh;
-import scene.BoxTestScene;
 import scene.Intersection;
 import scene.MeshPreviewScene;
 import scene.PointLight;

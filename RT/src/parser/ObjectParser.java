@@ -283,7 +283,6 @@ public class ObjectParser {
 			ex.printStackTrace();
 		}
 
-		System.out.println("Finished parsing materials!");
 		return materials;
 	}
 	
@@ -479,7 +478,6 @@ public class ObjectParser {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		System.out.println("Finished parsing objects, materials next...!");
 
 
 		HashMap<String, Material> materials = parseMaterialFromFile(matLibrary);
@@ -487,7 +485,6 @@ public class ObjectParser {
 			TriangleMesh current = objects.get(i);
 			current.material = materials.get(materialMap.get(current.getID()));
 		}
-		System.out.println("Finished parsing objects with materials!");
 
 		return objects;
 

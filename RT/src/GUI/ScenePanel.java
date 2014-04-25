@@ -32,6 +32,7 @@ import scene.BunnyScene;
 import scene.MaterialScene;
 import scene.Scene;
 import scene.SpheresInRoom;
+import scene.SpheresInSpace;
 import util.SceneObjectException;
 
 public class ScenePanel extends JPanel
@@ -69,8 +70,7 @@ public class ScenePanel extends JPanel
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Sphere s = new Sphere();
-		Scene scn = new MaterialScene(s);
-		ScenePanel sp = new ScenePanel(scn);
+		ScenePanel sp = new ScenePanel(new MaterialScene(s));
 
 		f.add(sp);
 		f.pack();
